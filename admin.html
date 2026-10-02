@@ -133,7 +133,7 @@ dialog::backdrop { background: rgba(10,10,11,.55); }
 .check input { width: 18px; height: 18px; margin-top: 3px; accent-color: var(--accent); flex: none; }
 .promos { display: grid; gap: 12px; }
 .promo { display: grid; grid-template-columns: 110px 1fr auto; gap: 16px; align-items: center; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 12px; }
-.promo .pimg { width: 110px; aspect-ratio: 4/3; border-radius: 10px; background: var(--bg-2) center/cover no-repeat; display: grid; place-items: center; color: var(--muted); font-size: .75rem; }
+.promo .pimg { width: 110px; aspect-ratio: 3/4; border-radius: 10px; background: var(--bg-2) center/contain no-repeat; display: grid; place-items: center; color: var(--muted); font-size: .75rem; }
 .promo h3 { font-size: 1.1rem; }
 .promo p { margin: 2px 0 0; color: var(--fg-2); font-size: .9rem; }
 .promo .badge { display: inline-block; font-size: .72rem; padding: 2px 9px; border-radius: 999px; background: var(--bg-2); color: var(--fg-2); margin-left: 6px; vertical-align: middle; }
@@ -145,7 +145,7 @@ dialog::backdrop { background: rgba(10,10,11,.55); }
 .promo .acts .del:hover { border-color: var(--danger); background: var(--danger); color: #fff; }
 @media (max-width: 640px) { .promo { grid-template-columns: 80px 1fr; } .promo .pimg { width: 80px; } .promo .acts { grid-column: 1 / -1; } .promo .acts button { flex: 1; } }
 .img-pick { display: flex; align-items: center; gap: 14px; margin-top: 8px; }
-.img-pick .pimg { width: 120px; aspect-ratio: 4/3; border-radius: 10px; background: var(--bg-2) center/cover no-repeat; flex: none; }
+.img-pick .pimg { width: 120px; aspect-ratio: 3/4; background-size: contain !important; background-color: var(--bg-2); border-radius: 10px; background: var(--bg-2) center/cover no-repeat; flex: none; }
 .notice { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 24px; max-width: 680px; }
 .notice h2 { font-size: 1.35rem; margin-bottom: 6px; }
 .notice p { color: var(--fg-2); margin: 0 0 14px; }
@@ -218,7 +218,7 @@ dialog::backdrop { background: rgba(10,10,11,.55); }
     </div>
     <nav class="tabs" role="tablist" aria-label="Sections">
       <button type="button" role="tab" aria-selected="true" aria-controls="tab-gallery" data-tab="gallery">Gallery</button>
-      <button type="button" role="tab" aria-selected="false" aria-controls="tab-specials" data-tab="specials">Specials</button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="tab-specials" data-tab="specials">Specials &amp; posters</button>
       <button type="button" role="tab" aria-selected="false" aria-controls="tab-subs" data-tab="subs">Subscribers</button>
     </nav>
   </header>
@@ -234,8 +234,8 @@ dialog::backdrop { background: rgba(10,10,11,.55); }
     </section>
     <section id="tab-specials" role="tabpanel" hidden>
       <div class="bar">
-        <button class="btn solid" type="button" id="promo-add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>New special</button>
-        <p>Specials show on the website until their end date, then hide on their own.</p>
+        <button class="btn solid" type="button" id="promo-add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Post a special or poster</button>
+        <p>Posts show on the website until their end date, then hide on their own.</p>
       </div>
       <div class="promos" id="promos"></div>
     </section>
@@ -295,17 +295,18 @@ dialog::backdrop { background: rgba(10,10,11,.55); }
 <!-- Special (create / edit) -->
 <dialog id="promo-dlg" aria-labelledby="promo-title">
   <form class="panel" id="promo-form" method="dialog" novalidate>
-    <div class="panel-head"><h2 id="promo-title">New special</h2><button class="x" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <div class="panel-head"><h2 id="promo-title">New special or poster</h2><button class="x" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
     <div class="field"><label for="pr-title">Title *</label><input id="pr-title" maxlength="70" placeholder="e.g. Mother&rsquo;s Day mini sessions"></div>
     <div class="row2">
       <div class="field"><label for="pr-offer">Offer</label><input id="pr-offer" maxlength="30" placeholder="e.g. 20% off or R499"></div>
       <div class="field"><label for="pr-ends">Ends on</label><input id="pr-ends" type="date"></div>
     </div>
     <div class="field"><label for="pr-details">Details</label><textarea id="pr-details" maxlength="600" placeholder="What&rsquo;s included, dates, how to book&hellip;"></textarea></div>
-    <div class="section"><span class="label">Picture</span> <span class="hint">optional</span>
-      <div class="img-pick"><span class="pimg" id="pr-imgprev"></span><div><label class="btn" for="pr-file">Choose picture</label> <button class="linkish" type="button" id="pr-imgclear" style="margin:0 0 0 8px">Remove</button><input class="sr" type="file" id="pr-file" accept="image/jpeg,image/png,image/webp"></div></div>
+    <div class="section"><span class="label">Poster or picture</span> <span class="hint">optional &middot; shown in full</span>
+      <div class="img-pick"><span class="pimg" id="pr-imgprev"></span><div><label class="btn" for="pr-file">Choose poster</label> <button class="linkish" type="button" id="pr-imgclear" style="margin:0 0 0 8px">Remove</button><input class="sr" type="file" id="pr-file" accept="image/jpeg,image/png,image/webp"></div></div>
     </div>
-    <label class="check" id="pr-mailrow"><input type="checkbox" id="pr-mail"> <span>Also email this special to all subscribers</span></label>
+    <label class="check" id="pr-mailrow"><input type="checkbox" id="pr-mail"> <span id="pr-mailtext">Email it to all subscribers as soon as it&rsquo;s posted</span></label>
+    <p class="hint" id="pr-mailoff" style="margin:14px 0 0">To email posts to your subscribers automatically, connect your subscriber list in Settings.</p>
     <p class="err" id="promo-err" role="alert"></p>
     <div class="panel-foot"><button class="btn" type="button" data-close>Cancel</button><button class="btn solid" type="submit" id="promo-go">Post special</button></div>
   </form>
@@ -726,18 +727,21 @@ dialog::backdrop { background: rgba(10,10,11,.55); }
       return '<article class="promo"><span class="pimg"' + (p.image ? ' style="background-image:url(\'' + esc(previews["promo:" + p.id] || "img/" + p.image) + '\')"' : "") + ">" + (p.image ? "" : "No picture") + "</span><div><h3>" + esc(p.title) +
         '<span class="badge' + (live ? " live" : "") + '">' + (live ? "Showing" : "Ended") + "</span></h3><p>" + (p.offer ? esc(p.offer) + " &middot; " : "") + (p.ends ? (live ? "Ends " : "Ended ") + niceDate(p.ends) : "No end date") + '</p></div><div class="acts">' +
         (nlReady() ? '<button type="button" data-pmail="' + p.id + '">Email</button>' : "") + '<button type="button" data-pedit="' + p.id + '">Edit</button><button type="button" class="del" data-pdel="' + p.id + '">Delete</button></div></article>';
-    }).join("") : '<p class="empty">No specials yet. Post one and it will show on the website.</p>';
+    }).join("") : '<p class="empty">Nothing posted yet. Post a special or poster and it will show on the website.</p>';
   }
   var promoEditing = null, promoImg = null;
   function promoById(id) { return site.promotions.filter(function (p) { return p.id === id; })[0]; }
   function openPromo(p) {
     promoEditing = p || null; promoImg = null;
-    $("#promo-title").textContent = p ? "Edit special" : "New special";
-    $("#promo-go").textContent = p ? "Save changes" : "Post special";
+    $("#promo-title").textContent = p ? "Edit post" : "New special or poster";
+    $("#promo-go").textContent = p ? "Save changes" : "Post";
     $("#pr-title").value = p ? p.title : ""; $("#pr-offer").value = p ? p.offer || "" : ""; $("#pr-ends").value = p ? p.ends || "" : ""; $("#pr-details").value = p ? p.details || "" : "";
     $("#pr-ends").min = today();
     setPromoPrev(p && p.image ? previews["promo:" + p.id] || "img/" + p.image : "");
-    $("#pr-mailrow").hidden = !!p || !nlReady(); $("#pr-mail").checked = false;
+    // New posts go to subscribers straight away (can be unticked); edits only if asked
+    $("#pr-mailrow").hidden = !nlReady(); $("#pr-mailoff").hidden = nlReady();
+    $("#pr-mail").checked = !p && nlReady();
+    $("#pr-mailtext").textContent = p ? "Email it to all subscribers again" : "Email it to all subscribers as soon as it\u2019s posted";
     $("#promo-err").textContent = "";
     openDlg($("#promo-dlg"));
   }
@@ -753,14 +757,14 @@ dialog::backdrop { background: rgba(10,10,11,.55); }
     var b = e.target.closest("button"); if (!b) return;
     if (b.dataset.pedit) openPromo(promoById(b.dataset.pedit));
     if (b.dataset.pdel) delPromo(promoById(b.dataset.pdel));
-    if (b.dataset.pmail) openSend(promoById(b.dataset.pmail));
+    if (b.dataset.pmail) mailNow(promoById(b.dataset.pmail));
   });
   $("#promo-form").addEventListener("submit", function (e) {
     e.preventDefault();
     var err = $("#promo-err"), d = $("#promo-dlg"), btn = $("#promo-go"), label = btn.textContent;
     var data = { title: $("#pr-title").value.trim(), offer: $("#pr-offer").value.trim(), ends: $("#pr-ends").value, details: $("#pr-details").value.trim() };
     err.textContent = "";
-    if (!data.title) { err.textContent = "Give the special a title."; $("#pr-title").focus(); return; }
+    if (!data.title) { err.textContent = "Give it a title. It\u2019s also the email subject."; $("#pr-title").focus(); return; }
     var mail = $("#pr-mail").checked && !$("#pr-mailrow").hidden, editingId = promoEditing && promoEditing.id;
     busy(d, true, btn, "Saving\u2026");
     var img = promoImg && promoImg !== "none" ? prepare({ file: promoImg.file, caption: data.title }, 0) : Promise.resolve(null);
@@ -779,8 +783,11 @@ dialog::backdrop { background: rgba(10,10,11,.55); }
         var saved = editingId ? promoById(editingId) : dd.site.promotions[0];
         if (r && saved) previews["promo:" + saved.id] = promoImg.url;
         busy(d, false, btn, label); d.close(); renderPromos();
-        status("ok", "Special saved. It will show on the website in a few minutes.");
-        if (mail && saved) openSend(saved);
+        if (!mail || !saved) { status("ok", (editingId ? "Saved" : "Posted") + ". It will show on the website in a few minutes."); return; }
+        status("busy", "Posted. Emailing your subscribers\u2026");
+        return emailPromo(saved, r ? promoImg.file : null).then(function (j) {
+          status("ok", "Posted, and emailed to " + j.sent + " subscriber" + (j.sent === 1 ? "" : "s") + ". It will show on the website in a few minutes.");
+        }, function (x) { status("bad", "Posted on the website, but the email wasn\u2019t sent: " + x.message + " Use the Email button to try again."); });
       });
     }).catch(function (x) { busy(d, false, btn, label); err.textContent = x.status ? failMsg(x) : x.message; });
   });
@@ -851,6 +858,31 @@ dialog::backdrop { background: rgba(10,10,11,.55); }
 
   // Compose and send
   var siteUrl = new URL("./", location.href).href;
+  // A JPEG copy of the poster to put inside the email (WebP doesn't show in every email app)
+  function posterJpeg(source) {
+    var load = source instanceof Blob ? createImageBitmap(source, { imageOrientation: "from-image" }) : new Promise(function (res, rej) { var i = new Image(); i.onload = function () { res(i); }; i.onerror = rej; i.src = source; });
+    return load.then(function (img) {
+      var w = Math.min(1000, img.width), h = Math.round(img.height * w / img.width);
+      var c = document.createElement("canvas"); c.width = w; c.height = h;
+      var x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, w, h); x.drawImage(img, 0, 0, w, h);
+      return c.toDataURL("image/jpeg", .85).split(",")[1];
+    }).catch(function () { return null; });
+  }
+  function emailPromo(p, file) {
+    var src = file || (p.image ? previews["promo:" + p.id] || "img/" + p.image : null);
+    return (src ? posterJpeg(src) : Promise.resolve(null)).then(function (jpg) {
+      var body = { action: "send", subject: p.title + (p.offer ? " \u2013 " + p.offer : ""), message: promoText(p), link: siteUrl + "#specials", linkText: "See it on our website" };
+      if (jpg) body.image = jpg;
+      return nl(body);
+    }).then(function (j) { quota = j.quota; if (subs) drawSubs(); return j; });
+  }
+  function mailNow(p) {
+    if (!p || !nlReady()) return;
+    var n = subs ? activeSubs().length : 0;
+    if (!confirm("Email \u201c" + p.title + "\u201d to " + (n ? n + " subscriber" + (n === 1 ? "" : "s") : "all subscribers") + " now?")) return;
+    status("busy", "Emailing your subscribers\u2026");
+    emailPromo(p).then(function (j) { status("ok", "Emailed to " + j.sent + " subscriber" + (j.sent === 1 ? "" : "s") + "."); }, function (x) { status("bad", x.message); });
+  }
   function promoText(p) {
     return [p.offer ? p.offer + "!" : "", p.details || "", p.ends ? "Valid until " + niceDate(p.ends) + "." : "", "", "Book on WhatsApp: 066 132 2462"].filter(function (l, i, a) { return l || (i && a[i - 1]); }).join("\n").trim();
   }
@@ -867,6 +899,7 @@ dialog::backdrop { background: rgba(10,10,11,.55); }
     $("#sd-subject").value = p ? p.title + (p.offer ? " \u2013 " + p.offer : "") : "";
     $("#sd-msg").value = p ? promoText(p) : "";
     $("#send-form").dataset.link = p ? siteUrl + "#specials" : siteUrl;
+    $("#send-form").dataset.promo = p ? p.id : "";
   }
   $("#sd-pick").addEventListener("change", function (e) { fillFrom(promoById(e.target.value)); });
   $("#send-btn").addEventListener("click", function () { openSend(null); });
@@ -879,7 +912,12 @@ dialog::backdrop { background: rgba(10,10,11,.55); }
     if (!confirm("Send \u201c" + subject + "\u201d to " + (n ? n + " subscriber" + (n === 1 ? "" : "s") : "all subscribers") + " now?")) return;
     var d = $("#send-dlg"), btn = $("#send-go"), link = e.target.dataset.link || siteUrl;
     busy(d, true, btn, "Sending\u2026");
-    nl({ action: "send", subject: subject, message: msg, link: link, linkText: link.indexOf("#specials") > -1 ? "See the special" : "Visit our website" })
+    var pp = promoById(e.target.dataset.promo), src = pp && pp.image ? previews["promo:" + pp.id] || "img/" + pp.image : null;
+    (src ? posterJpeg(src) : Promise.resolve(null)).then(function (jpg) {
+      var body = { action: "send", subject: subject, message: msg, link: link, linkText: link.indexOf("#specials") > -1 ? "See it on our website" : "Visit our website" };
+      if (jpg) body.image = jpg;
+      return nl(body);
+    })
       .then(function (j) { quota = j.quota; busy(d, false, btn, "Send"); d.close(); status("ok", "Sent to " + j.sent + " subscriber" + (j.sent === 1 ? "" : "s") + "."); if (subs) drawSubs(); })
       .catch(function (x) { busy(d, false, btn, "Send"); err.textContent = x.message; });
   });

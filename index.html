@@ -301,7 +301,8 @@ main { padding-top: var(--header-h, 147px); }
 .specials-sec { background: var(--bg); }
 .specials { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 360px)); justify-content: center; gap: 18px; margin-top: 44px; }
 .special { display: flex; flex-direction: column; background: var(--bg-2); border: 1px solid var(--g3); border-radius: 20px; overflow: hidden; text-align: left; }
-.special img { width: 100%; aspect-ratio: 4/3; object-fit: cover; object-position: 50% 30%; }
+.special .sp-poster { display: block; background: var(--g3); cursor: zoom-in; }
+.special .sp-poster img { width: 100%; height: auto; display: block; }
 .special .sp-body { padding: 22px 22px 24px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
 .special .sp-offer { align-self: flex-start; padding: 4px 12px; border-radius: 999px; background: var(--accent); color: #fff; font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; }
 .special h3 { font-size: 1.45rem; }
@@ -1538,7 +1539,7 @@ footer h3 { color: var(--fg); }
     $("#specials-list").innerHTML = list.map(function (p) {
       var ends = p.ends ? new Date(p.ends + "T00:00").toLocaleDateString("en-ZA", { day: "numeric", month: "long", year: "numeric" }) : "";
       var ask = "https://wa.me/" + WA + "?text=" + encodeURIComponent("Hi J Masocha Photography! I'm interested in your special: " + p.title + (p.offer ? " (" + p.offer + ")" : "") + ".");
-      return '<article class="special fade">' + (p.image ? '<img src="img/' + esc(p.image) + '" alt="" loading="lazy">' : "") +
+      return '<article class="special fade">' + (p.image ? '<a class="sp-poster" href="img/' + esc(p.image) + '" target="_blank" rel="noopener" aria-label="Open poster: ' + esc(p.title) + '"><img src="img/' + esc(p.image) + '" alt="' + esc(p.title) + '" loading="lazy"></a>' : "") +
         '<div class="sp-body">' + (p.offer ? '<span class="sp-offer">' + esc(p.offer) + "</span>" : "") + "<h3>" + esc(p.title) + "</h3>" +
         (p.details ? "<p>" + esc(p.details) + "</p>" : "") + (ends ? '<span class="sp-ends">Valid until ' + ends + "</span>" : "") +
         '<a class="btn btn--solid" href="' + ask + '" target="_blank" rel="noopener">Book this special</a></div></article>';
