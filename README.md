@@ -2,35 +2,49 @@
 
 Website for J Masocha Photography, a photography, videography and printing studio in Pretoria Central.
 
-It is a single static page (`index.html`) with its photos in `img/`. There is no WordPress, database or build step. Upload the files to any web host, or turn on GitHub Pages for this repository.
+It is a static page (`index.html`) with its photos in `img/`, plus a private website manager (`admin.html`) for the owner. There is no WordPress, database or build step. It's made to run on GitHub Pages.
 
 ## What's on the page
 
-- Header with dropdown menus (About, Gallery, Photo Session Information, Our Services, Packages & Pricing, Printed Products, Contact), a social media button and a light/dark switch
-- Gallery grouped by backdrop colour (dark, grey, white, colour, outdoors), with category filters, an "All photos" window and a full-screen viewer (slideshow, zoom, share)
-- Photo sessions, services, a packages request form, a print showcase with a print order form, about, team and Google reviews
+- Header with dropdown menus (About, Gallery, Photo Session Information, Specials, Our Services, Packages & Pricing, Printed Products, Contact) and a social media button
+- Current specials (shown only while a special is running)
+- Gallery grouped by backdrop colour (dark, grey, white, colour, outdoors), with a category filter, a backdrop timeline, an "All photos" window and a full-screen viewer (slideshow, zoom, share)
+- Photo sessions, services, the Adult Birthday price list, a packages request form, a print showcase with a print order form, about, team and Google reviews
 - Contact window (email, WhatsApp or call), newsletter sign-up and footer
 
 Bookings, print orders and contact messages open WhatsApp or the visitor's email app with the details already filled in, so no server is needed.
 
-## Updating the site
+## Website manager (owner login)
 
-All settings are near the top of the `<script>` section in `index.html`.
+Open **`/admin.html`** on the live site (for example `https://carvenmaceke.github.io/J-mosocha/admin.html`). It isn't linked from the website.
+
+- **Gallery:** add photos (choose the backdrop and one or more categories), edit captions and categories, or delete photos. Photos are resized automatically.
+- **Specials:** post current sales or promotions with an offer, end date and optional picture. They show in "Current specials" on the website and hide themselves after the end date.
+- **Subscribers:** see everyone who subscribed, remove people, download the list, and email a promotion to all subscribers. This needs the free Google Sheet set-up in [`newsletter/README.md`](newsletter/README.md).
+
+Every change is saved straight into this repository as a commit, and the website updates within a few minutes.
+
+### First-time set-up on a device
+
+1. On GitHub, create a **fine-grained personal access token**: Settings → Developer settings → Fine-grained tokens → Generate new token.
+   - Repository access: **Only select repositories → J-mosocha**
+   - Permissions: **Contents → Read and write**
+2. Open `admin.html`, paste the token and choose a password.
+
+The token is stored only in that browser, locked with your password, and from then on you log in with the password alone. To use another phone or computer, repeat the set-up there with the same token or a new one. If the token expires, choose "Forgot password? Set up this device again" on the login screen and paste a new token.
+
+## Updating the site by hand
+
+Most settings are near the top of the `<script>` section in `index.html`.
 
 | What | Where to change it |
 | --- | --- |
 | Phone/WhatsApp number and email | `var WA = "27661322462", MAIL = "wanhloni@gmail.com";` |
 | Facebook, TikTok and Instagram links | `var SOCIAL = { facebook: "", tiktok: "", instagram: "" };` (an empty link shows "coming soon") |
-| Newsletter list (Mailchimp, Brevo or Formspree form URL) | `var NEWSLETTER_URL = "";` (empty means sign-ups arrive by email) |
-| Gallery photos and categories | `var TONES = [ ... ]` |
-
-### Adding a gallery photo
-
-1. Save two WebP versions in `img/`: `name-700.webp` (about 700px wide) and `name-1600.webp` (about 1600px wide).
-2. Add a line to the right backdrop group in `TONES`:
-   `["name", "Caption", "categories", width, height]`, where width and height are the size of the 700px file and categories are any of `kids women men couples family maternity graduation birthdays outdoor`.
-3. Category counts and filters update automatically.
+| Adult Birthday prices | `var PACKAGES = [ ... ]` |
+| Gallery photos | `gallery.js` (easier from the website manager) |
+| Specials and the newsletter connection | `site.js` (easier from the website manager) |
 
 ## Publishing with GitHub Pages
 
-Settings → Pages → Deploy from a branch → `main` / root. The site will then be available at `https://carvenmaceke.github.io/j-mosocha/`, or at your own domain if you add one.
+Settings → Pages → Deploy from a branch → `main` / root. The site will then be available at `https://carvenmaceke.github.io/J-mosocha/`, or at your own domain if you add one.

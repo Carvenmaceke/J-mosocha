@@ -1,0 +1,916 @@
+<!doctype html>
+<html lang="en-ZA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Website Manager</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f2f2f1; --bg-2: #e7e7e5; --card: #fbfbfa; --fg: #1d1d1f; --fg-2: #55534f; --muted: #8e8b86; --line: rgba(0,0,0,.1);
+  --accent: #9a7a4a; --danger: #c2412d; --ok: #2f7d4f; --font: "Lato", "Helvetica Neue", Arial, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 400 16px/1.6 var(--font); -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { font-weight: 400; margin: 0; line-height: 1.2; }
+img { display: block; max-width: 100%; }
+button, input, select, textarea { font: inherit; color: inherit; }
+a { color: inherit; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+[hidden] { display: none !important; }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 20px; border: 1px solid var(--fg); border-radius: 999px; background: transparent; cursor: pointer; font-size: .92rem; text-decoration: none; transition: background .2s, color .2s, opacity .2s; }
+.btn:hover { background: var(--fg); color: var(--bg); }
+.btn.solid { background: var(--fg); color: var(--bg); }
+.btn.solid:hover { background: transparent; color: var(--fg); }
+.btn.danger { border-color: var(--danger); color: var(--danger); }
+.btn.danger:hover, .btn.danger.solid { background: var(--danger); color: #fff; }
+.btn:disabled { opacity: .45; pointer-events: none; }
+.btn svg { width: 16px; height: 16px; }
+.btn:focus-visible, .chip input:focus-visible + span, .tone-opt input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.field { display: grid; gap: 6px; margin-bottom: 14px; }
+.field label, .label { font-size: .74rem; text-transform: uppercase; letter-spacing: .14em; color: var(--fg-2); }
+.field input, .field select { width: 100%; padding: 11px 14px; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+.field input:focus, .field select:focus { outline: none; border-color: var(--fg); }
+.hint { font-size: .85rem; color: var(--muted); }
+.err { color: var(--danger); font-size: .9rem; min-height: 1.4em; margin: 6px 0 0; }
+
+/* Login / setup */
+.gate { min-height: 100svh; display: grid; place-items: center; padding: 24px 16px; }
+.gate-box { width: min(440px, 100%); background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 34px 30px; box-shadow: 0 20px 50px rgba(0,0,0,.08); }
+.gate-box .logo { display: flex; align-items: center; gap: 10px; color: var(--accent); font-size: .78rem; letter-spacing: .2em; text-transform: uppercase; margin-bottom: 14px; }
+.gate-box .logo svg { width: 22px; height: 22px; }
+.gate-box h1 { font-size: 1.8rem; margin-bottom: 6px; }
+.gate-box > p { color: var(--fg-2); margin: 0 0 22px; }
+.gate-box .btn { width: 100%; margin-top: 6px; }
+.gate-box details { margin: 4px 0 18px; font-size: .92rem; color: var(--fg-2); }
+.gate-box summary { cursor: pointer; color: var(--fg); }
+.gate-box ol { padding-left: 20px; margin: 10px 0 0; }
+.gate-box ol li { margin-bottom: 6px; }
+.linkish { background: none; border: 0; padding: 0; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; font-size: .85rem; margin-top: 16px; }
+
+/* App */
+.top { position: sticky; top: 0; z-index: 20; background: rgba(242,242,241,.92); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+.top .in { max-width: 1180px; margin: 0 auto; padding: 12px 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.top h1 { font-size: 1.25rem; margin-right: auto; display: flex; align-items: center; gap: 10px; }
+.top h1 svg { width: 20px; height: 20px; color: var(--accent); }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 24px 16px 80px; }
+.status { display: none; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 12px; margin-bottom: 18px; font-size: .95rem; }
+.status.show { display: flex; }
+.status.busy { background: #fff; border: 1px solid var(--line); }
+.status.ok { background: #e6f2ea; color: var(--ok); }
+.status.bad { background: #f8e4e0; color: var(--danger); }
+.spin { width: 16px; height: 16px; border: 2px solid var(--line); border-top-color: var(--fg); border-radius: 50%; animation: spin .8s linear infinite; flex: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.bar { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+.bar .field { margin: 0; min-width: 200px; }
+.bar p { margin: 0 0 0 auto; color: var(--muted); font-size: .9rem; }
+
+.group { margin-bottom: 30px; }
+.group h2 { font-size: 1.3rem; display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.dot { width: 13px; height: 13px; border-radius: 50%; background: var(--sw); box-shadow: 0 0 0 1px rgba(0,0,0,.2); flex: none; }
+.group h2 small { color: var(--muted); font-size: .85rem; font-style: italic; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
+.card .ph { aspect-ratio: 4/5; background: var(--bg-2) center/cover no-repeat; position: relative; }
+.card .ph img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+.card .ph .new { position: absolute; top: 8px; left: 8px; background: var(--accent); color: #fff; font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; }
+.card .body { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.card .cap { font-size: .95rem; line-height: 1.3; }
+.tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.tags span { font-size: .72rem; padding: 2px 8px; border-radius: 999px; background: var(--bg-2); color: var(--fg-2); }
+.card .acts { display: flex; gap: 6px; margin-top: auto; }
+.card .acts button { flex: 1; padding: 7px 8px; border-radius: 8px; border: 1px solid var(--line); background: #fff; cursor: pointer; font-size: .82rem; }
+.card .acts button:hover { border-color: var(--fg); }
+.card .acts .del { color: var(--danger); }
+.card .acts .del:hover { border-color: var(--danger); background: var(--danger); color: #fff; }
+.empty { color: var(--muted); font-style: italic; padding: 14px 0; }
+
+/* Panels (add / edit / delete) */
+dialog { border: 0; padding: 0; background: transparent; max-width: 100vw; max-height: 100svh; }
+dialog::backdrop { background: rgba(10,10,11,.55); }
+.panel { width: min(720px, calc(100vw - 24px)); max-height: calc(100svh - 24px); overflow-y: auto; background: var(--card); border-radius: 20px; padding: 26px; box-shadow: 0 30px 80px rgba(0,0,0,.3); }
+.panel.small { width: min(440px, calc(100vw - 24px)); }
+.panel-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 18px; }
+.panel-head h2 { font-size: 1.5rem; }
+.x { width: 38px; height: 38px; border: 0; border-radius: 50%; background: none; cursor: pointer; display: grid; place-items: center; }
+.x:hover { background: var(--bg-2); }
+.x svg { width: 20px; height: 20px; }
+.drop { display: grid; place-items: center; gap: 6px; text-align: center; padding: 28px 16px; border: 2px dashed var(--line); border-radius: 14px; cursor: pointer; transition: border-color .2s, background .2s; }
+.drop:hover, .drop.over { border-color: var(--accent); background: #fff; }
+.drop svg { width: 30px; height: 30px; color: var(--accent); }
+.drop b { font-weight: 400; }
+.picked { display: grid; gap: 10px; margin: 16px 0 6px; }
+.pick { display: grid; grid-template-columns: 64px 1fr auto; gap: 12px; align-items: center; }
+.pick img { width: 64px; height: 80px; object-fit: cover; border-radius: 8px; background: var(--bg-2); }
+.pick input { width: 100%; padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+.pick button { border: 0; background: none; cursor: pointer; color: var(--muted); padding: 6px; }
+.pick button:hover { color: var(--danger); }
+.section { margin-top: 18px; }
+.tones, .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.tone-opt, .chip { position: relative; }
+.tone-opt input, .chip input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.tone-opt span, .chip span { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; background: #fff; font-size: .9rem; cursor: pointer; transition: border-color .2s, background .2s, color .2s; }
+.tone-opt input:checked + span, .chip input:checked + span { border-color: var(--fg); background: var(--fg); color: var(--bg); }
+.panel-foot { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; flex-wrap: wrap; }
+.confirm-ph { width: 100%; max-height: 260px; object-fit: contain; border-radius: 12px; background: var(--bg-2); margin-bottom: 14px; }
+.tabs { max-width: 1180px; margin: 0 auto; padding: 0 16px; display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+.tabs button { flex: none; border: 0; background: none; padding: 10px 14px 12px; cursor: pointer; color: var(--fg-2); border-bottom: 2px solid transparent; font-size: .95rem; }
+.tabs button[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--accent); }
+.tabs button:hover { color: var(--fg); }
+.tabs button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.icon { width: 40px; height: 40px; padding: 0; }
+.field textarea { width: 100%; padding: 11px 14px; border: 1px solid var(--line); border-radius: 10px; background: #fff; resize: vertical; min-height: 110px; }
+.field textarea:focus { outline: none; border-color: var(--fg); }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+@media (max-width: 560px) { .row2 { grid-template-columns: 1fr; } }
+.check { display: flex; gap: 10px; align-items: flex-start; margin-top: 14px; font-size: .95rem; cursor: pointer; }
+.check input { width: 18px; height: 18px; margin-top: 3px; accent-color: var(--accent); flex: none; }
+.promos { display: grid; gap: 12px; }
+.promo { display: grid; grid-template-columns: 110px 1fr auto; gap: 16px; align-items: center; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 12px; }
+.promo .pimg { width: 110px; aspect-ratio: 4/3; border-radius: 10px; background: var(--bg-2) center/cover no-repeat; display: grid; place-items: center; color: var(--muted); font-size: .75rem; }
+.promo h3 { font-size: 1.1rem; }
+.promo p { margin: 2px 0 0; color: var(--fg-2); font-size: .9rem; }
+.promo .badge { display: inline-block; font-size: .72rem; padding: 2px 9px; border-radius: 999px; background: var(--bg-2); color: var(--fg-2); margin-left: 6px; vertical-align: middle; }
+.promo .badge.live { background: #e6f2ea; color: var(--ok); }
+.promo .acts { display: flex; gap: 6px; }
+.promo .acts button { padding: 7px 12px; border-radius: 8px; border: 1px solid var(--line); background: #fff; cursor: pointer; font-size: .82rem; }
+.promo .acts button:hover { border-color: var(--fg); }
+.promo .acts .del { color: var(--danger); }
+.promo .acts .del:hover { border-color: var(--danger); background: var(--danger); color: #fff; }
+@media (max-width: 640px) { .promo { grid-template-columns: 80px 1fr; } .promo .pimg { width: 80px; } .promo .acts { grid-column: 1 / -1; } .promo .acts button { flex: 1; } }
+.img-pick { display: flex; align-items: center; gap: 14px; margin-top: 8px; }
+.img-pick .pimg { width: 120px; aspect-ratio: 4/3; border-radius: 10px; background: var(--bg-2) center/cover no-repeat; flex: none; }
+.notice { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 24px; max-width: 680px; }
+.notice h2 { font-size: 1.35rem; margin-bottom: 6px; }
+.notice p { color: var(--fg-2); margin: 0 0 14px; }
+.notice ol { margin: 0 0 18px; padding-left: 20px; color: var(--fg-2); }
+.notice ol li { margin-bottom: 6px; }
+.subs-tools { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; }
+.subs-tools input { flex: 1; min-width: 200px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 999px; background: #fff; }
+.subs-tools .meta { color: var(--muted); font-size: .9rem; width: 100%; }
+.table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.table th, .table td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--line); font-size: .93rem; }
+.table th { font-size: .72rem; text-transform: uppercase; letter-spacing: .14em; color: var(--fg-2); font-weight: 400; background: var(--bg-2); }
+.table tr:last-child td { border-bottom: 0; }
+.table td.st span { font-size: .75rem; padding: 2px 9px; border-radius: 999px; background: var(--bg-2); color: var(--fg-2); }
+.table td.st span.active { background: #e6f2ea; color: var(--ok); }
+.table td:last-child { text-align: right; }
+.table button { border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 5px 10px; cursor: pointer; font-size: .8rem; color: var(--danger); }
+.table button:hover { border-color: var(--danger); background: var(--danger); color: #fff; }
+@media (max-width: 560px) { .table th:nth-child(2), .table td:nth-child(2) { display: none; } }
+@media (max-width: 600px) { .panel { padding: 20px 16px; } .bar p { margin-left: 0; width: 100%; } }
+</style>
+</head>
+<body>
+
+<!-- First time on this device: connect to GitHub and choose a password -->
+<section class="gate" id="setup" hidden>
+  <form class="gate-box" id="setup-form" novalidate>
+    <p class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.8"/><path d="m21 15-5-5L5 21"/></svg>J Masocha Photography</p>
+    <h1>Set up the website manager</h1>
+    <p>Connect this device once. After that you only need your password.</p>
+    <details>
+      <summary>How to get a GitHub access key</summary>
+      <ol>
+        <li>Sign in to GitHub and open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Settings &rarr; Developer settings &rarr; Fine-grained tokens</a>.</li>
+        <li>Name it &ldquo;Website manager&rdquo; and pick an expiry date.</li>
+        <li>Under <b>Repository access</b>, choose <b>Only select repositories</b> and pick <b>J-mosocha</b>.</li>
+        <li>Under <b>Permissions &rarr; Contents</b>, choose <b>Read and write</b>.</li>
+        <li>Click <b>Generate token</b> and paste it below.</li>
+      </ol>
+    </details>
+    <div class="field"><label for="s-token">GitHub access key</label><input id="s-token" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_…"></div>
+    <div class="field"><label for="s-pass">Choose a password</label><input id="s-pass" type="password" autocomplete="new-password" minlength="8"><span class="hint">At least 8 characters.</span></div>
+    <div class="field"><label for="s-pass2">Repeat password</label><input id="s-pass2" type="password" autocomplete="new-password"></div>
+    <button class="btn solid" type="submit" id="s-go">Connect</button>
+    <p class="err" id="s-err" role="alert"></p>
+  </form>
+</section>
+
+<!-- Returning: password only -->
+<section class="gate" id="login" hidden>
+  <form class="gate-box" id="login-form" novalidate>
+    <p class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.8"/><path d="m21 15-5-5L5 21"/></svg>J Masocha Photography</p>
+    <h1>Owner login</h1>
+    <p>Manage the photos in your gallery.</p>
+    <input type="text" name="username" value="owner" autocomplete="username" hidden>
+    <div class="field"><label for="l-pass">Password</label><input id="l-pass" type="password" autocomplete="current-password" autofocus></div>
+    <button class="btn solid" type="submit" id="l-go">Log in</button>
+    <p class="err" id="l-err" role="alert"></p>
+    <button class="linkish" type="button" id="l-reset">Forgot password? Set up this device again</button>
+  </form>
+</section>
+
+<!-- Gallery manager -->
+<div id="app" hidden>
+  <header class="top">
+    <div class="in">
+      <h1><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.8"/><path d="m21 15-5-5L5 21"/></svg>Website manager</h1>
+      <a class="btn" href="./" target="_blank" rel="noopener">View site</a>
+      <button class="btn icon" type="button" id="settings-btn" aria-label="Settings" title="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+      <button class="btn" type="button" id="logout">Log out</button>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Sections">
+      <button type="button" role="tab" aria-selected="true" aria-controls="tab-gallery" data-tab="gallery">Gallery</button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="tab-specials" data-tab="specials">Specials</button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="tab-subs" data-tab="subs">Subscribers</button>
+    </nav>
+  </header>
+  <main class="wrap">
+    <div class="status" id="status" role="status" aria-live="polite"></div>
+    <section id="tab-gallery" role="tabpanel">
+      <div class="bar">
+        <button class="btn solid" type="button" id="add-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Add photos</button>
+        <div class="field"><label for="show" class="sr">Show</label><select id="show"></select></div>
+        <p>Changes appear on the website within a few minutes.</p>
+      </div>
+      <div id="groups"></div>
+    </section>
+    <section id="tab-specials" role="tabpanel" hidden>
+      <div class="bar">
+        <button class="btn solid" type="button" id="promo-add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>New special</button>
+        <p>Specials show on the website until their end date, then hide on their own.</p>
+      </div>
+      <div class="promos" id="promos"></div>
+    </section>
+    <section id="tab-subs" role="tabpanel" hidden>
+      <div id="subs-setup" class="notice" hidden>
+        <h2>Connect your subscriber list</h2>
+        <p>Subscribers are kept in a free Google Sheet, and promotions are sent from your Gmail. Set it up once:</p>
+        <ol>
+          <li>Follow the steps in <b>newsletter/README.md</b> in your website files (about 5 minutes).</li>
+          <li>Open <b>Settings</b> (the gear above) and paste the <b>web app URL</b> and <b>admin key</b>.</li>
+        </ol>
+        <button class="btn solid" type="button" data-open-settings>Open settings</button>
+      </div>
+      <div id="subs-app" hidden>
+        <div class="bar">
+          <button class="btn solid" type="button" id="send-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>Send a promotion</button>
+          <button class="btn" type="button" id="subs-csv">Download list</button>
+          <button class="btn" type="button" id="subs-reload">Refresh</button>
+        </div>
+        <div class="subs-tools"><input type="search" id="subs-q" placeholder="Search email" aria-label="Search subscribers"><span class="meta" id="subs-meta"></span></div>
+        <div id="subs-list"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Add photos -->
+<dialog id="add-dlg" aria-labelledby="add-title">
+  <form class="panel" id="add-form" method="dialog" novalidate>
+    <div class="panel-head"><h2 id="add-title">Add photos</h2><button class="x" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <label class="drop" id="drop">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+      <b>Choose photos</b><span class="hint">or drag them here &middot; JPG, PNG or WebP</span>
+      <input class="sr" type="file" id="files" accept="image/jpeg,image/png,image/webp" multiple>
+    </label>
+    <div class="picked" id="picked"></div>
+    <div class="section"><span class="label">Backdrop</span><div class="tones" id="add-tones"></div></div>
+    <div class="section"><span class="label">Categories</span> <span class="hint">pick one or more</span><div class="chips" id="add-cats"></div></div>
+    <p class="err" id="add-err" role="alert"></p>
+    <div class="panel-foot"><button class="btn" type="button" data-close>Cancel</button><button class="btn solid" type="submit" id="add-go">Upload</button></div>
+  </form>
+</dialog>
+
+<!-- Edit a photo -->
+<dialog id="edit-dlg" aria-labelledby="edit-title">
+  <form class="panel" id="edit-form" method="dialog" novalidate>
+    <div class="panel-head"><h2 id="edit-title">Edit photo</h2><button class="x" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <img class="confirm-ph" id="edit-img" alt="">
+    <div class="field"><label for="edit-cap">Caption</label><input id="edit-cap" maxlength="60"></div>
+    <div class="section"><span class="label">Backdrop</span><div class="tones" id="edit-tones"></div></div>
+    <div class="section"><span class="label">Categories</span> <span class="hint">pick one or more</span><div class="chips" id="edit-cats"></div></div>
+    <p class="err" id="edit-err" role="alert"></p>
+    <div class="panel-foot"><button class="btn" type="button" data-close>Cancel</button><button class="btn solid" type="submit" id="edit-go">Save changes</button></div>
+  </form>
+</dialog>
+
+<!-- Special (create / edit) -->
+<dialog id="promo-dlg" aria-labelledby="promo-title">
+  <form class="panel" id="promo-form" method="dialog" novalidate>
+    <div class="panel-head"><h2 id="promo-title">New special</h2><button class="x" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <div class="field"><label for="pr-title">Title *</label><input id="pr-title" maxlength="70" placeholder="e.g. Mother&rsquo;s Day mini sessions"></div>
+    <div class="row2">
+      <div class="field"><label for="pr-offer">Offer</label><input id="pr-offer" maxlength="30" placeholder="e.g. 20% off or R499"></div>
+      <div class="field"><label for="pr-ends">Ends on</label><input id="pr-ends" type="date"></div>
+    </div>
+    <div class="field"><label for="pr-details">Details</label><textarea id="pr-details" maxlength="600" placeholder="What&rsquo;s included, dates, how to book&hellip;"></textarea></div>
+    <div class="section"><span class="label">Picture</span> <span class="hint">optional</span>
+      <div class="img-pick"><span class="pimg" id="pr-imgprev"></span><div><label class="btn" for="pr-file">Choose picture</label> <button class="linkish" type="button" id="pr-imgclear" style="margin:0 0 0 8px">Remove</button><input class="sr" type="file" id="pr-file" accept="image/jpeg,image/png,image/webp"></div></div>
+    </div>
+    <label class="check" id="pr-mailrow"><input type="checkbox" id="pr-mail"> <span>Also email this special to all subscribers</span></label>
+    <p class="err" id="promo-err" role="alert"></p>
+    <div class="panel-foot"><button class="btn" type="button" data-close>Cancel</button><button class="btn solid" type="submit" id="promo-go">Post special</button></div>
+  </form>
+</dialog>
+
+<!-- Send an email to subscribers -->
+<dialog id="send-dlg" aria-labelledby="send-title">
+  <form class="panel" id="send-form" method="dialog" novalidate>
+    <div class="panel-head"><h2 id="send-title">Send a promotion</h2><button class="x" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <div class="field"><label for="sd-pick">Start from a special</label><select id="sd-pick"></select></div>
+    <div class="field"><label for="sd-subject">Subject *</label><input id="sd-subject" maxlength="100"></div>
+    <div class="field"><label for="sd-msg">Message *</label><textarea id="sd-msg" maxlength="2000" style="min-height:160px"></textarea></div>
+    <p class="hint" id="sd-who"></p>
+    <p class="err" id="send-err" role="alert"></p>
+    <div class="panel-foot"><button class="btn" type="button" data-close>Cancel</button><button class="btn solid" type="submit" id="send-go">Send</button></div>
+  </form>
+</dialog>
+
+<!-- Settings -->
+<dialog id="set-dlg" aria-labelledby="set-title">
+  <form class="panel" id="set-form" method="dialog" novalidate>
+    <div class="panel-head"><h2 id="set-title">Settings</h2><button class="x" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <h3 style="font-size:1.1rem;margin-bottom:4px">Newsletter</h3>
+    <p class="hint" style="margin:0 0 14px">From your Google Apps Script set-up (see newsletter/README.md).</p>
+    <div class="field"><label for="st-url">Web app URL</label><input id="st-url" type="url" spellcheck="false" placeholder="https://script.google.com/macros/s/&hellip;/exec"></div>
+    <div class="field"><label for="st-key">Admin key</label><input id="st-key" type="password" autocomplete="off" spellcheck="false"><span class="hint">Saved on this device only, locked with your password.</span></div>
+    <p class="err" id="set-err" role="alert"></p>
+    <div class="panel-foot"><button class="btn" type="button" data-close>Cancel</button><button class="btn solid" type="submit" id="set-go">Save</button></div>
+  </form>
+</dialog>
+
+<!-- Delete a photo -->
+<dialog id="del-dlg" aria-labelledby="del-title">
+  <form class="panel small" id="del-form" method="dialog" novalidate>
+    <div class="panel-head"><h2 id="del-title">Delete this photo?</h2><button class="x" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <img class="confirm-ph" id="del-img" alt="">
+    <p id="del-cap" style="margin:0"></p>
+    <p class="hint">It will be removed from the website. This can&rsquo;t be undone here.</p>
+    <div class="panel-foot"><button class="btn" type="button" data-close>Cancel</button><button class="btn danger solid" type="submit" id="del-go">Delete photo</button></div>
+  </form>
+</dialog>
+
+<script>
+(function () {
+  // Where the website lives on GitHub
+  var OWNER = "Carvenmaceke", REPO = "J-mosocha", BRANCH = "main", DATA = "gallery.js";
+  var API = "https://api.github.com/repos/" + OWNER + "/" + REPO;
+  var KEY_STORE = "jm-admin-key";
+
+  // Same backdrops and categories as the website
+  var TONES = [["dark", "Dark & dramatic", "#0d0d0e"], ["grey", "Studio grey", "#8f8f91"], ["white", "Bright & white", "#ffffff"], ["colour", "Colour & themed sets", "#f3c9c1"], ["outdoor", "Outdoors", "#9db08f"]];
+  var CATS = [["kids", "Kids"], ["women", "Women"], ["men", "Men"], ["couples", "Couples"], ["family", "Family"], ["maternity", "Maternity"], ["graduation", "Graduation"], ["birthdays", "Birthdays"], ["outdoor", "Outdoor"]];
+  var catName = function (c) { var f = CATS.filter(function (x) { return x[0] === c; })[0]; return f ? f[1] : c; };
+
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+
+  var token = null, nlKey = "", pass = null, gallery = null, site = null, fresh = {}, previews = {};
+
+  /* ---------- Key storage: the GitHub key is kept on this device, locked with the owner's password ---------- */
+  var enc = new TextEncoder(), dec = new TextDecoder();
+  function b64(buf) { var s = "", b = new Uint8Array(buf); for (var i = 0; i < b.length; i++) s += String.fromCharCode(b[i]); return btoa(s); }
+  function unb64(s) { var bin = atob(s), b = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) b[i] = bin.charCodeAt(i); return b; }
+  function deriveKey(pass, salt) {
+    return crypto.subtle.importKey("raw", enc.encode(pass), "PBKDF2", false, ["deriveKey"]).then(function (k) {
+      return crypto.subtle.deriveKey({ name: "PBKDF2", salt: salt, iterations: 600000, hash: "SHA-256" }, k, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
+    });
+  }
+  function lock(secret, pass) {
+    var salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12));
+    return deriveKey(pass, salt).then(function (k) { return crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, k, enc.encode(secret)); })
+      .then(function (ct) { return JSON.stringify({ s: b64(salt), i: b64(iv), c: b64(ct) }); });
+  }
+  function unlock(stored, pass) {
+    var o = JSON.parse(stored);
+    return deriveKey(pass, unb64(o.s)).then(function (k) { return crypto.subtle.decrypt({ name: "AES-GCM", iv: unb64(o.i) }, k, unb64(o.c)); })
+      .then(function (pt) { return dec.decode(pt); });
+  }
+  function storedKey() { try { return localStorage.getItem(KEY_STORE); } catch (e) { return null; } }
+
+  /* ---------- GitHub ---------- */
+  function gh(path, opts) {
+    opts = opts || {};
+    return fetch(path.indexOf("http") === 0 ? path : API + path, {
+      method: opts.method || "GET",
+      headers: { Authorization: "Bearer " + (opts.token || token), Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28", "Content-Type": "application/json" },
+      body: opts.body ? JSON.stringify(opts.body) : undefined,
+      cache: "no-store"
+    }).then(function (r) {
+      if (r.status === 204) return null;
+      return r.json().catch(function () { return {}; }).then(function (j) {
+        if (!r.ok) { var e = new Error(j.message || ("GitHub error " + r.status)); e.status = r.status; throw e; }
+        return j;
+      });
+    });
+  }
+  function decodeB64Utf8(s) { return dec.decode(unb64(s.replace(/\n/g, ""))); }
+  function parseGallery(text) {
+    var a = text.indexOf("{", text.indexOf("window.GALLERY")), b = text.lastIndexOf("}");
+    var g = JSON.parse(text.slice(a, b + 1));
+    TONES.forEach(function (t) { if (!g[t[0]]) g[t[0]] = []; });
+    return g;
+  }
+  function writeGallery(g) {
+    var body = "{\n" + TONES.map(function (t) {
+      return "  " + JSON.stringify(t[0]) + ": [" + (g[t[0]].length ? "\n" + g[t[0]].map(function (p) { return "    " + JSON.stringify(p); }).join(",\n") + "\n  " : "") + "]";
+    }).join(",\n") + "\n}";
+    return "// Gallery photos, grouped by backdrop. Managed from admin.html.\n// Each photo: id (its file name in img/ without -700/-1600), caption, categories, and the width and height of the 700px image.\nwindow.GALLERY = " + body + ";\n";
+  }
+  function loadGallery() {
+    return gh("/contents/" + DATA + "?ref=" + BRANCH).then(function (f) { return parseGallery(decodeB64Utf8(f.content)); });
+  }
+  var SITE_FILE = "site.js";
+  function parseSite(text) {
+    var a = text.indexOf("{", text.indexOf("window.SITE")), b = text.lastIndexOf("}");
+    var o = JSON.parse(text.slice(a, b + 1));
+    o.newsletter = o.newsletter || ""; o.promotions = o.promotions || [];
+    return o;
+  }
+  function writeSite(o) {
+    return "// Specials and newsletter settings. Managed from admin.html.\nwindow.SITE = {\n  \"newsletter\": " + JSON.stringify(o.newsletter || "") + ",\n  \"promotions\": [" +
+      (o.promotions.length ? "\n" + o.promotions.map(function (p) { return "    " + JSON.stringify(p); }).join(",\n") + "\n  " : "") + "]\n};\n";
+  }
+  function loadSite() {
+    return gh("/contents/" + SITE_FILE + "?ref=" + BRANCH).then(function (f) { return parseSite(decodeB64Utf8(f.content)); }, function (e) {
+      if (e.status === 404) return { newsletter: "", promotions: [] };
+      throw e;
+    });
+  }
+  // One commit with any number of added files and removed paths, plus updated data files.
+  // change(d) edits the freshly loaded d.gallery / d.site and returns { add: [{path, base64}], remove: [path], message }.
+  function save(change, tries) {
+    tries = tries || 0;
+    var head, d, plan;
+    return gh("/git/ref/heads/" + BRANCH).then(function (ref) {
+      head = ref.object.sha;
+      return Promise.all([gh("/git/commits/" + head), loadGallery(), loadSite()]);
+    }).then(function (r) {
+      d = { gallery: r[1], site: r[2] };
+      var before = { g: writeGallery(d.gallery), s: writeSite(d.site) };
+      plan = change(d);
+      var after = { g: writeGallery(d.gallery), s: writeSite(d.site) };
+      var blobs = plan.add.map(function (f) { return gh("/git/blobs", { method: "POST", body: { content: f.base64, encoding: "base64" } }).then(function (b) { return { path: f.path, mode: "100644", type: "blob", sha: b.sha }; }); });
+      if (after.g !== before.g) blobs.push(gh("/git/blobs", { method: "POST", body: { content: after.g, encoding: "utf-8" } }).then(function (b) { return { path: DATA, mode: "100644", type: "blob", sha: b.sha }; }));
+      if (after.s !== before.s) blobs.push(gh("/git/blobs", { method: "POST", body: { content: after.s, encoding: "utf-8" } }).then(function (b) { return { path: SITE_FILE, mode: "100644", type: "blob", sha: b.sha }; }));
+      return Promise.all(blobs).then(function (entries) {
+        plan.remove.forEach(function (p) { entries.push({ path: p, mode: "100644", type: "blob", sha: null }); });
+        return gh("/git/trees", { method: "POST", body: { base_tree: r[0].tree.sha, tree: entries } });
+      });
+    }).then(function (tree) {
+      return gh("/git/commits", { method: "POST", body: { message: plan.message, tree: tree.sha, parents: [head] } });
+    }).then(function (commit) {
+      return gh("/git/refs/heads/" + BRANCH, { method: "PATCH", body: { sha: commit.sha } });
+    }).then(function () { gallery = d.gallery; site = d.site; return d; }, function (e) {
+      // Someone else saved at the same moment: start again from the latest version
+      if ((e.status === 422 || e.status === 409) && tries < 2) return save(change, tries + 1);
+      throw e;
+    });
+  }
+
+  /* ---------- Screens ---------- */
+  function showScreen(id) { ["setup", "login", "app"].forEach(function (s) { $("#" + s).hidden = s !== id; }); }
+  function start() { if (storedKey()) { showScreen("login"); $("#l-pass").focus(); } else { showScreen("setup"); } }
+
+  $("#setup-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var t = $("#s-token").value.trim(), p = $("#s-pass").value, p2 = $("#s-pass2").value, err = $("#s-err");
+    err.textContent = "";
+    if (!t) { err.textContent = "Paste your GitHub access key."; return; }
+    if (p.length < 8) { err.textContent = "Choose a password of at least 8 characters."; return; }
+    if (p !== p2) { err.textContent = "The passwords don’t match."; return; }
+    var b = $("#s-go"); b.disabled = true; b.textContent = "Checking…";
+    gh("", { token: t }).then(function (repo) {
+      if (!repo.permissions || !repo.permissions.push) throw new Error("This key can read the website but not change it. Give it Contents: Read and write.");
+      return lock(JSON.stringify({ github: t, nlkey: "" }), p);
+    }).then(function (stored) {
+      localStorage.setItem(KEY_STORE, stored);
+      token = t; nlKey = ""; pass = p; $("#setup-form").reset(); enterApp();
+    }).catch(function (x) {
+      err.textContent = x.status === 401 ? "GitHub didn’t accept that key. Check it was copied in full." : x.status === 404 ? "That key can’t see the J-mosocha repository. Give it access to J-mosocha." : x.message;
+    }).then(function () { b.disabled = false; b.textContent = "Connect"; });
+  });
+
+  $("#login-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var b = $("#l-go"), err = $("#l-err"); err.textContent = ""; b.disabled = true; b.textContent = "Logging in…";
+    var pw = $("#l-pass").value;
+    unlock(storedKey(), pw).then(function (t) {
+      var o; try { o = JSON.parse(t); } catch (x) { o = { github: t, nlkey: "" }; }
+      token = o.github; nlKey = o.nlkey || ""; pass = pw; $("#l-pass").value = ""; enterApp();
+    })
+      .catch(function () { err.textContent = "Wrong password."; $("#l-pass").select(); })
+      .then(function () { b.disabled = false; b.textContent = "Log in"; });
+  });
+  $("#l-reset").addEventListener("click", function () {
+    if (!confirm("Remove the saved key from this device? You’ll need your GitHub access key to set it up again.")) return;
+    try { localStorage.removeItem(KEY_STORE); } catch (x) {}
+    showScreen("setup");
+  });
+  $("#logout").addEventListener("click", function () { token = null; nlKey = ""; pass = null; gallery = site = subs = null; showScreen("login"); });
+
+  function enterApp() {
+    showScreen("app"); status("busy", "Loading your gallery…");
+    Promise.all([loadGallery(), loadSite()]).then(function (r) { gallery = r[0]; site = r[1]; status(); render(); renderPromos(); subsView(); }).catch(function (x) {
+      if (x.status === 401) { status("bad", "Your GitHub access key has expired or was removed. Log out and set up this device again."); return; }
+      status("bad", "Couldn’t load the gallery: " + x.message);
+    });
+  }
+
+  /* ---------- Status line ---------- */
+  var stT;
+  function status(kind, msg) {
+    var s = $("#status"); clearTimeout(stT);
+    if (!kind) { s.className = "status"; s.innerHTML = ""; return; }
+    s.className = "status show " + kind;
+    s.innerHTML = (kind === "busy" ? '<span class="spin" aria-hidden="true"></span>' : "") + "<span>" + esc(msg) + "</span>";
+    if (kind === "ok") stT = setTimeout(function () { status(); }, 6000);
+  }
+
+  /* ---------- Gallery list ---------- */
+  $("#show").innerHTML = '<option value="all">All photos</option>' + CATS.map(function (c) { return '<option value="' + c[0] + '">' + c[1] + "</option>"; }).join("");
+  $("#show").addEventListener("change", render);
+  function imgSrc(p) { return previews[p.id] || ("img/" + p.id + "-700." + (p.ext || "webp")); }
+  function render() {
+    var show = $("#show").value;
+    $("#groups").innerHTML = TONES.map(function (t) {
+      var list = gallery[t[0]].filter(function (p) { return show === "all" || p.categories.indexOf(show) > -1; });
+      return '<section class="group"><h2 style="--sw:' + t[2] + '"><span class="dot"></span>' + esc(t[1]) + "</h2>" +
+        (list.length ? '<div class="cards">' + list.map(function (p) {
+          return '<article class="card"><div class="ph"><img src="' + esc(imgSrc(p)) + '" alt="" loading="lazy" onerror="this.style.opacity=0">' + (fresh[p.id] ? '<span class="new">New</span>' : "") + '</div><div class="body"><div class="cap">' + esc(p.caption) + '</div><div class="tags">' +
+            p.categories.map(function (c) { return "<span>" + esc(catName(c)) + "</span>"; }).join("") +
+            '</div><div class="acts"><button type="button" data-edit="' + esc(p.id) + '">Edit</button><button type="button" class="del" data-del="' + esc(p.id) + '">Delete</button></div></div></article>';
+        }).join("") + "</div>" : '<p class="empty">No photos here yet.</p>') + "</section>";
+    }).join("");
+  }
+  function find(id) {
+    for (var i = 0; i < TONES.length; i++) { var l = gallery[TONES[i][0]]; for (var j = 0; j < l.length; j++) if (l[j].id === id) return { tone: TONES[i][0], photo: l[j] }; }
+    return null;
+  }
+  $("#groups").addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (!b) return;
+    if (b.dataset.edit) openEdit(b.dataset.edit);
+    if (b.dataset.del) openDel(b.dataset.del);
+  });
+
+  /* ---------- Shared pickers ---------- */
+  function tonePicker(el, name, value) {
+    el.innerHTML = TONES.map(function (t) { return '<label class="tone-opt"><input type="radio" name="' + name + '" value="' + t[0] + '"' + (t[0] === value ? " checked" : "") + '><span><i class="dot" style="--sw:' + t[2] + '"></i>' + esc(t[1]) + "</span></label>"; }).join("");
+  }
+  function catPicker(el, name, values) {
+    el.innerHTML = CATS.map(function (c) { return '<label class="chip"><input type="checkbox" name="' + name + '" value="' + c[0] + '"' + (values.indexOf(c[0]) > -1 ? " checked" : "") + "><span>" + c[1] + "</span></label>"; }).join("");
+  }
+  function picked(form, name) { return $$('input[name="' + name + '"]:checked', form).map(function (i) { return i.value; }); }
+  function openDlg(d) { if (d.showModal) d.showModal(); else d.setAttribute("open", ""); }
+  $$("dialog").forEach(function (d) {
+    $$("[data-close]", d).forEach(function (b) { b.addEventListener("click", function () { if (!d.busy) d.close(); }); });
+    d.addEventListener("cancel", function (e) { if (d.busy) e.preventDefault(); });
+  });
+  function busy(d, on, btn, label) { d.busy = on; btn.disabled = on; if (label) btn.textContent = label; }
+  function failMsg(x) { return x.status === 401 ? "Your GitHub access key has expired. Log out and set up this device again." : "Couldn’t save: " + x.message; }
+
+  /* ---------- Add photos ---------- */
+  var queue = [];
+  $("#add-btn").addEventListener("click", function () {
+    queue = []; drawQueue(); $("#add-err").textContent = ""; $("#files").value = "";
+    tonePicker($("#add-tones"), "tone", ""); catPicker($("#add-cats"), "cat", []);
+    openDlg($("#add-dlg"));
+  });
+  $("#files").addEventListener("change", function (e) { addFiles(e.target.files); e.target.value = ""; });
+  var drop = $("#drop");
+  ["dragenter", "dragover"].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add("over"); }); });
+  ["dragleave", "drop"].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove("over"); }); });
+  drop.addEventListener("drop", function (e) { addFiles(e.dataTransfer.files); });
+  function niceName(f) { return f.name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " ").replace(/\s+/g, " ").trim().replace(/^./, function (c) { return c.toUpperCase(); }).slice(0, 60); }
+  function addFiles(list) {
+    Array.prototype.forEach.call(list, function (f) {
+      if (!/^image\/(jpeg|png|webp)$/.test(f.type)) { $("#add-err").textContent = f.name + " isn’t a JPG, PNG or WebP photo."; return; }
+      queue.push({ file: f, url: URL.createObjectURL(f), caption: /^(img|dsc|image|photo|whatsapp)/i.test(f.name) ? "" : niceName(f) });
+    });
+    drawQueue();
+  }
+  function drawQueue() {
+    $("#picked").innerHTML = queue.map(function (q, i) {
+      return '<div class="pick"><img src="' + q.url + '" alt=""><input data-i="' + i + '" value="' + esc(q.caption) + '" placeholder="Caption, e.g. 30th birthday" maxlength="60" aria-label="Caption for photo ' + (i + 1) + '"><button type="button" data-rm="' + i + '" aria-label="Remove">&times;</button></div>';
+    }).join("");
+    $("#add-go").textContent = queue.length > 1 ? "Upload " + queue.length + " photos" : "Upload";
+  }
+  $("#picked").addEventListener("input", function (e) { if (e.target.dataset.i) queue[+e.target.dataset.i].caption = e.target.value; });
+  $("#picked").addEventListener("click", function (e) { var b = e.target.closest("[data-rm]"); if (b) { URL.revokeObjectURL(queue[+b.dataset.rm].url); queue.splice(+b.dataset.rm, 1); drawQueue(); } });
+
+  // Make the 700px and 1600px versions the website uses
+  function resize(bitmap, width) {
+    var w = Math.min(width, bitmap.width), h = Math.round(bitmap.height * w / bitmap.width);
+    var c = document.createElement("canvas"); c.width = w; c.height = h;
+    var x = c.getContext("2d"); x.imageSmoothingQuality = "high"; x.drawImage(bitmap, 0, 0, w, h);
+    return new Promise(function (res) { c.toBlob(function (b) {
+      if (b && b.type === "image/webp") return res({ blob: b, ext: "webp", w: w, h: h });
+      c.toBlob(function (j) { res({ blob: j, ext: "jpg", w: w, h: h }); }, "image/jpeg", .85);
+    }, "image/webp", .82); });
+  }
+  function blobB64(b) { return new Promise(function (res, rej) { var r = new FileReader(); r.onload = function () { res(String(r.result).split(",")[1]); }; r.onerror = rej; r.readAsDataURL(b); }); }
+  function slugify(s) { return (s.toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40) || "photo"); }
+  function prepare(q, i) {
+    var load = window.createImageBitmap ? createImageBitmap(q.file, { imageOrientation: "from-image" }).catch(function () { return createImageBitmap(q.file); }) : Promise.reject(new Error("This browser can’t process photos. Try Chrome, Edge or Safari."));
+    return load.then(function (bmp) {
+      return Promise.all([resize(bmp, 700), resize(bmp, 1600)]).then(function (r) {
+        var ext = r[1].ext === "webp" && r[0].ext === "webp" ? "webp" : "jpg";
+        if (ext === "jpg" && (r[0].ext !== "jpg" || r[1].ext !== "jpg")) throw new Error("Couldn’t prepare " + q.file.name + ".");
+        var id = slugify(q.caption || niceName(q.file)) + "-" + Date.now().toString(36) + i;
+        return Promise.all([blobB64(r[0].blob), blobB64(r[1].blob)]).then(function (b) {
+          return { id: id, caption: (q.caption || "").trim(), ext: ext, w: r[0].w, h: r[0].h, small: b[0], large: b[1], url: q.url };
+        });
+      });
+    }).catch(function (x) { throw new Error(x.message && x.message.indexOf("Couldn") === 0 ? x.message : "Couldn’t read " + q.file.name + ". Try a JPG or PNG copy of it."); });
+  }
+  $("#add-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var form = e.target, err = $("#add-err"), tone = picked(form, "tone")[0], cats = picked(form, "cat");
+    err.textContent = "";
+    if (!queue.length) { err.textContent = "Choose at least one photo."; return; }
+    if (!tone) { err.textContent = "Choose the backdrop these photos were taken on."; return; }
+    if (!cats.length) { err.textContent = "Choose at least one category."; return; }
+    var missing = queue.findIndex(function (q) { return !q.caption.trim(); });
+    if (missing > -1) { err.textContent = "Add a caption for each photo."; $('#picked input[data-i="' + missing + '"]').focus(); return; }
+    var d = $("#add-dlg"), btn = $("#add-go");
+    busy(d, true, btn, "Preparing photos…");
+    var n = queue.length;
+    Promise.all(queue.map(prepare)).then(function (ready) {
+      btn.textContent = "Uploading…";
+      return save(function (d) {
+        var g = d.gallery, add = [];
+        ready.forEach(function (r) {
+          var p = { id: r.id, caption: r.caption, categories: cats.slice(), w: r.w, h: r.h };
+          if (r.ext !== "webp") p.ext = r.ext;
+          g[tone].unshift(p);
+          add.push({ path: "img/" + r.id + "-700." + r.ext, base64: r.small }, { path: "img/" + r.id + "-1600." + r.ext, base64: r.large });
+        });
+        return { add: add, remove: [], message: "Add " + (n > 1 ? n + " photos" : "photo “" + ready[0].caption + "”") + " to the gallery" };
+      }).then(function () {
+        ready.forEach(function (r) { fresh[r.id] = true; previews[r.id] = r.url; });
+        queue = []; busy(d, false, btn, "Upload"); d.close(); render();
+        status("ok", (n > 1 ? n + " photos" : "Photo") + " added. They’ll appear on the website in a few minutes.");
+      });
+    }).catch(function (x) { busy(d, false, btn, n > 1 ? "Upload " + n + " photos" : "Upload"); err.textContent = x.status ? failMsg(x) : x.message; });
+  });
+
+  /* ---------- Edit ---------- */
+  var editing = null;
+  function openEdit(id) {
+    var f = find(id); if (!f) return; editing = f;
+    $("#edit-img").src = imgSrc(f.photo); $("#edit-cap").value = f.photo.caption; $("#edit-err").textContent = "";
+    tonePicker($("#edit-tones"), "etone", f.tone); catPicker($("#edit-cats"), "ecat", f.photo.categories);
+    openDlg($("#edit-dlg"));
+  }
+  $("#edit-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var form = e.target, err = $("#edit-err"), cap = $("#edit-cap").value.trim(), tone = picked(form, "etone")[0], cats = picked(form, "ecat");
+    err.textContent = "";
+    if (!cap) { err.textContent = "Add a caption."; return; }
+    if (!cats.length) { err.textContent = "Choose at least one category."; return; }
+    var d = $("#edit-dlg"), btn = $("#edit-go"), id = editing.photo.id;
+    busy(d, true, btn, "Saving…");
+    save(function (d) {
+      var g = d.gallery, p, from, at;
+      TONES.forEach(function (t) { var i = g[t[0]].findIndex(function (x) { return x.id === id; }); if (i > -1) { from = t[0]; at = i; p = g[t[0]].splice(i, 1)[0]; } });
+      if (!p) throw new Error("This photo was already removed.");
+      p.caption = cap; p.categories = cats;
+      // Same backdrop: keep its place. New backdrop: show it first there.
+      if (from === tone) g[tone].splice(at, 0, p); else g[tone].unshift(p);
+      return { add: [], remove: [], message: "Update photo “" + cap + "”" };
+    }).then(function () { busy(d, false, btn, "Save changes"); d.close(); render(); status("ok", "Saved. The website will update in a few minutes."); })
+      .catch(function (x) { busy(d, false, btn, "Save changes"); err.textContent = x.status ? failMsg(x) : x.message; });
+  });
+
+  /* ---------- Delete ---------- */
+  var deleting = null, siteHtml = null;
+  function openDel(id) {
+    var f = find(id); if (!f) return; deleting = f;
+    $("#del-img").src = imgSrc(f.photo); $("#del-cap").textContent = f.photo.caption;
+    openDlg($("#del-dlg"));
+  }
+  $("#del-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var d = $("#del-dlg"), btn = $("#del-go"), id = deleting.photo.id;
+    busy(d, true, btn, "Deleting…");
+    // Photos also used elsewhere on the page (hero, print examples) keep their files
+    (siteHtml ? Promise.resolve(siteHtml) : gh("/contents/index.html?ref=" + BRANCH).then(function (f) { return (siteHtml = decodeB64Utf8(f.content)); }))
+      .then(function (html) {
+        return save(function (d) {
+          var g = d.gallery, p;
+          TONES.forEach(function (t) { var i = g[t[0]].findIndex(function (x) { return x.id === id; }); if (i > -1) p = g[t[0]].splice(i, 1)[0]; });
+          if (!p) throw new Error("This photo was already removed.");
+          var ext = p.ext || "webp", files = html.indexOf("img/" + id + "-") > -1 ? [] : ["img/" + id + "-700." + ext, "img/" + id + "-1600." + ext];
+          return { add: [], remove: files, message: "Remove photo “" + p.caption + "” from the gallery" };
+        });
+      })
+      .then(function () { busy(d, false, btn, "Delete photo"); d.close(); render(); status("ok", "Photo deleted. The website will update in a few minutes."); })
+      .catch(function (x) { busy(d, false, btn, "Delete photo"); d.close(); status("bad", x.status ? failMsg(x) : x.message); });
+  });
+
+  /* ---------- Tabs ---------- */
+  $$(".tabs button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      $$(".tabs button").forEach(function (x) { x.setAttribute("aria-selected", x === b); $("#" + x.getAttribute("aria-controls")).hidden = x !== b; });
+      status();
+      if (b.dataset.tab === "subs") subsView(true);
+    });
+  });
+
+  /* ---------- Specials ---------- */
+  var today = function () { var t = new Date(); return t.getFullYear() + "-" + String(t.getMonth() + 1).padStart(2, "0") + "-" + String(t.getDate()).padStart(2, "0"); };
+  var niceDate = function (s) { return new Date(s + "T00:00").toLocaleDateString("en-ZA", { day: "numeric", month: "long", year: "numeric" }); };
+  function renderPromos() {
+    var list = site.promotions;
+    $("#promos").innerHTML = list.length ? list.map(function (p) {
+      var live = !p.ends || p.ends >= today();
+      return '<article class="promo"><span class="pimg"' + (p.image ? ' style="background-image:url(\'' + esc(previews["promo:" + p.id] || "img/" + p.image) + '\')"' : "") + ">" + (p.image ? "" : "No picture") + "</span><div><h3>" + esc(p.title) +
+        '<span class="badge' + (live ? " live" : "") + '">' + (live ? "Showing" : "Ended") + "</span></h3><p>" + (p.offer ? esc(p.offer) + " &middot; " : "") + (p.ends ? (live ? "Ends " : "Ended ") + niceDate(p.ends) : "No end date") + '</p></div><div class="acts">' +
+        (nlReady() ? '<button type="button" data-pmail="' + p.id + '">Email</button>' : "") + '<button type="button" data-pedit="' + p.id + '">Edit</button><button type="button" class="del" data-pdel="' + p.id + '">Delete</button></div></article>';
+    }).join("") : '<p class="empty">No specials yet. Post one and it will show on the website.</p>';
+  }
+  var promoEditing = null, promoImg = null;
+  function promoById(id) { return site.promotions.filter(function (p) { return p.id === id; })[0]; }
+  function openPromo(p) {
+    promoEditing = p || null; promoImg = null;
+    $("#promo-title").textContent = p ? "Edit special" : "New special";
+    $("#promo-go").textContent = p ? "Save changes" : "Post special";
+    $("#pr-title").value = p ? p.title : ""; $("#pr-offer").value = p ? p.offer || "" : ""; $("#pr-ends").value = p ? p.ends || "" : ""; $("#pr-details").value = p ? p.details || "" : "";
+    $("#pr-ends").min = today();
+    setPromoPrev(p && p.image ? previews["promo:" + p.id] || "img/" + p.image : "");
+    $("#pr-mailrow").hidden = !!p || !nlReady(); $("#pr-mail").checked = false;
+    $("#promo-err").textContent = "";
+    openDlg($("#promo-dlg"));
+  }
+  function setPromoPrev(url) { var el = $("#pr-imgprev"); el.style.backgroundImage = url ? "url('" + url + "')" : ""; $("#pr-imgclear").hidden = !url; el.dataset.has = url ? "1" : ""; }
+  $("#promo-add").addEventListener("click", function () { openPromo(null); });
+  $("#pr-file").addEventListener("change", function (e) {
+    var f = e.target.files[0]; e.target.value = ""; if (!f) return;
+    if (!/^image\/(jpeg|png|webp)$/.test(f.type)) { $("#promo-err").textContent = "Choose a JPG, PNG or WebP picture."; return; }
+    promoImg = { file: f, url: URL.createObjectURL(f) }; setPromoPrev(promoImg.url);
+  });
+  $("#pr-imgclear").addEventListener("click", function () { promoImg = "none"; setPromoPrev(""); });
+  $("#promos").addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (!b) return;
+    if (b.dataset.pedit) openPromo(promoById(b.dataset.pedit));
+    if (b.dataset.pdel) delPromo(promoById(b.dataset.pdel));
+    if (b.dataset.pmail) openSend(promoById(b.dataset.pmail));
+  });
+  $("#promo-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var err = $("#promo-err"), d = $("#promo-dlg"), btn = $("#promo-go"), label = btn.textContent;
+    var data = { title: $("#pr-title").value.trim(), offer: $("#pr-offer").value.trim(), ends: $("#pr-ends").value, details: $("#pr-details").value.trim() };
+    err.textContent = "";
+    if (!data.title) { err.textContent = "Give the special a title."; $("#pr-title").focus(); return; }
+    var mail = $("#pr-mail").checked && !$("#pr-mailrow").hidden, editingId = promoEditing && promoEditing.id;
+    busy(d, true, btn, "Saving\u2026");
+    var img = promoImg && promoImg !== "none" ? prepare({ file: promoImg.file, caption: data.title }, 0) : Promise.resolve(null);
+    img.then(function (r) {
+      return save(function (dd) {
+        var list = dd.site.promotions, add = [], remove = [], p;
+        if (editingId) { p = list.filter(function (x) { return x.id === editingId; })[0]; if (!p) throw new Error("This special was already removed."); }
+        else { p = { id: "sp-" + Date.now().toString(36) }; list.unshift(p); }
+        var oldImg = p.image;
+        p.title = data.title; ["offer", "ends", "details"].forEach(function (k) { if (data[k]) p[k] = data[k]; else delete p[k]; });
+        if (r) { p.image = "promo-" + r.id + "." + r.ext; add.push({ path: "img/" + p.image, base64: r.large }); }
+        else if (promoImg === "none") delete p.image;
+        if (oldImg && oldImg !== p.image) remove.push("img/" + oldImg);
+        return { add: add, remove: remove, message: (editingId ? "Update" : "Post") + " special \u201c" + p.title + "\u201d" };
+      }).then(function (dd) {
+        var saved = editingId ? promoById(editingId) : dd.site.promotions[0];
+        if (r && saved) previews["promo:" + saved.id] = promoImg.url;
+        busy(d, false, btn, label); d.close(); renderPromos();
+        status("ok", "Special saved. It will show on the website in a few minutes.");
+        if (mail && saved) openSend(saved);
+      });
+    }).catch(function (x) { busy(d, false, btn, label); err.textContent = x.status ? failMsg(x) : x.message; });
+  });
+  function delPromo(p) {
+    if (!p || !confirm("Delete the special \u201c" + p.title + "\u201d? It will be removed from the website.")) return;
+    status("busy", "Deleting\u2026");
+    save(function (dd) {
+      var i = dd.site.promotions.findIndex(function (x) { return x.id === p.id; });
+      if (i < 0) throw new Error("This special was already removed.");
+      var gone = dd.site.promotions.splice(i, 1)[0];
+      return { add: [], remove: gone.image ? ["img/" + gone.image] : [], message: "Remove special \u201c" + gone.title + "\u201d" };
+    }).then(function () { renderPromos(); status("ok", "Special deleted."); }).catch(function (x) { status("bad", x.status ? failMsg(x) : x.message); });
+  }
+
+  /* ---------- Newsletter (Google Apps Script) ---------- */
+  var subs = null, quota = null;
+  function nlReady() { return !!(site && site.newsletter && nlKey); }
+  function nl(body) {
+    body.key = nlKey;
+    return fetch(site.newsletter, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(body) })
+      .then(function (r) { return r.json(); }, function () { throw new Error("Couldn\u2019t reach your Google script. Check the web app URL in Settings."); })
+      .then(function (j) {
+        if (!j.ok) {
+          var m = { "not-allowed": "The admin key doesn\u2019t match your Google script. Check it in Settings.", "no-subscribers": "There are no subscribers yet.",
+            "over-quota": "Gmail can send " + j.quota + " more emails today, but you have " + j.count + " subscribers. Try again tomorrow." }[j.error];
+          throw new Error(m || "The newsletter service said: " + j.error);
+        }
+        return j;
+      });
+  }
+  function subsView(reload) {
+    var ready = nlReady();
+    $("#subs-setup").hidden = ready; $("#subs-app").hidden = !ready;
+    if (ready && (reload || !subs)) loadSubs();
+  }
+  function loadSubs() {
+    $("#subs-list").innerHTML = '<p class="empty">Loading subscribers\u2026</p>';
+    nl({ action: "list" }).then(function (j) { subs = j.subscribers; quota = j.quota; drawSubs(); })
+      .catch(function (x) { $("#subs-list").innerHTML = ""; status("bad", x.message); });
+  }
+  function activeSubs() { return (subs || []).filter(function (s) { return s.status === "active"; }); }
+  function drawSubs() {
+    var q = $("#subs-q").value.trim().toLowerCase(), list = (subs || []).filter(function (s) { return !q || s.email.indexOf(q) > -1; });
+    list.sort(function (a, b) { return (b.status === "active") - (a.status === "active") || String(b.since).localeCompare(String(a.since)); });
+    var n = activeSubs().length;
+    $("#subs-meta").textContent = n + " active subscriber" + (n === 1 ? "" : "s") + (quota !== null ? " \u00b7 Gmail can send " + quota + " more emails today" : "");
+    $("#subs-list").innerHTML = list.length ? '<table class="table"><thead><tr><th>Email</th><th>Subscribed</th><th>Status</th><th><span class="sr">Actions</span></th></tr></thead><tbody>' + list.map(function (s) {
+      var d = s.since ? new Date(s.since) : null;
+      return "<tr><td>" + esc(s.email) + "</td><td>" + (d && !isNaN(d) ? d.toLocaleDateString("en-ZA", { day: "numeric", month: "short", year: "numeric" }) : "") + '</td><td class="st"><span class="' + (s.status === "active" ? "active" : "") + '">' + (s.status === "active" ? "Subscribed" : s.status === "unsubscribed" ? "Unsubscribed" : "Removed") + "</span></td><td>" +
+        (s.status === "active" ? '<button type="button" data-rm-sub="' + esc(s.email) + '">Remove</button>' : "") + "</td></tr>";
+    }).join("") + "</tbody></table>" : '<p class="empty">' + (q ? "No matches." : "No subscribers yet. People who sign up on the website will appear here.") + "</p>";
+  }
+  $("#subs-q").addEventListener("input", drawSubs);
+  $("#subs-reload").addEventListener("click", function () { loadSubs(); });
+  $("#subs-list").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-rm-sub]"); if (!b) return;
+    var email = b.dataset.rmSub;
+    if (!confirm("Remove " + email + " from your subscribers?")) return;
+    b.disabled = true;
+    nl({ action: "remove", email: email }).then(function () { subs.forEach(function (s) { if (s.email === email) s.status = "removed"; }); drawSubs(); status("ok", email + " removed."); })
+      .catch(function (x) { b.disabled = false; status("bad", x.message); });
+  });
+  $("#subs-csv").addEventListener("click", function () {
+    var rows = [["Email", "Subscribed", "Status"]].concat((subs || []).map(function (s) { return [s.email, s.since, s.status]; }));
+    var csv = rows.map(function (r) { return r.map(function (c) { return '"' + String(c).replace(/"/g, '""') + '"'; }).join(","); }).join("\r\n");
+    var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" })); a.download = "subscribers.csv"; a.click();
+  });
+
+  // Compose and send
+  var siteUrl = new URL("./", location.href).href;
+  function promoText(p) {
+    return [p.offer ? p.offer + "!" : "", p.details || "", p.ends ? "Valid until " + niceDate(p.ends) + "." : "", "", "Book on WhatsApp: 066 132 2462"].filter(function (l, i, a) { return l || (i && a[i - 1]); }).join("\n").trim();
+  }
+  function openSend(p) {
+    if (!nlReady()) { status("bad", "Connect your subscriber list in Settings first."); return; }
+    $("#sd-pick").innerHTML = '<option value="">Write my own</option>' + site.promotions.map(function (x) { return '<option value="' + x.id + '"' + (p && p.id === x.id ? " selected" : "") + ">" + esc(x.title) + "</option>"; }).join("");
+    fillFrom(p); $("#send-err").textContent = "";
+    var n = subs ? activeSubs().length : null;
+    $("#sd-who").textContent = n === null ? "It will go to everyone who is subscribed." : "It will go to " + n + " subscriber" + (n === 1 ? "" : "s") + ".";
+    openDlg($("#send-dlg"));
+    if (!subs) nl({ action: "list" }).then(function (j) { subs = j.subscribers; quota = j.quota; var c = activeSubs().length; $("#sd-who").textContent = "It will go to " + c + " subscriber" + (c === 1 ? "" : "s") + "."; }).catch(function () {});
+  }
+  function fillFrom(p) {
+    $("#sd-subject").value = p ? p.title + (p.offer ? " \u2013 " + p.offer : "") : "";
+    $("#sd-msg").value = p ? promoText(p) : "";
+    $("#send-form").dataset.link = p ? siteUrl + "#specials" : siteUrl;
+  }
+  $("#sd-pick").addEventListener("change", function (e) { fillFrom(promoById(e.target.value)); });
+  $("#send-btn").addEventListener("click", function () { openSend(null); });
+  $("#send-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var err = $("#send-err"), subject = $("#sd-subject").value.trim(), msg = $("#sd-msg").value.trim();
+    err.textContent = "";
+    if (!subject || !msg) { err.textContent = "Add a subject and a message."; return; }
+    var n = subs ? activeSubs().length : 0;
+    if (!confirm("Send \u201c" + subject + "\u201d to " + (n ? n + " subscriber" + (n === 1 ? "" : "s") : "all subscribers") + " now?")) return;
+    var d = $("#send-dlg"), btn = $("#send-go"), link = e.target.dataset.link || siteUrl;
+    busy(d, true, btn, "Sending\u2026");
+    nl({ action: "send", subject: subject, message: msg, link: link, linkText: link.indexOf("#specials") > -1 ? "See the special" : "Visit our website" })
+      .then(function (j) { quota = j.quota; busy(d, false, btn, "Send"); d.close(); status("ok", "Sent to " + j.sent + " subscriber" + (j.sent === 1 ? "" : "s") + "."); if (subs) drawSubs(); })
+      .catch(function (x) { busy(d, false, btn, "Send"); err.textContent = x.message; });
+  });
+
+  /* ---------- Settings ---------- */
+  function openSettings() { $("#st-url").value = (site && site.newsletter) || ""; $("#st-key").value = nlKey; $("#set-err").textContent = ""; openDlg($("#set-dlg")); }
+  $("#settings-btn").addEventListener("click", openSettings);
+  document.addEventListener("click", function (e) { if (e.target.closest("[data-open-settings]")) openSettings(); });
+  $("#set-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var url = $("#st-url").value.trim(), key = $("#st-key").value.trim(), err = $("#set-err");
+    err.textContent = "";
+    if (url && !/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(url)) { err.textContent = "Paste the web app URL from Google Apps Script. It ends in /exec."; return; }
+    if (url && !key) { err.textContent = "Add the admin key you set in Google Apps Script."; return; }
+    var d = $("#set-dlg"), btn = $("#set-go");
+    busy(d, true, btn, "Checking\u2026");
+    var check = url ? fetch(url, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "list", key: key }) }).then(function (r) { return r.json(); })
+      .then(function (j) { if (!j.ok) throw new Error(j.error === "not-allowed" ? "The admin key doesn\u2019t match the one in your Google script." : "Your Google script replied with an error: " + j.error); }, function (x) { if (x.message && x.message.indexOf("admin key") > -1) throw x; throw new Error("Couldn\u2019t reach that web app. Check the URL and that it is deployed with access for \u201cAnyone\u201d."); })
+      : Promise.resolve();
+    check.then(function () {
+      return lock(JSON.stringify({ github: token, nlkey: key }), pass).then(function (stored) { localStorage.setItem(KEY_STORE, stored); nlKey = key; });
+    }).then(function () {
+      if (site.newsletter === url) return;
+      btn.textContent = "Saving\u2026";
+      return save(function (dd) { dd.site.newsletter = url; return { add: [], remove: [], message: url ? "Connect the newsletter sign-up form" : "Disconnect the newsletter sign-up form" }; });
+    }).then(function () { busy(d, false, btn, "Save"); d.close(); subs = null; renderPromos(); subsView(); status("ok", "Settings saved."); })
+      .catch(function (x) { busy(d, false, btn, "Save"); err.textContent = x.status ? failMsg(x) : x.message; });
+  });
+
+  start();
+})();
+</script>
+</body>
+</html>
