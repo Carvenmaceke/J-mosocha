@@ -182,28 +182,29 @@ main { padding-top: var(--header-h, 147px); }
   .f-pop { left: 0; right: 0; width: auto; }
   .g-label small { display: none; }
 }
-.g-layout { display: grid; grid-template-columns: 190px 1fr; gap: 36px; align-items: start; margin-top: 28px; }
-.g-time { position: sticky; top: calc(var(--stick, 0px) + var(--gbar-h, 60px) + 24px); transition: top .4s ease; }
-.g-time h4 { font-size: .72rem; text-transform: uppercase; letter-spacing: .2em; color: var(--muted); font-weight: 400; margin: 0 0 14px; }
-.g-time ol { list-style: none; margin: 0; padding: 0; position: relative; }
-.g-time ol::before, .g-time ol::after { content: ""; position: absolute; left: 8px; top: 18px; width: 2px; margin-left: -1px; border-radius: 2px; }
-.g-time ol::before { bottom: 18px; background: var(--g4); }
-.g-time ol::after { height: var(--fill, 0px); background: var(--accent); transition: height .4s ease; }
-.g-time a { position: relative; z-index: 1; display: flex; align-items: flex-start; gap: 14px; padding: 9px 0; color: var(--gw-mute); text-decoration: none; line-height: 1.3; }
-.g-time a i { flex: none; width: 17px; height: 17px; margin-top: 1px; border-radius: 50%; background: var(--sw); box-shadow: 0 0 0 4px var(--gw), 0 0 0 5px rgba(127,127,127,.45); transition: transform .25s, box-shadow .25s; }
-.g-time a span { font-size: .95rem; font-weight: 400; transition: color .2s; }
-.g-time a small { display: block; font-size: .78rem; font-style: italic; font-weight: 300; color: var(--muted); margin-top: 2px; }
+.g-layout { display: grid; grid-template-columns: 1fr 112px; gap: 22px; margin-top: 28px; }
+/* Backdrop timeline: a slim rail on the right as long as the gallery, each dot level with its set */
+.g-time { grid-column: 2; grid-row: 1; position: relative; }
+.g-time ol { list-style: none; margin: 0; padding: 0; position: absolute; inset: 0; }
+.g-time ol::before, .g-time ol::after { content: ""; position: absolute; left: 6px; top: 0; width: 2px; margin-left: -1px; border-radius: 2px; }
+.g-time ol::before { bottom: 0; background: var(--g4); }
+.g-time ol::after { height: var(--fill, 0px); background: var(--accent); }
+.g-time li { position: absolute; left: 0; right: 0; top: var(--y, 0px); transition: top .3s ease; }
+.g-time a { display: flex; align-items: flex-start; gap: 9px; padding: 22px 0 6px; color: var(--gw-mute); text-decoration: none; line-height: 1.25; }
+.g-time a i { flex: none; width: 12px; height: 12px; margin-top: 2px; border-radius: 50%; background: var(--sw); box-shadow: 0 0 0 3px var(--gw), 0 0 0 4px rgba(127,127,127,.5); transition: transform .25s, box-shadow .25s; }
+.g-time a span { font-size: .76rem; font-weight: 400; transition: color .2s; }
+.g-time a small { display: block; font-size: .7rem; font-style: italic; font-weight: 300; color: var(--muted); margin-top: 1px; }
 .g-time a:hover { color: var(--gw-fg); }
-.g-time a:hover i { transform: scale(1.15); }
+.g-time a:hover i { transform: scale(1.2); }
 .g-time a.on { color: var(--gw-fg); }
-.g-time a.on i { transform: scale(1.25); box-shadow: 0 0 0 4px var(--gw), 0 0 0 6px var(--accent); }
-.g-time a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 6px; }
+.g-time a.on i { transform: scale(1.3); box-shadow: 0 0 0 3px var(--gw), 0 0 0 5px var(--accent); }
+.g-time a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+#tones { grid-column: 1; grid-row: 1; }
 .tone-head h3 i { width: 11px; height: 11px; border-radius: 50%; background: var(--sw); box-shadow: 0 0 0 1px rgba(127,127,127,.45); flex: none; }
-@media (max-width: 900px) { .g-layout { grid-template-columns: 150px 1fr; gap: 24px; } }
 @media (max-width: 700px) {
-  .g-layout { grid-template-columns: 18px 1fr; gap: 14px; margin-top: 18px; }
-  .g-time h4, .g-time a span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-  .g-time a { padding: 12px 0; } .g-time ol::before, .g-time ol::after { top: 21px; }
+  .g-layout { grid-template-columns: 1fr 12px; gap: 10px; margin-top: 18px; }
+  .g-time a span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .g-time a { padding-top: 18px; }
 }
 #tones { display: grid; gap: 18px; text-align: left; }
 .tone { border-radius: 22px; padding: clamp(18px, 3vw, 32px); scroll-margin-top: calc(var(--stick, 0px) + var(--gbar-h, 60px) + 16px); animation: fadeup .5s both; }
@@ -774,8 +775,8 @@ footer h3 { color: var(--fg); }
     </div>
     <div class="wrap">
       <div class="g-layout">
-        <nav class="g-time" aria-label="Jump to backdrop"><h4>Backdrops</h4><ol id="g-jump"></ol></nav>
         <div id="tones"></div>
+        <nav class="g-time" aria-label="Jump to backdrop"><ol id="g-jump"></ol></nav>
       </div>
       <div class="g-foot"><button class="btn" type="button" id="g-all">View all photos</button><p>Tap a photo to open the slideshow &middot; swipe to browse &middot; <a href="#sessions" style="color:inherit">continue to sessions</a></p></div>
     </div>
@@ -1324,13 +1325,18 @@ footer h3 { color: var(--fg); }
   });
   function spy() {
     var links = $$("#g-jump a"); if (!links.length) return;
-    var line = innerHeight * .4, on = 0;
-    links.forEach(function (a, i) { var el = document.getElementById("set-" + a.dataset.set); if (el && el.getBoundingClientRect().top < line) on = i; });
+    var tones = $("#tones"), base = tones.getBoundingClientRect().top, line = innerHeight * .4, on = 0;
+    links.forEach(function (a, i) {
+      var el = document.getElementById("set-" + a.dataset.set); if (!el) return;
+      var top = el.getBoundingClientRect().top;
+      a.parentNode.style.setProperty("--y", Math.round(top - base) + "px");
+      if (top < line) on = i;
+    });
     links.forEach(function (a, i) { a.classList.toggle("on", i === on); if (i === on) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current"); });
-    var first = links[0].querySelector("i"), cur = links[on].querySelector("i");
-    $("#g-jump").style.setProperty("--fill", (cur.getBoundingClientRect().top - first.getBoundingClientRect().top) + "px");
+    // The gold line fills down the rail as you scroll through the gallery
+    $("#g-jump").style.setProperty("--fill", Math.max(0, Math.min(tones.offsetHeight, line - base)) + "px");
   }
-  addEventListener("scroll", spy, { passive: true }); addEventListener("resize", spy);
+  addEventListener("scroll", spy, { passive: true }); addEventListener("resize", spy); $("#tones").addEventListener("animationend", spy);
   render();
 
   // Lightbox: thumbnails, slideshow, zoom, full screen, share
