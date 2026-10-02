@@ -296,6 +296,20 @@ main { padding-top: var(--header-h, 147px); }
 @media (max-width: 900px) { .services { grid-template-columns: 1fr; } }
 
 /* ---------- Packages planner ---------- */
+/* ---------- Current specials ---------- */
+.menu > li[hidden], .specials-sec[hidden] { display: none; }
+.specials-sec { background: var(--bg); }
+.specials { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 360px)); justify-content: center; gap: 18px; margin-top: 44px; }
+.special { display: flex; flex-direction: column; background: var(--bg-2); border: 1px solid var(--g3); border-radius: 20px; overflow: hidden; text-align: left; }
+.special img { width: 100%; aspect-ratio: 4/3; object-fit: cover; object-position: 50% 30%; }
+.special .sp-body { padding: 22px 22px 24px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.special .sp-offer { align-self: flex-start; padding: 4px 12px; border-radius: 999px; background: var(--accent); color: #fff; font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; }
+.special h3 { font-size: 1.45rem; }
+.special p { color: var(--fg-2); white-space: pre-line; }
+.special .sp-ends { font-size: .85rem; font-style: italic; color: var(--muted); margin-top: auto; padding-top: 6px; }
+.special .btn { align-self: flex-start; margin-top: 8px; }
+@media (max-width: 400px) { .specials { grid-template-columns: 1fr; } }
+
 /* ---------- Price list ---------- */
 .pk { margin-top: 50px; text-align: left; scroll-margin-top: calc(var(--header-h, 147px) + 16px); }
 .pk-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 10px 24px; flex-wrap: wrap; margin-bottom: 22px; }
@@ -768,6 +782,7 @@ footer h3 { color: var(--fg); }
         <ul class="drop" id="session-drop"></ul>
       </li>
       <li><a href="#services" data-sec="services">Our Services</a></li>
+      <li id="menu-specials" hidden><a href="#specials" data-sec="specials">Specials</a></li>
       <li><a href="#packages" data-sec="packages">Packages &amp; Pricing</a></li>
       <li><a href="#prints" data-sec="prints">Printed Products</a></li>
       <li><a href="#contact" data-sec="contact" data-contact>Contact</a></li>
@@ -784,6 +799,17 @@ footer h3 { color: var(--fg); }
       <p>Pretoria Central &middot; since 2010</p>
       <h1>Moments, beautifully kept.</h1>
       <a class="btn" href="#gallery">View the gallery</a>
+    </div>
+  </section>
+
+  <section class="sec specials-sec" id="specials" hidden>
+    <div class="wrap">
+      <div class="center fade">
+        <p class="eyebrow">Current specials</p>
+        <h2 class="title">On offer now</h2>
+        <p class="lede quote">&ldquo;Some moments are worth booking today.&rdquo;</p>
+      </div>
+      <div class="specials" id="specials-list"></div>
     </div>
   </section>
 
@@ -1004,7 +1030,7 @@ footer h3 { color: var(--fg); }
       </div>
     </div>
   </section>
-  <div class="f-strip" aria-label="From the gallery"><a href="#photo=kids-rainbow-castle" data-photo="kids-rainbow-castle" aria-label="Open photo"><img src="img/kids-rainbow-castle-700.webp" alt="" loading="lazy"></a><a href="#photo=birthday-25th" data-photo="birthday-25th" aria-label="Open photo"><img src="img/birthday-25th-700.webp" alt="" loading="lazy"></a><a href="#photo=maternity-green-drape" data-photo="maternity-green-drape" aria-label="Open photo"><img src="img/maternity-green-drape-700.webp" alt="" loading="lazy"></a><a href="#photo=graduation-portrait" data-photo="graduation-portrait" aria-label="Open photo"><img src="img/graduation-portrait-700.webp" alt="" loading="lazy"></a><a href="#photo=women-flower-wreath" data-photo="women-flower-wreath" aria-label="Open photo"><img src="img/women-flower-wreath-700.webp" alt="" loading="lazy"></a><a href="#photo=outdoor-couple-union-buildings" data-photo="outdoor-couple-union-buildings" aria-label="Open photo"><img src="img/outdoor-couple-union-buildings-700.webp" alt="" loading="lazy"></a><a href="#photo=maternity-silhouette" data-photo="maternity-silhouette" aria-label="Open photo"><img src="img/maternity-silhouette-700.webp" alt="" loading="lazy"></a><a href="#photo=birthday-crown-roses" data-photo="birthday-crown-roses" aria-label="Open photo"><img src="img/birthday-crown-roses-700.webp" alt="" loading="lazy"></a></div>
+  <div class="f-strip" id="f-strip" aria-label="From the gallery"></div>
   <div class="wrap f-news">
     <div class="f-news-text">
       <span class="f-news-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg></span>
@@ -1156,53 +1182,29 @@ footer h3 { color: var(--fg); }
 </div>
 <div class="toast" id="toast" role="status"></div>
 
+<script src="gallery.js"></script>
+<script src="site.js"></script>
 <script>
 (function () {
   var WA = "27661322462", MAIL = "wanhloni@gmail.com";
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
-  var src = function (s, w) { return "img/" + s + "-" + (w || 700) + ".webp"; };
+  var src = function (s, w) { return "img/" + s + "-" + (w || 700) + "." + (EXT[s] || "webp"); };
   var toast = function (m) { var t = $("#toast"); t.textContent = m; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(function () { t.classList.remove("show"); }, 2200); };
 
-  // Photos grouped by backdrop colour. [slug, caption, categories, width, height]
+  // Photos live in gallery.js (managed from admin.html); the backdrop groups are fixed here
+  var G = window.GALLERY || {}, EXT = {};
   var TONES = [
-    { id: "dark", name: "Dark &amp; dramatic", note: "Black backdrops", photos: [
-      ["graduation-man-portrait", "Graduation portrait", "men graduation", 700, 1047],
-      ["birthday-roses-black-gown", "Roses &amp; black gown", "women birthdays", 700, 1050],
-      ["maternity-golden-crown", "Golden crown maternity", "maternity women", 628, 768],
-      ["maternity-couple-red", "Expecting couple", "maternity couples", 700, 1023]] },
-    { id: "grey", name: "Studio grey", note: "Soft grey &amp; silhouettes", photos: [
-      ["graduation-family", "Graduate &amp; grandmother", "men graduation family", 700, 1050],
-      ["couple-mom-dad-caps", "Mom &amp; Dad to be", "couples family", 700, 467],
-      ["maternity-silhouette", "Maternity silhouette", "maternity couples", 700, 1047],
-      ["maternity-red-gown", "Maternity in red", "maternity women", 700, 977],
-      ["birthday-25th", "25th birthday", "women birthdays", 700, 913],
-      ["birthday-clock", "Time to celebrate", "women birthdays", 700, 1049]] },
-    { id: "white", name: "Bright &amp; white", note: "Clean white studio", photos: [
-      ["women-black-gown", "Studio portrait", "women", 700, 1050],
-      ["women-burgundy-suit", "Burgundy editorial", "women", 700, 1050],
-      ["women-flower-wreath", "Flower wreath", "women", 700, 1050],
-      ["birthday-30th", "30th birthday", "women birthdays", 700, 1050],
-      ["birthday-21st", "21st birthday", "women birthdays", 700, 1050],
-      ["birthday-crown-roses", "Queen for the day", "women birthdays", 700, 1050],
-      ["graduation-woman-balloons", "Class of 2026", "women graduation", 700, 1050],
-      ["maternity-couple-pink", "Pink &amp; white maternity", "maternity couples", 632, 1050],
-      ["maternity-white-tulle", "White tulle maternity", "maternity women", 700, 467],
-      ["kids-tulle-dress", "Tulle &amp; twirls", "kids", 700, 1050]] },
-    { id: "colour", name: "Colour &amp; themed sets", note: "Pastels, cakes &amp; colour", photos: [
-      ["kids-rainbow-castle", "Rainbow cake smash", "kids birthdays", 700, 963],
-      ["kids-princess-throne", "Little princess", "kids birthdays", 700, 1050],
-      ["kids-second-birthday", "Butterfly second birthday", "kids birthdays", 700, 535],
-      ["kids-cake-smash-bluey", "Bluey cake smash", "kids birthdays", 700, 1050],
-      ["kids-first-birthday-beach", "Beach first birthday", "kids birthdays", 700, 448],
-      ["birthday-pink-cake", "Pretty in pink", "women birthdays", 700, 1050],
-      ["maternity-green-drape", "Mint maternity", "maternity women", 700, 1049],
-      ["graduation-portrait", "Graduation close-up", "women graduation", 700, 1050]] },
-    { id: "outdoor", name: "Outdoors", note: "On location in Pretoria", photos: [
-      ["outdoor-couple-union-buildings", "Union Buildings couple", "couples outdoor", 700, 466],
-      ["outdoor-couple-kiss", "Outdoor love story", "couples outdoor", 700, 466]] }
-  ];
+    { id: "dark", name: "Dark &amp; dramatic", note: "Black backdrops" },
+    { id: "grey", name: "Studio grey", note: "Soft grey &amp; silhouettes" },
+    { id: "white", name: "Bright &amp; white", note: "Clean white studio" },
+    { id: "colour", name: "Colour &amp; themed sets", note: "Pastels, cakes &amp; colour" },
+    { id: "outdoor", name: "Outdoors", note: "On location in Pretoria" }
+  ].map(function (t) {
+    t.photos = (G[t.id] || []).map(function (p) { if (p.ext) EXT[p.id] = p.ext; return [p.id, esc(p.caption), p.categories.join(" "), p.w, p.h]; });
+    return t;
+  });
   var CATS = [["all", "All"], ["kids", "Kids"], ["women", "Women"], ["men", "Men"], ["couples", "Couples"], ["family", "Family"],
               ["maternity", "Maternity"], ["graduation", "Graduation"], ["birthdays", "Birthdays"], ["outdoor", "Outdoor"]];
   var SESSIONS = [
@@ -1309,7 +1311,7 @@ footer h3 { color: var(--fg); }
       $$("[data-sec]").forEach(function (el) { el.classList.toggle("active", el.dataset.sec === (map[id] || id)); });
     });
   }, { rootMargin: "-45% 0px -50% 0px" });
-  ["gallery", "tones", "sessions", "services", "packages", "prints", "about", "team", "reviews", "contact"].forEach(function (id) { secIO.observe(document.getElementById(id)); });
+  ["specials", "gallery", "tones", "sessions", "services", "packages", "prints", "about", "team", "reviews", "contact"].forEach(function (id) { secIO.observe(document.getElementById(id)); });
 
   // Gallery: one section per backdrop colour, each laid out in justified rows
   var tonesEl = $("#tones"), current = "all", visible = [];
@@ -1444,6 +1446,12 @@ footer h3 { color: var(--fg); }
   var tx = null;
   lb.addEventListener("touchstart", function (e) { tx = e.touches.length === 1 ? e.touches[0].clientX : null; }, { passive: true });
   lb.addEventListener("touchend", function (e) { if (tx === null || lb.classList.contains("zoomed")) return; var d = e.changedTouches[0].clientX - tx; if (Math.abs(d) > 50) show(idx + (d < 0 ? 1 : -1)); tx = null; });
+  // Footer strip: a mix of photos, taking one from each backdrop in turn
+  (function () {
+    var pick = [], i = 0, more = true;
+    while (pick.length < 8 && more) { more = false; TONES.forEach(function (t) { if (t.photos[i] && pick.length < 8) { pick.push(t.photos[i]); more = true; } }); i++; }
+    $("#f-strip").innerHTML = pick.map(function (p) { return '<a href="#photo=' + p[0] + '" data-photo="' + p[0] + '" aria-label="Open photo"><img src="' + src(p[0]) + '" alt="" loading="lazy"></a>'; }).join("");
+  })();
   $$(".f-strip a").forEach(function (a) {
     a.addEventListener("click", function (e) {
       e.preventDefault();
@@ -1520,6 +1528,22 @@ footer h3 { color: var(--fg); }
     return '<div class="session fade" id="session-' + s[0] + '"><h3>' + s[1] + "</h3><p>" + s[2] + '</p>' + (s[0] === "birthday" ? '<a href="#pk-birthday">View packages &amp; prices</a>' : '<a href="#packages" data-plan="' + plain(s[1]) + '">Request packages</a>') + "</div>";
   }).join("");
   $("#video-list").innerHTML = VIDEO.map(function (v) { return "<li>" + v[0].replace(" Videography", "") + "</li>"; }).join("");
+
+  // Current specials, posted from admin.html. Ended specials hide themselves.
+  (function () {
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+    var list = ((window.SITE && SITE.promotions) || []).filter(function (p) { return !p.ends || new Date(p.ends + "T23:59:59") >= today; });
+    if (!list.length) return;
+    $("#specials").hidden = false; $("#menu-specials").hidden = false;
+    $("#specials-list").innerHTML = list.map(function (p) {
+      var ends = p.ends ? new Date(p.ends + "T00:00").toLocaleDateString("en-ZA", { day: "numeric", month: "long", year: "numeric" }) : "";
+      var ask = "https://wa.me/" + WA + "?text=" + encodeURIComponent("Hi J Masocha Photography! I'm interested in your special: " + p.title + (p.offer ? " (" + p.offer + ")" : "") + ".");
+      return '<article class="special fade">' + (p.image ? '<img src="img/' + esc(p.image) + '" alt="" loading="lazy">' : "") +
+        '<div class="sp-body">' + (p.offer ? '<span class="sp-offer">' + esc(p.offer) + "</span>" : "") + "<h3>" + esc(p.title) + "</h3>" +
+        (p.details ? "<p>" + esc(p.details) + "</p>" : "") + (ends ? '<span class="sp-ends">Valid until ' + ends + "</span>" : "") +
+        '<a class="btn btn--solid" href="' + ask + '" target="_blank" rel="noopener">Book this special</a></div></article>';
+    }).join("");
+  })();
 
   // Price list. Edit prices and inclusions here.
   var PACKAGES = [
@@ -1657,7 +1681,7 @@ footer h3 { color: var(--fg); }
   // Newsletter sign-up.
   // To collect sign-ups automatically, paste a form endpoint from Mailchimp, Brevo or Formspree here.
   // Left empty, the sign-up opens the visitor's email app with a ready-made subscribe message.
-  var NEWSLETTER_URL = "";
+  var NEWSLETTER_URL = (window.SITE && SITE.newsletter) || "";
   var news = $("#newsletter"), newsMsg = $("#news-msg");
   news.addEventListener("submit", function (e) {
     e.preventDefault();
@@ -1668,9 +1692,9 @@ footer h3 { color: var(--fg); }
     if (!news.consent.checked) { newsMsg.textContent = "Please tick the box so we may send you promos."; newsMsg.classList.add("err"); return; }
     function done() { newsMsg.textContent = "Thank you! You\u2019ll be the first to hear about our promos."; newsMsg.classList.add("ok"); news.reset(); }
     if (NEWSLETTER_URL) {
-      var data = new FormData(news);
-      fetch(NEWSLETTER_URL, { method: "POST", body: data, headers: { Accept: "application/json" }, mode: "cors" })
-        .then(function (r) { if (!r.ok) throw 0; done(); })
+      fetch(NEWSLETTER_URL, { method: "POST", body: JSON.stringify({ action: "subscribe", email: email }), headers: { "Content-Type": "text/plain;charset=utf-8" } })
+        .then(function (r) { return r.json(); })
+        .then(function (j) { if (!j.ok) throw 0; done(); })
         .catch(function () { newsMsg.textContent = "Something went wrong. Please try again or WhatsApp us."; newsMsg.classList.add("err"); });
     } else {
       location.href = "mailto:" + MAIL + "?subject=" + encodeURIComponent("Newsletter sign-up") + "&body=" + encodeURIComponent("Hi J Masocha Photography,\n\nPlease add me to your newsletter so I hear about promos first.\n\nEmail: " + email);
