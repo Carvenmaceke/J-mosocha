@@ -181,13 +181,31 @@ main { padding-top: var(--header-h, 147px); }
   .f-pop { left: 0; right: 0; width: auto; }
   .g-label small { display: none; }
 }
-.g-meta { display: flex; justify-content: flex-end; min-height: 1px; align-items: center; gap: 12px; margin: 26px 0 14px; font-size: .92rem; color: var(--gw-mute); font-style: italic; flex-wrap: wrap; }
-.g-jump { display: flex; gap: 6px; flex-wrap: wrap; font-style: normal; }
-.g-jump a { display: inline-flex; align-items: center; gap: 7px; padding: 4px 10px; border-radius: 999px; color: var(--gw-mute); text-decoration: none; font-size: .85rem; font-weight: 400; }
-.g-jump a:hover { background: var(--gw-2); color: var(--gw-fg); }
-.g-jump i, .tone-head h3 i { width: 11px; height: 11px; border-radius: 50%; background: var(--sw); box-shadow: 0 0 0 1px rgba(127,127,127,.45); flex: none; }
+.g-layout { display: grid; grid-template-columns: 190px 1fr; gap: 36px; align-items: start; margin-top: 28px; }
+.g-time { position: sticky; top: calc(var(--stick, 0px) + var(--gbar-h, 60px) + 24px); transition: top .4s ease; }
+.g-time h4 { font-size: .72rem; text-transform: uppercase; letter-spacing: .2em; color: var(--muted); font-weight: 400; margin: 0 0 14px; }
+.g-time ol { list-style: none; margin: 0; padding: 0; position: relative; }
+.g-time ol::before, .g-time ol::after { content: ""; position: absolute; left: 8px; top: 18px; width: 2px; margin-left: -1px; border-radius: 2px; }
+.g-time ol::before { bottom: 18px; background: var(--g4); }
+.g-time ol::after { height: var(--fill, 0px); background: var(--accent); transition: height .4s ease; }
+.g-time a { position: relative; z-index: 1; display: flex; align-items: flex-start; gap: 14px; padding: 9px 0; color: var(--gw-mute); text-decoration: none; line-height: 1.3; }
+.g-time a i { flex: none; width: 17px; height: 17px; margin-top: 1px; border-radius: 50%; background: var(--sw); box-shadow: 0 0 0 4px var(--gw), 0 0 0 5px rgba(127,127,127,.45); transition: transform .25s, box-shadow .25s; }
+.g-time a span { font-size: .95rem; font-weight: 400; transition: color .2s; }
+.g-time a small { display: block; font-size: .78rem; font-style: italic; font-weight: 300; color: var(--muted); margin-top: 2px; }
+.g-time a:hover { color: var(--gw-fg); }
+.g-time a:hover i { transform: scale(1.15); }
+.g-time a.on { color: var(--gw-fg); }
+.g-time a.on i { transform: scale(1.25); box-shadow: 0 0 0 4px var(--gw), 0 0 0 6px var(--accent); }
+.g-time a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 6px; }
+.tone-head h3 i { width: 11px; height: 11px; border-radius: 50%; background: var(--sw); box-shadow: 0 0 0 1px rgba(127,127,127,.45); flex: none; }
+@media (max-width: 900px) { .g-layout { grid-template-columns: 150px 1fr; gap: 24px; } }
+@media (max-width: 700px) {
+  .g-layout { grid-template-columns: 18px 1fr; gap: 14px; margin-top: 18px; }
+  .g-time h4, .g-time a span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .g-time a { padding: 12px 0; } .g-time ol::before, .g-time ol::after { top: 21px; }
+}
 #tones { display: grid; gap: 18px; text-align: left; }
-.tone { border-radius: 22px; padding: clamp(18px, 3vw, 32px); scroll-margin-top: calc(var(--header-h, 147px) + 110px); animation: fadeup .5s both; }
+.tone { border-radius: 22px; padding: clamp(18px, 3vw, 32px); scroll-margin-top: calc(var(--stick, 0px) + var(--gbar-h, 60px) + 16px); animation: fadeup .5s both; }
 .tone-dark { background: #050505; color: #f2efea; box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); }
 .tone-grey { background: var(--tone-grey); color: #fff; }
 .tone-white { background: #fff; color: #1d1d1f; box-shadow: inset 0 0 0 1px rgba(0,0,0,.06); }
@@ -199,7 +217,7 @@ main { padding-top: var(--header-h, 147px); }
 .tone-head p b { font-style: normal; font-weight: 400; padding: 3px 10px; margin-left: 8px; border-radius: 999px; background: rgba(127,127,127,.2); font-size: .8rem; }
 .grid { display: grid; grid-template-columns: repeat(5, 1fr); grid-auto-flow: dense; gap: 8px; }
 @media (max-width: 1000px) { .grid { grid-template-columns: repeat(4, 1fr); } }
-@media (max-width: 700px) { .grid { grid-template-columns: repeat(2, 1fr); gap: 6px; } .tone { border-radius: 16px; } .g-jump { display: none; } }
+@media (max-width: 700px) { .grid { grid-template-columns: repeat(2, 1fr); gap: 6px; } .tone { border-radius: 16px; } }
 .shot { margin: 0; overflow: hidden; cursor: zoom-in; position: relative; aspect-ratio: 3/4; border-radius: 10px; background: rgba(127,127,127,.15); }
 .shot.wide { grid-column: span 2; aspect-ratio: 3/2; }
 .shot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; transition: transform 1s cubic-bezier(.2,.8,.2,1), opacity .6s; }
@@ -752,8 +770,10 @@ footer h3 { color: var(--fg); }
       </div>
     </div>
     <div class="wrap">
-      <div class="g-meta"><nav class="g-jump" id="g-jump" aria-label="Jump to backdrop"></nav></div>
-      <div id="tones"></div>
+      <div class="g-layout">
+        <nav class="g-time" aria-label="Jump to backdrop"><h4>Backdrops</h4><ol id="g-jump"></ol></nav>
+        <div id="tones"></div>
+      </div>
       <div class="g-foot"><button class="btn" type="button" id="g-all">View all photos</button><p>Tap a photo to open the slideshow &middot; swipe to browse &middot; <a href="#sessions" style="color:inherit">continue to sessions</a></p></div>
     </div>
   </section>
@@ -1194,7 +1214,7 @@ footer h3 { color: var(--fg); }
   var header = $("#header"), lastY = 0;
   function headerSize() { if (!header.classList.contains("compact")) root.style.setProperty("--header-h", header.offsetHeight + "px"); }
   // Gallery bar sits just under the header, or at the very top while the header is hidden
-  function stick() { root.style.setProperty("--stick", (header.classList.contains("hide") ? 0 : header.offsetHeight - 1) + "px"); }
+  function stick() { root.style.setProperty("--stick", (header.classList.contains("hide") ? 0 : header.offsetHeight - 1) + "px"); root.style.setProperty("--gbar-h", document.getElementById("g-bar").offsetHeight + "px"); }
   headerSize(); stick(); addEventListener("resize", function () { headerSize(); stick(); }); document.fonts && document.fonts.ready.then(headerSize);
   addEventListener("scroll", function () {
     var y = scrollY;
@@ -1278,7 +1298,8 @@ footer h3 { color: var(--fg); }
     }).join("");
     var catName = CATS.filter(function (c) { return c[0] === current; })[0][1];
     $("#g-now").textContent = current === "all" ? "All photos" : catName;
-    $("#g-jump").innerHTML = groups.length > 1 ? groups.map(function (g) { return '<a href="#set-' + g[0].id + '" style="--sw:' + SWATCH[g[0].id] + '"><i aria-hidden="true"></i>' + g[0].name + "</a>"; }).join("") : "";
+    $("#g-jump").innerHTML = groups.map(function (g) { return '<li><a href="#set-' + g[0].id + '" data-set="' + g[0].id + '" title="' + plain(g[0].name) + '" style="--sw:' + SWATCH[g[0].id] + '"><i aria-hidden="true"></i><span>' + g[0].name + "<small>" + g[1] + " photo" + (g[1] > 1 ? "s" : "") + "</small></span></a></li>"; }).join("");
+    spy();
   }
   function setCat(cat) {
     current = cat;
@@ -1289,6 +1310,25 @@ footer h3 { color: var(--fg); }
     $("#f-n").hidden = $("#g-clear").hidden = cat === "all";
     render();
   }
+  // Backdrop timeline: jump to a set, and light up the set currently in view
+  $("#g-jump").addEventListener("click", function (e) {
+    var a = e.target.closest("a"); if (!a) return;
+    e.preventDefault();
+    var el = document.getElementById("set-" + a.dataset.set), y = el.getBoundingClientRect().top + scrollY;
+    // Scrolling down hides the site header, scrolling up shows it, so leave room for whichever will be on screen
+    var room = $("#g-bar").offsetHeight + 16 + (y - 200 < scrollY ? header.offsetHeight : 0);
+    scrollTo({ top: y - room, behavior: "smooth" });
+    a.focus({ preventScroll: true });
+  });
+  function spy() {
+    var links = $$("#g-jump a"); if (!links.length) return;
+    var line = innerHeight * .4, on = 0;
+    links.forEach(function (a, i) { var el = document.getElementById("set-" + a.dataset.set); if (el && el.getBoundingClientRect().top < line) on = i; });
+    links.forEach(function (a, i) { a.classList.toggle("on", i === on); if (i === on) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current"); });
+    var first = links[0].querySelector("i"), cur = links[on].querySelector("i");
+    $("#g-jump").style.setProperty("--fill", (cur.getBoundingClientRect().top - first.getBoundingClientRect().top) + "px");
+  }
+  addEventListener("scroll", spy, { passive: true }); addEventListener("resize", spy);
   render();
 
   // Lightbox: thumbnails, slideshow, zoom, full screen, share
