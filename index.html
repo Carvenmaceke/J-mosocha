@@ -134,26 +134,45 @@ main { padding-top: var(--header-h, 147px); }
 .hero-text .btn:hover { background: #fff; color: #111; }
 @media (max-width: 700px) { .hero { grid-template-columns: 1fr; } .hero figure:not(:nth-child(2)) { display: none; } }
 
-/* ---------- Gallery: one framed section, sets grouped by backdrop ---------- */
-.gallery-sec { background: var(--bg-2); }
-.filters { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 30px; }
-.filters button { flex: none; border: 1px solid var(--line); border-radius: 999px; background: var(--bg); cursor: pointer; padding: 8px 16px; font: inherit; font-size: .9rem; font-weight: 400; color: var(--fg-2); transition: background .2s, color .2s, border-color .2s; }
-.filters button small { margin-left: 6px; opacity: .55; font-size: .78rem; }
-.filters button:hover { color: var(--fg); border-color: var(--fg-2); }
-.filters button[aria-pressed="true"] { background: var(--fg); border-color: var(--fg); color: var(--bg); }
-.filters button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-@media (max-width: 700px) {
-  .filters { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; scrollbar-width: none; margin-inline: -16px; padding: 2px 16px; }
-  .filters::-webkit-scrollbar { display: none; }
+/* ---------- Gallery: its own dark "exhibition room", sets grouped by backdrop ---------- */
+.gallery-sec { --gw: #141415; --gw-2: #1e1e20; --gw-fg: #f2efea; --gw-mute: rgba(242,239,234,.6); --gw-line: rgba(255,255,255,.12);
+  background: var(--gw); color: var(--gw-fg); padding-top: 0; position: relative; }
+.g-hero { position: relative; padding: clamp(70px, 9vw, 120px) 0 clamp(36px, 5vw, 56px); text-align: center; overflow: hidden; }
+.g-hero::before { content: ""; position: absolute; inset: 0; background: radial-gradient(60% 80% at 50% 0%, rgba(207,174,122,.18), transparent 70%); pointer-events: none; }
+.g-hero .wrap { position: relative; }
+.g-crumb { display: flex; justify-content: center; align-items: center; gap: 8px; font-size: .78rem; text-transform: uppercase; letter-spacing: .2em; color: var(--gw-mute); margin-bottom: 18px; }
+.g-crumb a { color: inherit; text-decoration: none; } .g-crumb a:hover { color: var(--gw-fg); }
+.g-crumb b { color: #cfae7a; font-weight: 400; }
+.g-hero h2 { font-size: clamp(3rem, 9vw, 6.5rem); line-height: 1; letter-spacing: -.01em; display: inline-flex; align-items: center; gap: .25em; }
+.g-hero h2 svg { width: .55em; height: .55em; color: #cfae7a; flex: none; }
+.g-hero .lede { color: var(--gw-mute); margin: 18px auto 0; }
+.g-stats { display: flex; justify-content: center; gap: clamp(20px, 5vw, 56px); margin-top: 30px; flex-wrap: wrap; }
+.g-stats div { text-align: center; } .g-stats b { display: block; font-size: 1.9rem; font-weight: 300; line-height: 1.1; }
+.g-stats span { font-size: .72rem; text-transform: uppercase; letter-spacing: .2em; color: var(--gw-mute); }
+.g-bar { position: sticky; top: var(--stick, 0px); z-index: 50; background: rgba(20,20,21,.9); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-block: 1px solid var(--gw-line); transition: top .4s ease; }
+.g-bar .wrap { display: flex; align-items: center; gap: 16px; padding: 10px 0; }
+.g-label { display: flex; align-items: center; gap: 10px; flex: none; font-weight: 400; white-space: nowrap; }
+.g-label svg { width: 20px; height: 20px; color: #cfae7a; }
+.g-label small { color: var(--gw-mute); font-style: italic; font-weight: 300; font-size: .85rem; }
+.filters { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; flex: 1; justify-content: flex-end; padding: 2px; }
+.filters::-webkit-scrollbar { display: none; }
+.filters button { flex: none; border: 1px solid var(--gw-line); border-radius: 999px; background: transparent; cursor: pointer; padding: 6px 14px; font: inherit; font-size: .86rem; font-weight: 400; color: var(--gw-mute); transition: background .2s, color .2s, border-color .2s; }
+.filters button small { margin-left: 6px; opacity: .6; font-size: .75rem; }
+.filters button:hover { color: var(--gw-fg); border-color: rgba(255,255,255,.35); }
+.filters button[aria-pressed="true"] { background: #cfae7a; border-color: #cfae7a; color: #141415; }
+.filters button:focus-visible { outline: 2px solid #cfae7a; outline-offset: 2px; }
+@media (max-width: 900px) {
+  .g-bar .wrap { flex-direction: column; align-items: stretch; gap: 8px; padding: 10px 0 8px; }
+  .filters { justify-content: flex-start; margin-inline: -16px; padding: 2px 16px; }
 }
-.g-meta { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 34px 0 14px; font-size: .92rem; color: var(--muted); font-style: italic; flex-wrap: wrap; }
+.g-meta { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 26px 0 14px; font-size: .92rem; color: var(--gw-mute); font-style: italic; flex-wrap: wrap; }
 .g-jump { display: flex; gap: 6px; flex-wrap: wrap; font-style: normal; }
-.g-jump a { display: inline-flex; align-items: center; gap: 7px; padding: 4px 10px; border-radius: 999px; color: var(--fg-2); text-decoration: none; font-size: .85rem; font-weight: 400; }
-.g-jump a:hover { background: var(--bg); color: var(--fg); }
+.g-jump a { display: inline-flex; align-items: center; gap: 7px; padding: 4px 10px; border-radius: 999px; color: var(--gw-mute); text-decoration: none; font-size: .85rem; font-weight: 400; }
+.g-jump a:hover { background: var(--gw-2); color: var(--gw-fg); }
 .g-jump i, .tone-head h3 i { width: 11px; height: 11px; border-radius: 50%; background: var(--sw); box-shadow: 0 0 0 1px rgba(127,127,127,.45); flex: none; }
 #tones { display: grid; gap: 18px; text-align: left; }
-.tone { border-radius: 22px; padding: clamp(18px, 3vw, 32px); scroll-margin-top: calc(var(--header-h, 147px) + 12px); animation: fadeup .5s both; }
-.tone-dark { background: var(--tone-dark); color: #f2efea; box-shadow: inset 0 0 0 1px var(--line); }
+.tone { border-radius: 22px; padding: clamp(18px, 3vw, 32px); scroll-margin-top: calc(var(--header-h, 147px) + 110px); animation: fadeup .5s both; }
+.tone-dark { background: #050505; color: #f2efea; box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); }
 .tone-grey { background: var(--tone-grey); color: #fff; }
 .tone-white { background: #fff; color: #1d1d1f; box-shadow: inset 0 0 0 1px rgba(0,0,0,.06); }
 .tone-colour { background: var(--tone-colour); color: #1d1d1f; }
@@ -177,7 +196,9 @@ main { padding-top: var(--header-h, 147px); }
 .shot:hover .zoom, .shot:focus-visible .zoom { opacity: 1; }
 @media (hover: none) { .shot figcaption { opacity: 1; padding-top: 24px; font-size: .78rem; } }
 .g-foot { margin-top: 34px; text-align: center; }
-.g-foot p { color: var(--muted); font-style: italic; font-size: .92rem; margin-top: 12px; }
+.g-foot .btn { color: var(--gw-fg); }
+.g-foot .btn:hover { background: #cfae7a; border-color: #cfae7a; color: #141415; }
+.g-foot p { color: var(--gw-mute); font-style: italic; font-size: .92rem; margin-top: 12px; }
 
 /* ---------- Lightbox ---------- */
 .lb { position: fixed; inset: 0; z-index: 400; background: rgba(10,10,11,.97); color: #fff; display: grid; grid-template-rows: auto auto 1fr auto; opacity: 0; visibility: hidden; transition: opacity .3s, visibility .3s; }
@@ -692,17 +713,25 @@ footer h3 { color: var(--fg); }
     </div>
   </section>
 
-  <section class="sec gallery-sec" id="gallery">
-    <div class="wrap">
-      <div class="center fade">
-        <p class="eyebrow">Our work</p>
-        <h2 class="title">Gallery</h2>
+  <section class="sec gallery-sec" id="gallery" aria-labelledby="g-title">
+    <header class="g-hero">
+      <div class="wrap fade">
+        <p class="g-crumb"><a href="#top">Home</a><span aria-hidden="true">/</span><b>Gallery</b></p>
+        <h2 id="g-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.8"/><path d="m21 15-5-5L5 21"/></svg>Gallery</h2>
         <p class="lede">Our favourite sessions, grouped by studio backdrop. Choose a category, or tap any photo to view it full screen.</p>
+        <div class="g-stats" id="g-stats"></div>
+      </div>
+    </header>
+    <div class="g-bar" id="g-bar">
+      <div class="wrap">
+        <p class="g-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.8"/><path d="m21 15-5-5L5 21"/></svg>Gallery <small id="g-now">All photos</small></p>
         <div class="filters" id="filters" role="group" aria-label="Filter by category"></div>
       </div>
+    </div>
+    <div class="wrap">
       <div class="g-meta"><span id="g-count" aria-live="polite"></span><nav class="g-jump" id="g-jump" aria-label="Jump to backdrop"></nav></div>
       <div id="tones"></div>
-      <div class="g-foot"><button class="btn" type="button" id="g-all">View all photos</button><p>Tap a photo to open the slideshow &middot; swipe to browse</p></div>
+      <div class="g-foot"><button class="btn" type="button" id="g-all">View all photos</button><p>Tap a photo to open the slideshow &middot; swipe to browse &middot; <a href="#sessions" style="color:inherit">continue to sessions</a></p></div>
     </div>
   </section>
 
@@ -1141,12 +1170,14 @@ footer h3 { color: var(--fg); }
   // Header: hide on scroll down, show on scroll up, compact after the top
   var header = $("#header"), lastY = 0;
   function headerSize() { if (!header.classList.contains("compact")) root.style.setProperty("--header-h", header.offsetHeight + "px"); }
-  headerSize(); addEventListener("resize", headerSize); document.fonts && document.fonts.ready.then(headerSize);
+  // Gallery bar sits just under the header, or at the very top while the header is hidden
+  function stick() { root.style.setProperty("--stick", (header.classList.contains("hide") ? 0 : header.offsetHeight - 1) + "px"); }
+  headerSize(); stick(); addEventListener("resize", function () { headerSize(); stick(); }); document.fonts && document.fonts.ready.then(headerSize);
   addEventListener("scroll", function () {
     var y = scrollY;
     header.classList.toggle("compact", y > 60);
     if (!header.classList.contains("menu-open")) header.classList.toggle("hide", y > lastY && y > 400);
-    lastY = y;
+    lastY = y; stick();
   }, { passive: true });
 
   // Dropdown menus
@@ -1195,6 +1226,7 @@ footer h3 { color: var(--fg); }
   $("#filters").innerHTML = CATS.map(function (c) { return '<button type="button" data-cat="' + c[0] + '" aria-pressed="' + (c[0] === "all") + '">' + c[1] + "<small>" + count(c[0]) + "</small></button>"; }).join("");
   $$("#filters button").forEach(function (b) { b.addEventListener("click", function () { setCat(b.dataset.cat); }); });
   $("#g-all").addEventListener("click", function () { openAllPhotos(); });
+  $("#g-stats").innerHTML = '<div><b>' + count("all") + '</b><span>Photos</span></div><div><b>' + TONES.length + '</b><span>Backdrops</span></div><div><b>' + (CATS.length - 1) + '</b><span>Categories</span></div>';
   var SWATCH = { dark: "#0d0d0e", grey: "#8f8f91", white: "#ffffff", colour: "#f3c9c1", outdoor: "#9db08f" };
 
   function render() {
@@ -1210,12 +1242,16 @@ footer h3 { color: var(--fg); }
       }).join("");
       return '<section class="tone tone-' + t.id + '" id="set-' + t.id + '" style="--sw:' + SWATCH[t.id] + '" aria-label="' + plain(t.name) + '"><div class="tone-head"><h3><i aria-hidden="true"></i>' + t.name + "</h3><p>" + t.note + "<b>" + list.length + " photo" + (list.length > 1 ? "s" : "") + '</b></p></div><div class="grid">' + figs + "</div></section>";
     }).join("");
-    var label = current === "all" ? "" : " in " + CATS.filter(function (c) { return c[0] === current; })[0][1];
+    var catName = CATS.filter(function (c) { return c[0] === current; })[0][1], label = current === "all" ? "" : " in " + catName;
+    $("#g-now").textContent = current === "all" ? "All photos" : catName;
     $("#g-count").textContent = "Showing " + visible.length + " photo" + (visible.length > 1 ? "s" : "") + label + " across " + groups.length + " backdrop" + (groups.length > 1 ? "s" : "");
     $("#g-jump").innerHTML = groups.length > 1 ? groups.map(function (g) { return '<a href="#set-' + g[0].id + '" style="--sw:' + SWATCH[g[0].id] + '"><i aria-hidden="true"></i>' + g[0].name + "</a>"; }).join("") : "";
   }
   function setCat(cat) {
     current = cat;
+    // If the bar is stuck (user is down in the photos), jump back to the top of the results
+    var at = $("#gallery").offsetTop + $(".g-hero").offsetHeight - header.offsetHeight + 1;
+    if (scrollY > at) scrollTo({ top: at, behavior: "auto" });
     $$("#filters button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.cat === cat); });
     render();
   }
