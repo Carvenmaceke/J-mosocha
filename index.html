@@ -145,10 +145,11 @@ main { padding-top: var(--header-h, 147px); }
 .g-crumb b { color: var(--accent); font-weight: 400; }
 .g-hero h2 { font-size: clamp(3rem, 9vw, 6.5rem); line-height: 1; letter-spacing: -.01em; display: inline-flex; align-items: center; gap: .25em; }
 .g-hero h2 svg { width: .55em; height: .55em; color: var(--accent); flex: none; }
-.g-hero .lede { color: var(--gw-mute); margin: 18px auto 0; }
-.g-stats { display: flex; justify-content: center; gap: clamp(20px, 5vw, 56px); margin-top: 30px; flex-wrap: wrap; }
-.g-stats div { text-align: center; } .g-stats b { display: block; font-size: 1.9rem; font-weight: 300; line-height: 1.1; }
-.g-stats span { font-size: .72rem; text-transform: uppercase; letter-spacing: .2em; color: var(--gw-mute); }
+.g-quote { max-width: 640px; margin: 22px auto 0; }
+.g-quote p { font-style: italic; font-size: clamp(1.15rem, 2.2vw, 1.45rem); line-height: 1.6; color: var(--gw-fg); }
+.g-quote p::before { content: "\201C"; display: block; font-style: normal; font-size: 3.4rem; line-height: .6; height: .45em; color: var(--accent); }
+.g-quote footer { background: none; border: 0; padding: 0; margin-top: 14px; font-size: .74rem; text-transform: uppercase; letter-spacing: .2em; color: var(--gw-mute); }
+.g-quote footer::before { content: ""; display: inline-block; width: 26px; height: 1px; background: var(--accent); vertical-align: middle; margin-right: 12px; }
 .g-bar { position: sticky; top: var(--stick, 0px); z-index: 50; background: var(--bg-2); background: color-mix(in srgb, var(--bg-2) 92%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-block: 1px solid var(--gw-line); transition: top .4s ease; }
 .g-bar .wrap { display: flex; align-items: center; gap: 16px; padding: 10px 0; }
 .g-label { display: flex; align-items: center; gap: 10px; flex: none; font-weight: 400; white-space: nowrap; }
@@ -752,8 +753,10 @@ footer h3 { color: var(--fg); }
       <div class="wrap fade">
         <p class="g-crumb"><a href="#top">Home</a><span aria-hidden="true">/</span><b>Gallery</b></p>
         <h2 id="g-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.8"/><path d="m21 15-5-5L5 21"/></svg>Gallery</h2>
-        <p class="lede">Our favourite sessions, grouped by studio backdrop. Use <b style="font-weight:400">Filter</b> to pick a category, or tap any photo to view it full screen.</p>
-        <div class="g-stats" id="g-stats"></div>
+        <blockquote class="g-quote">
+          <p>A photograph holds still what life never does: the laugh, the glance, the little hands that won&rsquo;t stay little for long. We take the picture so you can keep the moment.</p>
+          <footer>J Masocha Photography</footer>
+        </blockquote>
       </div>
     </header>
     <div class="g-bar" id="g-bar">
@@ -1280,7 +1283,6 @@ footer h3 { color: var(--fg); }
   $$("#filters button").forEach(function (b) { b.addEventListener("click", function () { setCat(b.dataset.cat); setPop(false); fBtn.focus(); }); });
   $("#g-clear").addEventListener("click", function () { setCat("all"); });
   $("#g-all").addEventListener("click", function () { openAllPhotos(); });
-  $("#g-stats").innerHTML = '<div><b>' + count("all") + '</b><span>Photos</span></div><div><b>' + TONES.length + '</b><span>Backdrops</span></div><div><b>' + (CATS.length - 1) + '</b><span>Categories</span></div>';
   var SWATCH = { dark: "#0d0d0e", grey: "#8f8f91", white: "#ffffff", colour: "#f3c9c1", outdoor: "#9db08f" };
 
   function render() {
