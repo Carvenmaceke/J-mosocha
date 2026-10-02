@@ -295,6 +295,38 @@ main { padding-top: var(--header-h, 147px); }
 @media (max-width: 900px) { .services { grid-template-columns: 1fr; } }
 
 /* ---------- Packages planner ---------- */
+/* ---------- Price list ---------- */
+.pk { margin-top: 50px; text-align: left; scroll-margin-top: calc(var(--header-h, 147px) + 16px); }
+.pk-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 10px 24px; flex-wrap: wrap; margin-bottom: 22px; }
+.pk-head h3 { font-size: clamp(1.5rem, 2.6vw, 2rem); }
+.pk-head p { color: var(--fg-2); font-style: italic; }
+.pk-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+@media (min-width: 1101px) { .pk-card h4 { min-height: 3.4em; } }
+@media (max-width: 1100px) { .pk-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 620px) { .pk-grid { grid-template-columns: 1fr; } }
+.pk-card { display: flex; flex-direction: column; padding: 26px 24px 24px; background: var(--bg); border: 1px solid var(--g3); border-top: 3px solid var(--band-bar); border-radius: 18px; position: relative; }
+.pk-card h4 { font-size: .78rem; text-transform: uppercase; letter-spacing: .18em; font-weight: 400; color: var(--fg-2); }
+.pk-price { font-size: 2.6rem; font-weight: 300; line-height: 1.1; margin: 10px 0 4px; }
+.pk-price small { font-size: .9rem; color: var(--muted); font-style: italic; margin-left: 6px; }
+.pk-card ul { list-style: none; padding: 0; margin: 16px 0 22px; flex: 1; }
+.pk-card li { display: flex; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: .95rem; line-height: 1.4; }
+.pk-card li:last-child { border-bottom: 0; }
+.pk-card li svg { flex: none; width: 15px; height: 15px; margin-top: 3px; color: var(--accent); }
+.pk-card li.extra { font-weight: 400; }
+.pk-card .btn { justify-content: center; }
+.pk-card.featured { background: var(--fg); color: var(--bg); border-color: var(--fg); border-top-color: var(--accent); }
+.pk-card.featured h4, .pk-card.featured .pk-price small { color: inherit; opacity: .7; }
+.pk-card.featured li { border-color: rgba(127,127,127,.3); }
+.pk-card.featured .btn { background: var(--accent); border-color: var(--accent); color: #111; }
+.pk-card.featured .btn:hover { background: transparent; color: var(--bg); border-color: var(--bg); }
+.pk-tag { position: absolute; top: -12px; right: 20px; padding: 3px 12px; border-radius: 999px; background: var(--accent); color: #111; font-size: .72rem; text-transform: uppercase; letter-spacing: .14em; font-weight: 400; }
+.pk-policy { display: flex; gap: 14px; margin-top: 18px; padding: 18px 22px; border-radius: 14px; background: var(--bg-2); border: 1px solid var(--g3); color: var(--fg-2); font-size: .95rem; }
+.pk-policy svg { flex: none; width: 22px; height: 22px; color: var(--accent); margin-top: 2px; }
+.pk-policy b { display: block; color: var(--fg); font-weight: 400; }
+.pk-more { margin-top: 70px; }
+.pk-more h3 { font-size: 1.6rem; }
+.pk-more p { color: var(--fg-2); margin-top: 6px; }
+
 .planner { max-width: 760px; margin: 50px auto 0; text-align: left; border: 1px solid var(--line); padding: clamp(22px, 4vw, 44px); background: var(--bg); }
 .steps-dots { display: flex; gap: 6px; margin-bottom: 26px; }
 .steps-dots i { flex: 1; height: 2px; background: var(--line); position: relative; }
@@ -833,11 +865,20 @@ footer h3 { color: var(--fg); }
     <div class="wrap">
       <div class="fade">
         <p class="eyebrow">Packages &amp; pricing</p>
-        <h2 class="title">Request our price list</h2>
-        <p class="lede">Packages are tailored to each session. Answer three quick questions and we&rsquo;ll send the right packages and open dates on WhatsApp.</p>
+        <h2 class="title">Our packages</h2>
+        <p class="lede">Choose a package and book it on WhatsApp in a minute. Prices for other sessions are sent on request.</p>
       </div>
-      <form class="planner fade" id="planner" novalidate>
-        <div class="steps-dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div>
+      <div class="pk fade" id="pk-birthday">
+        <div class="pk-head"><h3>Adult Birthday Shoot</h3><p>Studio sessions in Pretoria Central</p></div>
+        <div class="pk-grid" id="pk-grid"></div>
+        <div class="pk-policy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v5h1"/></svg><p><b>Booking policy</b>To secure your photoshoot date and time, a 50% non-refundable deposit is required upon booking. The remaining balance is due on the day of the shoot. No booking is confirmed without a deposit.</p></div>
+      </div>
+      <div class="pk-more fade">
+        <h3>Booking a different session?</h3>
+        <p>Answer three quick questions and we&rsquo;ll send the right packages and open dates on WhatsApp.</p>
+      </div>
+      <form class="planner fade" id="planner" novalidate style="margin-top:30px">
+        <input type="hidden" name="pkg" id="pkg"><div class="steps-dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div>
         <fieldset class="p-step on"><legend class="sr">Step 1 of 4</legend><h3>Which session?</h3><p>Pick one.</p><div class="opts" id="occasions"></div></fieldset>
         <fieldset class="p-step"><legend class="sr">Step 2 of 4</legend><h3>Who&rsquo;s in it?</h3><p>And would you like photos, video or both?</p>
           <div class="opts" style="margin-bottom:18px">
@@ -1468,9 +1509,25 @@ footer h3 { color: var(--fg); }
 
   // Sessions and videography
   $("#session-list").innerHTML = SESSIONS.map(function (s) {
-    return '<div class="session fade" id="session-' + s[0] + '"><h3>' + s[1] + "</h3><p>" + s[2] + '</p><a href="#packages" data-plan="' + plain(s[1]) + '">Request packages</a></div>';
+    return '<div class="session fade" id="session-' + s[0] + '"><h3>' + s[1] + "</h3><p>" + s[2] + '</p>' + (s[0] === "birthday" ? '<a href="#pk-birthday">View packages &amp; prices</a>' : '<a href="#packages" data-plan="' + plain(s[1]) + '">Request packages</a>') + "</div>";
   }).join("");
   $("#video-list").innerHTML = VIDEO.map(function (v) { return "<li>" + v[0].replace(" Videography", "") + "</li>"; }).join("");
+
+  // Price list. Edit prices and inclusions here.
+  var PACKAGES = [
+    ["Standard Package", 750, ["30 minute session", "20 high-res images", "10 pro edited images", "Studio props / customised theme", "2 outfit changes", "Online gallery"]],
+    ["Snoot Package", 880, ["30 minute session", "20 high-res images", "10 pro edited images", "Gobo light effects", "2 outfit changes", "Online gallery"]],
+    ["Pop Through Paper Package", 1150, ["45 minute session", "15 pro edited images", "Paper pop-up effect", "1 minute video (tear cheer)", "2 outfit changes", "Online gallery"]],
+    ["Premium Package", 1400, ["1 hour session", "25 high-res images", "15 pro edited images", "Paper pop-up &amp; snoot effect", "1 minute video (tear cheer)", "3 different backdrops", "Studio props / customised theme", "3 outfit changes", "Online gallery"], "Everything included"]
+  ];
+  var tick = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>';
+  $("#pk-grid").innerHTML = PACKAGES.map(function (k, i) {
+    var label = plain(k[0]) + " (R" + k[1] + ")";
+    return '<article class="pk-card' + (k[3] ? " featured" : "") + '">' + (k[3] ? '<span class="pk-tag">' + k[3] + "</span>" : "") +
+      "<h4>" + k[0] + '</h4><p class="pk-price">R' + k[1] + "<small>per session</small></p><ul>" +
+      k[2].map(function (f) { return "<li>" + tick + f + "</li>"; }).join("") + '<li class="extra">' + tick + "Add family &amp; friends for free</li></ul>" +
+      '<a class="btn' + (k[3] ? "" : " btn--solid") + '" href="#planner" data-plan="Adult Birthday" data-pkg="' + esc(label) + '">Book this package</a></article>';
+  }).join("");
 
   // Packages planner
   var OCC = SESSIONS.map(function (s) { return plain(s[1]); }).concat(["Videography", "Printing", "Something else"]);
@@ -1478,8 +1535,8 @@ footer h3 { color: var(--fg); }
   $("#occasions").innerHTML = OCC.map(function (o, i) { return '<label class="opt"><input type="radio" name="occasion" value="' + esc(o) + '"' + (i ? "" : " checked") + "><span>" + esc(o) + "</span></label>"; }).join("");
   function message() {
     var d = new FormData(form);
-    return ["Hi J Masocha Photography! Please send me your packages and prices.", "",
-      "Session: " + d.get("occasion"), "Coverage: " + d.get("coverage"), "Who: " + d.get("who"),
+    return [d.get("pkg") ? "Hi J Masocha Photography! I'd like to book the " + d.get("pkg") + "." : "Hi J Masocha Photography! Please send me your packages and prices.", "",
+      "Session: " + d.get("occasion"), d.get("pkg") ? "Package: " + d.get("pkg") : null, "Coverage: " + d.get("coverage"), "Who: " + d.get("who"),
       d.get("date") ? "Preferred date: " + new Date(d.get("date") + "T00:00").toLocaleDateString("en-ZA", { weekday: "short", day: "numeric", month: "long", year: "numeric" }) : null,
       d.get("theme") ? "Theme: " + d.get("theme") : null, d.get("note") ? "Notes: " + d.get("note") : null, "",
       "Name: " + d.get("name"), "Phone: " + d.get("phone")].filter(function (l) { return l !== null; }).join("\n");
@@ -1500,13 +1557,16 @@ footer h3 { color: var(--fg); }
       $("#send-mail").href = "mailto:" + MAIL + "?subject=" + encodeURIComponent("Packages: " + new FormData(form).get("occasion")) + "&body=" + encodeURIComponent(m);
     }
   }
+  // A package only applies to its own session
+  $("#occasions").addEventListener("change", function (e) { if (e.target.value !== "Adult Birthday") $("#pkg").value = ""; });
   $("#next").addEventListener("click", function () { go(step + 1); });
   $("#back").addEventListener("click", function () { go(step - 1); });
   form.addEventListener("submit", function (e) { e.preventDefault(); go(step + 1); });
   document.addEventListener("click", function (e) {
     var a = e.target.closest("[data-plan]"); if (!a) return;
     var r = $$('input[name="occasion"]', form).filter(function (x) { return x.value === a.dataset.plan; })[0];
-    if (r) { r.checked = true; go(0); toast(a.dataset.plan + " selected"); }
+    if (r) { r.checked = true; go(0); toast((a.dataset.pkg || a.dataset.plan) + " selected"); }
+    $("#pkg").value = a.dataset.pkg || "";
   });
 
   // Print examples: arrows, drag and a progress bar
