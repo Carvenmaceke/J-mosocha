@@ -42,6 +42,7 @@ em { font-style: italic; }
 .center { text-align: center; }
 .center .lede { margin-inline: auto; }
 .lede { color: var(--fg-2); max-width: 620px; margin-top: 16px; }
+.quote { font-style: italic; }
 .btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 26px; border: 1px solid currentColor; background: transparent; color: var(--fg); text-decoration: none; text-transform: uppercase; letter-spacing: .18em; font-size: .74rem; font-weight: 400; cursor: pointer; transition: background .25s, color .25s; }
 .btn:hover { background: var(--fg); color: var(--bg); }
 .btn--solid { background: var(--fg); color: var(--bg); border-color: var(--fg); }
@@ -707,23 +708,23 @@ footer h3 { color: var(--fg); }
 .ap-head { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 20px 24px 12px; }
 .ap-head h3 { font-size: 1.7rem; }
 .ap-head p { color: var(--muted); font-style: italic; font-size: .95rem; }
-.ap-chips { display: flex; gap: 8px; padding: 4px 24px 16px; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid var(--g3); }
-.ap-chips::-webkit-scrollbar { display: none; }
-.ap-chips button { flex: none; border: 0; border-radius: 999px; padding: 8px 15px; background: var(--g2); color: var(--fg-2); font: inherit; font-weight: 400; font-size: .9rem; cursor: pointer; transition: background .2s, color .2s; }
-.ap-chips button small { margin-left: 6px; opacity: .6; font-size: .78rem; }
-.ap-chips button:hover { background: var(--g3); color: var(--fg); }
-.ap-chips button[aria-pressed="true"] { background: var(--g4); color: var(--fg); font-weight: 700; }
+.ap-box { --gw: var(--bg); --gw-fg: var(--fg); --gw-mute: var(--fg-2); --gw-line: var(--line); }
+.ap-head h3 { white-space: nowrap; }
+@media (max-width: 600px) { .ap-head h3 { font-size: 1.35rem; } .ap-tools { gap: 4px; } }
+.ap-head h3 small { font-size: .95rem; font-style: italic; color: var(--muted); margin-left: 8px; }
+.ap-tools { margin-left: auto; display: flex; align-items: center; gap: 8px; position: relative; }
+.ap-tools .f-pop { z-index: 5; }
+.ap-head { border-bottom: 1px solid var(--g3); padding-bottom: 16px; }
 .ap-body { flex: 1; overflow-y: auto; padding: 8px 24px 28px; }
 .ap-group { padding-top: 18px; }
 .ap-group h4 { display: flex; align-items: baseline; gap: 10px; font-weight: 400; font-size: 1.05rem; margin: 0 0 12px; }
-.ap-group h4 span { color: var(--muted); font-style: italic; font-size: .85rem; }
 .ap-group h4::before { content: ""; width: 12px; height: 12px; border-radius: 50%; background: var(--sw); border: 1px solid var(--g4); align-self: center; }
 .ap-rows { display: flex; flex-wrap: wrap; gap: 6px; }
 .ap-rows button { padding: 0; border: 0; border-radius: 8px; overflow: hidden; cursor: zoom-in; background: var(--g2); }
 .ap-rows img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s, opacity .3s; }
 .ap-rows button:hover img { transform: scale(1.04); }
 .ap-rows button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-@media (max-width: 600px) { .ap-box { height: calc(100svh - 16px); width: calc(100% - 16px); } .ap-head, .ap-chips, .ap-body { padding-left: 14px; padding-right: 14px; } }
+@media (max-width: 600px) { .ap-box { height: calc(100svh - 16px); width: calc(100% - 16px); } .ap-head, .ap-body { padding-left: 14px; padding-right: 14px; } .ap-head h3 small { display: none; } .ap-tools { position: static; } .ap-head { position: relative; } .ap-tools .f-pop { left: 14px; right: 14px; width: auto; top: calc(100% - 4px); } }
 </style>
 </head>
 <body>
@@ -815,7 +816,7 @@ footer h3 { color: var(--fg); }
         <div id="tones"></div>
         <nav class="g-time" aria-label="Jump to backdrop"><ol id="g-jump"></ol></nav>
       </div>
-      <div class="g-foot"><button class="btn" type="button" id="g-all">View all photos</button><p>Tap a photo to open the slideshow &middot; swipe to browse &middot; <a href="#sessions" style="color:inherit">continue to sessions</a></p></div>
+      <div class="g-foot"><button class="btn" type="button" id="g-all">View all photos</button></div>
     </div>
   </section>
 
@@ -824,18 +825,9 @@ footer h3 { color: var(--fg); }
       <div class="center fade">
         <p class="eyebrow">Photo sessions</p>
         <h2 class="title">Sessions for every milestone</h2>
-        <p class="lede">Every session is styled in our Pretoria Central studio or on location. Choose one to request its packages.</p>
+        <p class="lede quote">&ldquo;Every milestone deserves its own story.&rdquo;</p>
       </div>
       <div class="sessions" id="session-list"></div>
-      <div class="info" id="session-info">
-        <h3 class="fade">How a session works</h3>
-        <ol class="info-steps">
-          <li class="fade"><b>Choose your session</b><span>Pick a session above, or tell us your own concept.</span></li>
-          <li class="fade"><b>Get packages &amp; dates</b><span>We send packages, prices and open dates on WhatsApp.</span></li>
-          <li class="fade"><b>Plan the look</b><span>Share your theme, colours and outfits so we can style the set.</span></li>
-          <li class="fade"><b>Shoot &amp; receive</b><span>We guide every pose, then deliver your edited photos.</span></li>
-        </ol>
-      </div>
     </div>
   </section>
 
@@ -865,7 +857,7 @@ footer h3 { color: var(--fg); }
       <div class="fade">
         <p class="eyebrow">Packages &amp; pricing</p>
         <h2 class="title">Our packages</h2>
-        <p class="lede">Choose a package and book it on WhatsApp in a minute. Prices for other sessions are sent on request.</p>
+        <p class="lede quote">&ldquo;The best moments are the ones you plan for.&rdquo;</p>
       </div>
       <div class="pk fade" id="pk-birthday">
         <div class="pk-head"><h3>Adult Birthday Shoot</h3><p>Studio sessions in Pretoria Central</p></div>
@@ -874,11 +866,11 @@ footer h3 { color: var(--fg); }
       </div>
       <div class="pk-more fade">
         <h3>Booking a different session?</h3>
-        <p>Answer three quick questions and we&rsquo;ll send the right packages and open dates on WhatsApp.</p>
+        <p class="quote">&ldquo;Your moment, your way.&rdquo;</p>
       </div>
       <form class="planner fade" id="planner" novalidate style="margin-top:30px">
         <input type="hidden" name="pkg" id="pkg"><div class="steps-dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div>
-        <fieldset class="p-step on"><legend class="sr">Step 1 of 4</legend><h3>Which session?</h3><p>Pick one.</p><div class="opts" id="occasions"></div></fieldset>
+        <fieldset class="p-step on"><legend class="sr">Step 1 of 4</legend><h3>Which session?</h3><div class="opts" id="occasions"></div></fieldset>
         <fieldset class="p-step"><legend class="sr">Step 2 of 4</legend><h3>Who&rsquo;s in it?</h3><p>And would you like photos, video or both?</p>
           <div class="opts" style="margin-bottom:18px">
             <label class="opt"><input type="radio" name="coverage" value="Photos" checked><span>Photos</span></label>
@@ -894,7 +886,7 @@ footer h3 { color: var(--fg); }
             <label class="opt"><input type="radio" name="who" value="Products"><span>Products</span></label>
           </div>
         </fieldset>
-        <fieldset class="p-step"><legend class="sr">Step 3 of 4</legend><h3>Your details</h3><p>So we can reply.</p>
+        <fieldset class="p-step"><legend class="sr">Step 3 of 4</legend><h3>Your details</h3>
           <div class="fields">
             <div class="f"><label for="pname">Name *</label><input id="pname" name="name" autocomplete="name" required></div>
             <div class="f"><label for="pphone">Phone *</label><input id="pphone" name="phone" type="tel" autocomplete="tel" required></div>
@@ -903,7 +895,7 @@ footer h3 { color: var(--fg); }
             <div class="f full"><label for="pnote">Anything else?</label><textarea id="pnote" name="note" rows="3"></textarea></div>
           </div>
         </fieldset>
-        <fieldset class="p-step"><legend class="sr">Step 4 of 4</legend><h3>Ready to send</h3><p>Here&rsquo;s your message.</p><div class="summary" id="summary"></div></fieldset>
+        <fieldset class="p-step"><legend class="sr">Step 4 of 4</legend><h3>Ready to send</h3><div class="summary" id="summary"></div></fieldset>
         <div class="p-actions">
           <button type="button" class="btn" id="back" hidden>Back</button><span class="grow"></span>
           <button type="button" class="btn btn--solid" id="next">Next</button>
@@ -920,7 +912,7 @@ footer h3 { color: var(--fg); }
         <div>
           <p class="eyebrow">Printed products</p>
           <h2 class="title">Made to be held</h2>
-          <p class="lede">A few of the keepsakes we&rsquo;ve printed in-house. Scroll through, then tell us what you&rsquo;d like made from your photos.</p>
+          <p class="lede quote">&ldquo;A photo on a screen is seen. A photo in print is held.&rdquo;</p>
         </div>
         <div class="p-arrows">
           <button class="rv-btn" id="p-prev" type="button" aria-label="Previous example"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></button>
@@ -1068,10 +1060,17 @@ footer h3 { color: var(--fg); }
 <dialog class="ap" id="all-photos" aria-labelledby="ap-title">
   <div class="ap-box">
     <div class="ap-head">
-      <div><h3 id="ap-title">All photos</h3><p id="ap-count"></p></div>
+      <h3 id="ap-title">All photos <small id="ap-now">All photos</small></h3>
+      <div class="ap-tools">
+        <button class="g-clear" type="button" id="ap-clear" hidden>Clear</button>
+        <button class="f-btn" type="button" id="ap-fbtn" aria-expanded="false" aria-controls="ap-pop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 5h18M6 12h12M10 19h4"/></svg>Filter<span class="n" id="ap-n" hidden>1</span></button>
+        <div class="f-pop" id="ap-pop">
+          <h4>Show photos of</h4>
+          <div class="filters" id="ap-chips" role="group" aria-label="Filter photos"></div>
+        </div>
+      </div>
       <button class="icon-btn" type="button" id="ap-close" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
     </div>
-    <div class="ap-chips" id="ap-chips" role="group" aria-label="Filter photos"></div>
     <div class="ap-body" id="ap-body"></div>
   </div>
 </dialog>
@@ -1080,7 +1079,7 @@ footer h3 { color: var(--fg); }
     <button class="icon-btn cm-close" type="button" data-po-close aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
     <div class="cm-step on" data-pstep="pick">
       <h3 id="po-title">What would you like to print?</h3>
-      <p class="cm-sub">Choose one or more items.</p>
+      <p class="cm-sub quote">&ldquo;Your favourite photos deserve more than a screen.&rdquo;</p>
       <div class="po-grid" id="po-grid"><button class="po-tile" type="button" aria-pressed="false" data-item="Canvas"><span class="em" aria-hidden="true">🖼️</span><span><b>Canvas</b><br><small>Gallery-wrapped</small></span><span class="tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></span></button><button class="po-tile" type="button" aria-pressed="false" data-item="Framed print"><span class="em" aria-hidden="true">🪟</span><span><b>Framed print</b><br><small>Ready to hang</small></span><span class="tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></span></button><button class="po-tile" type="button" aria-pressed="false" data-item="Photo prints"><span class="em" aria-hidden="true">📷</span><span><b>Photo prints</b><br><small>Any size</small></span><span class="tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></span></button><button class="po-tile" type="button" aria-pressed="false" data-item="Photo album"><span class="em" aria-hidden="true">📖</span><span><b>Photo album</b><br><small>Printed book</small></span><span class="tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></span></button><button class="po-tile" type="button" aria-pressed="false" data-item="Photo snow globe"><span class="em" aria-hidden="true">🔮</span><span><b>Photo snow globe</b><br><small>Gift idea</small></span><span class="tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></span></button><button class="po-tile" type="button" aria-pressed="false" data-item="Tumbler 500ml"><span class="em" aria-hidden="true">🥤</span><span><b>Tumbler 500ml</b><br><small>Name or photo</small></span><span class="tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></span></button><button class="po-tile" type="button" aria-pressed="false" data-item="Mug"><span class="em" aria-hidden="true">☕</span><span><b>Mug</b><br><small>Gift idea</small></span><span class="tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></span></button><button class="po-tile" type="button" aria-pressed="false" data-item="Plate"><span class="em" aria-hidden="true">🍽️</span><span><b>Plate</b><br><small>Keepsake</small></span><span class="tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></span></button><button class="po-tile" type="button" aria-pressed="false" data-item="T-shirt"><span class="em" aria-hidden="true">👕</span><span><b>T-shirt</b><br><small>Custom print</small></span><span class="tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></span></button><button class="po-tile" type="button" aria-pressed="false" data-item="Something else"><span class="em" aria-hidden="true">✨</span><span><b>Something else</b><br><small>Tell us</small></span><span class="tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></span></button></div>
       <p class="err-msg" id="po-pick-err" style="color:#d64545;font-size:.85rem;min-height:1.2em;margin-top:10px"></p>
       <button class="btn btn--solid cm-send" type="button" id="po-next">Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
@@ -1088,7 +1087,7 @@ footer h3 { color: var(--fg); }
     <div class="cm-step" data-pstep="details">
       <button class="cm-back" type="button" id="po-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>Back</button>
       <h3>Your order</h3>
-      <p class="cm-sub">Set quantities and add a size or note if you like.</p>
+      
       <form class="cm-form" id="po-form" novalidate>
         <div class="po-items" id="po-items"></div>
         <div class="f"><label for="po-name">Full name *</label><input id="po-name" name="name" autocomplete="name" required><span class="err-msg"></span></div>
@@ -1108,7 +1107,7 @@ footer h3 { color: var(--fg); }
     <button class="icon-btn cm-close" type="button" data-cm-close aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
     <div class="cm-step on" data-step="choose">
       <h3 id="cm-title">How would you like to contact us?</h3>
-      <p class="cm-sub">Choose what suits you best.</p>
+      <p class="cm-sub quote">&ldquo;Every great photo starts with a conversation.&rdquo;</p>
       <div class="cm-opts">
         <button class="cm-opt" type="button" data-way="email"><span class="ic ic-mail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg></span><span><b>Email</b><small>Send us your query by email</small></span><span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>
         <button class="cm-opt" type="button" data-way="whatsapp"><span class="ic ic-wa"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1s-.5-.1-.7.1-.8 1-.9 1.2-.3.2-.6.1a8.2 8.2 0 0 1-4-3.5c-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6a1.1 1.1 0 0 0-.8.4 3.4 3.4 0 0 0-1 2.5 5.9 5.9 0 0 0 1.2 3.1 13.4 13.4 0 0 0 5.2 4.6c1.9.8 2.7.9 3.6.8a3.1 3.1 0 0 0 2-1.4 2.5 2.5 0 0 0 .2-1.4c-.1-.1-.3-.2-.6-.3zM12 21.8a9.8 9.8 0 0 1-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 1 1 12 21.8zm8.4-18.2A11.8 11.8 0 0 0 1.8 17.9L.1 24l6.3-1.6a11.8 11.8 0 0 0 5.6 1.4A11.8 11.8 0 0 0 20.4 3.6z"/></svg></span><span><b>WhatsApp</b><small>Message us on WhatsApp</small></span><span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>
@@ -1130,7 +1129,7 @@ footer h3 { color: var(--fg); }
     <div class="cm-step" data-step="call">
       <button class="cm-back" type="button" data-cm-back><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>Back</button>
       <h3>Call the studio</h3>
-      <p class="cm-sub">Tap the number to call, or dial it from your phone.</p>
+      
       <a class="cm-call-num" href="tel:+27661322462">066 132 2462</a>
       <a class="btn btn--solid cm-send" href="tel:+27661322462"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg> Call now</a>
     </div>
@@ -1274,9 +1273,9 @@ footer h3 { color: var(--fg); }
   // Dropdown menus
   var count = function (cat) { return TONES.reduce(function (n, t) { return n + t.photos.filter(function (p) { return cat === "all" || p[2].split(" ").indexOf(cat) > -1; }).length; }, 0); };
   $("#gallery-drop").innerHTML = CATS.map(function (c, i) {
-    return (i === 1 ? '<li class="sep" role="separator"></li>' : "") + '<li><a href="#gallery" data-cat="' + c[0] + '">' + (c[0] === "all" ? "All photos" : c[1]) + "<small>" + count(c[0]) + "</small></a></li>";
+    return (i === 1 ? '<li class="sep" role="separator"></li>' : "") + '<li><a href="#gallery" data-cat="' + c[0] + '">' + (c[0] === "all" ? "All photos" : c[1]) + "</a></li>";
   }).join("");
-  $("#session-drop").innerHTML = '<li class="label">Sessions</li>' + SESSIONS.map(function (s) { return '<li><a href="#session-' + s[0] + '">' + s[1] + "</a></li>"; }).join("") + '<li class="sep" role="separator"></li><li><a href="#session-info">How a session works</a></li><li><a href="#packages">Request packages</a></li>';
+  $("#session-drop").innerHTML = '<li class="label">Sessions</li>' + SESSIONS.map(function (s) { return '<li><a href="#session-' + s[0] + '">' + s[1] + "</a></li>"; }).join("") + '<li class="sep" role="separator"></li><li><a href="#packages">Packages &amp; pricing</a></li>';
   var items = $$(".menu > li");
   function closeAll(except) { items.forEach(function (li) { if (li !== except) { li.classList.remove("open"); var b = $("button", li); if (b) b.setAttribute("aria-expanded", "false"); } }); }
   items.forEach(function (li) {
@@ -1314,7 +1313,7 @@ footer h3 { color: var(--fg); }
 
   // Gallery: one section per backdrop colour, each laid out in justified rows
   var tonesEl = $("#tones"), current = "all", visible = [];
-  $("#filters").innerHTML = CATS.map(function (c) { return '<button type="button" data-cat="' + c[0] + '" aria-pressed="' + (c[0] === "all") + '">' + c[1] + "<small>" + count(c[0]) + "</small></button>"; }).join("").replace(">All<", ">All photos<");
+  $("#filters").innerHTML = CATS.map(function (c) { return '<button type="button" data-cat="' + c[0] + '" aria-pressed="' + (c[0] === "all") + '">' + c[1] + "</button>"; }).join("").replace(">All<", ">All photos<");
   var fBtn = $("#f-btn"), fPop = $("#f-pop");
   function setPop(open) { fPop.classList.toggle("open", open); fBtn.setAttribute("aria-expanded", open); if (open) $("#filters [aria-pressed=true]").focus(); }
   fBtn.addEventListener("click", function (e) { e.stopPropagation(); setPop(!fPop.classList.contains("open")); });
@@ -1341,11 +1340,11 @@ footer h3 { color: var(--fg); }
         var i = visible.push(p) - 1, wide = p[3] / p[4] > 1.2 ? " wide" : "";
         return '<figure class="shot' + wide + '" tabindex="0" role="button" aria-label="Open photo: ' + p[1] + '" data-i="' + i + '"><img src="' + src(p[0]) + '" width="' + p[3] + '" height="' + p[4] + '" alt="' + p[1] + '" loading="lazy"><span class="zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span><figcaption>' + p[1] + "</figcaption></figure>";
       }).join("");
-      return '<section class="tone tone-' + t.id + '" id="set-' + t.id + '" style="--sw:' + SWATCH[t.id] + '" aria-label="' + plain(t.name) + '"><div class="tone-head"><h3><i aria-hidden="true"></i>' + t.name + "</h3><p>" + t.note + "<b>" + list.length + " photo" + (list.length > 1 ? "s" : "") + '</b></p></div><div class="grid">' + figs + "</div></section>";
+      return '<section class="tone tone-' + t.id + '" id="set-' + t.id + '" style="--sw:' + SWATCH[t.id] + '" aria-label="' + plain(t.name) + '"><div class="tone-head"><h3><i aria-hidden="true"></i>' + t.name + "</h3><p>" + t.note + '</p></div><div class="grid">' + figs + "</div></section>";
     }).join("");
     var catName = CATS.filter(function (c) { return c[0] === current; })[0][1];
     $("#g-now").textContent = current === "all" ? "All photos" : catName;
-    $("#g-jump").innerHTML = groups.map(function (g) { return '<li><a href="#set-' + g[0].id + '" data-set="' + g[0].id + '" title="' + plain(g[0].name) + '" style="--sw:' + SWATCH[g[0].id] + '"><i aria-hidden="true"></i><span>' + g[0].name + "<small>" + g[1] + " photo" + (g[1] > 1 ? "s" : "") + "</small></span></a></li>"; }).join("");
+    $("#g-jump").innerHTML = groups.map(function (g) { return '<li><a href="#set-' + g[0].id + '" data-set="' + g[0].id + '" title="' + plain(g[0].name) + '" style="--sw:' + SWATCH[g[0].id] + '"><i aria-hidden="true"></i><span>' + g[0].name + "</span></a></li>"; }).join("");
     spy();
   }
   function setCat(cat) {
@@ -1459,8 +1458,19 @@ footer h3 { color: var(--fg); }
   // All photos window: every photo, grouped by backdrop, with category chips
   var ap = $("#all-photos"), apBody = $("#ap-body"), apCat = "all", reopenAll = false, apScroll = 0;
   var SW = { dark: "#0d0d0e", grey: "#8f8f91", white: "#ffffff", colour: "#f3c9c1", outdoor: "#9db08f" };
-  $("#ap-chips").innerHTML = CATS.map(function (c) { return '<button type="button" data-cat="' + c[0] + '" aria-pressed="' + (c[0] === "all") + '">' + c[1] + "<small>" + count(c[0]) + "</small></button>"; }).join("");
-  $$("#ap-chips button").forEach(function (b) { b.addEventListener("click", function () { apCat = b.dataset.cat; apScroll = 0; renderAll(); }); });
+  $("#ap-chips").innerHTML = CATS.map(function (c) { return '<button type="button" data-cat="' + c[0] + '" aria-pressed="' + (c[0] === "all") + '">' + c[1] + "</button>"; }).join("").replace(">All<", ">All photos<");
+  var apBtn = $("#ap-fbtn"), apPop = $("#ap-pop");
+  function setApPop(open) { apPop.classList.toggle("open", open); apBtn.setAttribute("aria-expanded", open); if (open) $("#ap-chips [aria-pressed=true]").focus(); }
+  apBtn.addEventListener("click", function (e) { e.stopPropagation(); setApPop(!apPop.classList.contains("open")); });
+  ap.addEventListener("click", function (e) { if (!apPop.contains(e.target) && e.target !== apBtn) setApPop(false); });
+  apPop.addEventListener("keydown", function (e) {
+    var bs = $$("#ap-chips button"), i = bs.indexOf(document.activeElement);
+    if (e.key === "Escape") { e.preventDefault(); setApPop(false); apBtn.focus(); }
+    if (e.key === "ArrowDown") { e.preventDefault(); (bs[i + 1] || bs[0]).focus(); }
+    if (e.key === "ArrowUp") { e.preventDefault(); (bs[i - 1] || bs[bs.length - 1]).focus(); }
+  });
+  $$("#ap-chips button").forEach(function (b) { b.addEventListener("click", function () { apCat = b.dataset.cat; apScroll = 0; renderAll(); setApPop(false); apBtn.focus(); }); });
+  $("#ap-clear").addEventListener("click", function () { apCat = "all"; apScroll = 0; renderAll(); });
   function apJustify(row) {
     var items = $$("button", row), W = row.clientWidth, gap = 6, target = W < 500 ? 120 : 170, line = [], sum = 0;
     function place(list, h) { list.forEach(function (f) { f.style.width = Math.floor(f._ar * h) + "px"; f.style.height = Math.floor(h) + "px"; }); }
@@ -1478,10 +1488,11 @@ footer h3 { color: var(--fg); }
       var list = t.photos.filter(function (p) { return apCat === "all" || p[2].split(" ").indexOf(apCat) > -1; });
       if (!list.length) return "";
       total += list.length;
-      return '<section class="ap-group" style="--sw:' + SW[t.id] + '"><h4>' + t.name + " <span>" + list.length + '</span></h4><div class="ap-rows">' +
+      return '<section class="ap-group" style="--sw:' + SW[t.id] + '"><h4>' + t.name + '</h4><div class="ap-rows">' +
         list.map(function (p) { return '<button type="button" data-slug="' + p[0] + '" data-w="' + p[3] + '" data-h="' + p[4] + '" aria-label="View ' + p[1] + '"><img src="' + src(p[0]) + '" alt="' + p[1] + '" loading="lazy"></button>'; }).join("") + "</div></section>";
     }).join("");
-    $("#ap-count").textContent = total + " photo" + (total === 1 ? "" : "s") + (apCat === "all" ? ", grouped by backdrop" : " \u00b7 " + CATS.filter(function (c) { return c[0] === apCat; })[0][1]);
+    $("#ap-now").textContent = apCat === "all" ? "" : CATS.filter(function (c) { return c[0] === apCat; })[0][1];
+    $("#ap-n").hidden = $("#ap-clear").hidden = apCat === "all";
     $$(".ap-rows", apBody).forEach(apJustify);
   }
   function openAllPhotos(keep) {
@@ -1695,7 +1706,7 @@ footer h3 { color: var(--fg); }
       }
       var wa = way === "whatsapp";
       $("#cm-form-title").textContent = wa ? "Message us on WhatsApp" : "Send us an email";
-      $("#cm-form-sub").textContent = wa ? "Fill this in and WhatsApp will open with your message ready to send." : "Fill this in and your email app will open with your message ready to send.";
+      $("#cm-form-sub").textContent = "We\u2019ll get back to you as soon as we can.";
       var send = $("#cm-send");
       send.className = "btn btn--solid cm-send" + (wa ? " wa" : "");
       send.innerHTML = (wa ? WA_ICON + " Send via WhatsApp" : MAIL_ICON + " Send email");
