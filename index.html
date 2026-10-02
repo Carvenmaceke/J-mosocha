@@ -181,7 +181,7 @@ main { padding-top: var(--header-h, 147px); }
   .f-pop { left: 0; right: 0; width: auto; }
   .g-label small { display: none; }
 }
-.g-meta { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 26px 0 14px; font-size: .92rem; color: var(--gw-mute); font-style: italic; flex-wrap: wrap; }
+.g-meta { display: flex; justify-content: flex-end; min-height: 1px; align-items: center; gap: 12px; margin: 26px 0 14px; font-size: .92rem; color: var(--gw-mute); font-style: italic; flex-wrap: wrap; }
 .g-jump { display: flex; gap: 6px; flex-wrap: wrap; font-style: normal; }
 .g-jump a { display: inline-flex; align-items: center; gap: 7px; padding: 4px 10px; border-radius: 999px; color: var(--gw-mute); text-decoration: none; font-size: .85rem; font-weight: 400; }
 .g-jump a:hover { background: var(--gw-2); color: var(--gw-fg); }
@@ -740,7 +740,7 @@ footer h3 { color: var(--fg); }
     </header>
     <div class="g-bar" id="g-bar">
       <div class="wrap">
-        <p class="g-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.8"/><path d="m21 15-5-5L5 21"/></svg>Gallery <small id="g-now">All photos</small></p>
+        <p class="g-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.8"/><path d="m21 15-5-5L5 21"/></svg>Gallery <small id="g-now" aria-live="polite">All photos</small></p>
         <div class="g-tools">
           <button class="g-clear" type="button" id="g-clear" hidden>Clear</button>
           <button class="f-btn" type="button" id="f-btn" aria-expanded="false" aria-controls="f-pop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 5h18M6 12h12M10 19h4"/></svg>Filter<span class="n" id="f-n" hidden>1</span></button>
@@ -752,7 +752,7 @@ footer h3 { color: var(--fg); }
       </div>
     </div>
     <div class="wrap">
-      <div class="g-meta"><span id="g-count" aria-live="polite"></span><nav class="g-jump" id="g-jump" aria-label="Jump to backdrop"></nav></div>
+      <div class="g-meta"><nav class="g-jump" id="g-jump" aria-label="Jump to backdrop"></nav></div>
       <div id="tones"></div>
       <div class="g-foot"><button class="btn" type="button" id="g-all">View all photos</button><p>Tap a photo to open the slideshow &middot; swipe to browse &middot; <a href="#sessions" style="color:inherit">continue to sessions</a></p></div>
     </div>
@@ -1276,9 +1276,8 @@ footer h3 { color: var(--fg); }
       }).join("");
       return '<section class="tone tone-' + t.id + '" id="set-' + t.id + '" style="--sw:' + SWATCH[t.id] + '" aria-label="' + plain(t.name) + '"><div class="tone-head"><h3><i aria-hidden="true"></i>' + t.name + "</h3><p>" + t.note + "<b>" + list.length + " photo" + (list.length > 1 ? "s" : "") + '</b></p></div><div class="grid">' + figs + "</div></section>";
     }).join("");
-    var catName = CATS.filter(function (c) { return c[0] === current; })[0][1], label = current === "all" ? "" : " in " + catName;
+    var catName = CATS.filter(function (c) { return c[0] === current; })[0][1];
     $("#g-now").textContent = current === "all" ? "All photos" : catName;
-    $("#g-count").textContent = "Showing " + visible.length + " photo" + (visible.length > 1 ? "s" : "") + label + " across " + groups.length + " backdrop" + (groups.length > 1 ? "s" : "");
     $("#g-jump").innerHTML = groups.length > 1 ? groups.map(function (g) { return '<a href="#set-' + g[0].id + '" style="--sw:' + SWATCH[g[0].id] + '"><i aria-hidden="true"></i>' + g[0].name + "</a>"; }).join("") : "";
   }
   function setCat(cat) {
