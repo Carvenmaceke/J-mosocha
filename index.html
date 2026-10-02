@@ -134,32 +134,50 @@ main { padding-top: var(--header-h, 147px); }
 .hero-text .btn:hover { background: #fff; color: #111; }
 @media (max-width: 700px) { .hero { grid-template-columns: 1fr; } .hero figure:not(:nth-child(2)) { display: none; } }
 
-/* ---------- Gallery grouped by backdrop colour ---------- */
-.filters { display: flex; flex-wrap: wrap; justify-content: center; gap: 0; margin-top: 34px; }
-.filters button { border: 0; background: none; cursor: pointer; padding: 6px 16px; font-size: .95rem; font-weight: 400; color: var(--muted); position: relative; }
-.filters button + button::before { content: ""; position: absolute; left: 0; top: 50%; height: 14px; width: 1px; background: var(--line); transform: translateY(-50%); }
-.filters button:hover { color: var(--fg); }
-.filters button[aria-pressed="true"] { color: var(--fg); text-decoration: underline; text-underline-offset: 8px; text-decoration-thickness: 1px; }
-.filter-select { display: none; margin: 26px auto 0; font: inherit; font-weight: 400; padding: 12px 16px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); width: 100%; max-width: 340px; }
-@media (max-width: 700px) { .filters { display: none; } .filter-select { display: block; } }
-.tone { padding: clamp(60px, 7vw, 96px) 0; transition: opacity .4s; }
-.tone[hidden] { display: none; }
-.tone-dark { background: var(--tone-dark); color: #f2efea; }
+/* ---------- Gallery: one framed section, sets grouped by backdrop ---------- */
+.gallery-sec { background: var(--bg-2); }
+.filters { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 30px; }
+.filters button { flex: none; border: 1px solid var(--line); border-radius: 999px; background: var(--bg); cursor: pointer; padding: 8px 16px; font: inherit; font-size: .9rem; font-weight: 400; color: var(--fg-2); transition: background .2s, color .2s, border-color .2s; }
+.filters button small { margin-left: 6px; opacity: .55; font-size: .78rem; }
+.filters button:hover { color: var(--fg); border-color: var(--fg-2); }
+.filters button[aria-pressed="true"] { background: var(--fg); border-color: var(--fg); color: var(--bg); }
+.filters button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 700px) {
+  .filters { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; scrollbar-width: none; margin-inline: -16px; padding: 2px 16px; }
+  .filters::-webkit-scrollbar { display: none; }
+}
+.g-meta { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 34px 0 14px; font-size: .92rem; color: var(--muted); font-style: italic; flex-wrap: wrap; }
+.g-jump { display: flex; gap: 6px; flex-wrap: wrap; font-style: normal; }
+.g-jump a { display: inline-flex; align-items: center; gap: 7px; padding: 4px 10px; border-radius: 999px; color: var(--fg-2); text-decoration: none; font-size: .85rem; font-weight: 400; }
+.g-jump a:hover { background: var(--bg); color: var(--fg); }
+.g-jump i, .tone-head h3 i { width: 11px; height: 11px; border-radius: 50%; background: var(--sw); box-shadow: 0 0 0 1px rgba(127,127,127,.45); flex: none; }
+#tones { display: grid; gap: 18px; text-align: left; }
+.tone { border-radius: 22px; padding: clamp(18px, 3vw, 32px); scroll-margin-top: calc(var(--header-h, 147px) + 12px); animation: fadeup .5s both; }
+.tone-dark { background: var(--tone-dark); color: #f2efea; box-shadow: inset 0 0 0 1px var(--line); }
 .tone-grey { background: var(--tone-grey); color: #fff; }
-.tone-white { background: var(--tone-white); color: #1d1d1f; }
+.tone-white { background: #fff; color: #1d1d1f; box-shadow: inset 0 0 0 1px rgba(0,0,0,.06); }
 .tone-colour { background: var(--tone-colour); color: #1d1d1f; }
 .tone-outdoor { background: var(--tone-outdoor); color: #1d1d1f; }
-.tone-head { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; margin-bottom: 30px; flex-wrap: wrap; }
-.tone-head h3 { font-size: clamp(1.6rem, 3vw, 2.3rem); }
-.tone-head h3 span { font-style: italic; opacity: .6; font-size: .6em; margin-right: 12px; }
-.tone-head p { font-style: italic; opacity: .7; }
-.rows { display: flex; flex-wrap: wrap; gap: 6px; }
-.shot { margin: 0; overflow: hidden; cursor: zoom-in; position: relative; background: rgba(127,127,127,.15); }
-.shot img { width: 100%; height: 100%; object-fit: cover; transition: transform 1s cubic-bezier(.2,.8,.2,1), opacity .6s; }
-.shot:hover img { transform: scale(1.04); }
+.tone-head { display: flex; justify-content: space-between; align-items: center; gap: 8px 20px; margin-bottom: 18px; flex-wrap: wrap; }
+.tone-head h3 { display: flex; align-items: center; gap: 10px; font-size: clamp(1.25rem, 2.2vw, 1.6rem); }
+.tone-head p { font-style: italic; opacity: .75; font-size: .92rem; }
+.tone-head p b { font-style: normal; font-weight: 400; padding: 3px 10px; margin-left: 8px; border-radius: 999px; background: rgba(127,127,127,.2); font-size: .8rem; }
+.grid { display: grid; grid-template-columns: repeat(5, 1fr); grid-auto-flow: dense; gap: 8px; }
+@media (max-width: 1000px) { .grid { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 700px) { .grid { grid-template-columns: repeat(2, 1fr); gap: 6px; } .tone { border-radius: 16px; } .g-jump { display: none; } }
+.shot { margin: 0; overflow: hidden; cursor: zoom-in; position: relative; aspect-ratio: 3/4; border-radius: 10px; background: rgba(127,127,127,.15); }
+.shot.wide { grid-column: span 2; aspect-ratio: 3/2; }
+.shot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; transition: transform 1s cubic-bezier(.2,.8,.2,1), opacity .6s; }
+.shot:hover img { transform: scale(1.05); }
 .shot:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-.shot figcaption { position: absolute; inset: auto 0 0 0; padding: 30px 14px 12px; color: #fff; font-style: italic; font-size: .9rem; background: linear-gradient(transparent, rgba(0,0,0,.6)); opacity: 0; transition: opacity .3s; }
+.shot figcaption { position: absolute; inset: auto 0 0 0; padding: 34px 12px 10px; color: #fff; font-style: italic; font-size: .88rem; line-height: 1.4; background: linear-gradient(transparent, rgba(0,0,0,.65)); opacity: 0; transition: opacity .3s; }
 .shot:hover figcaption, .shot:focus-visible figcaption { opacity: 1; }
+.shot .zoom { position: absolute; top: 8px; right: 8px; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: rgba(0,0,0,.45); color: #fff; opacity: 0; transition: opacity .3s; }
+.shot .zoom svg { width: 15px; height: 15px; }
+.shot:hover .zoom, .shot:focus-visible .zoom { opacity: 1; }
+@media (hover: none) { .shot figcaption { opacity: 1; padding-top: 24px; font-size: .78rem; } }
+.g-foot { margin-top: 34px; text-align: center; }
+.g-foot p { color: var(--muted); font-style: italic; font-size: .92rem; margin-top: 12px; }
 
 /* ---------- Lightbox ---------- */
 .lb { position: fixed; inset: 0; z-index: 400; background: rgba(10,10,11,.97); color: #fff; display: grid; grid-template-rows: auto auto 1fr auto; opacity: 0; visibility: hidden; transition: opacity .3s, visibility .3s; }
@@ -572,7 +590,6 @@ footer h3 { color: var(--fg); }
 .qc:hover { background: var(--g3); }
 .rv-card { background: var(--bg-2); }
 .session { border-top-color: var(--g3); }
-.filter-select { background: var(--bg-2); }
 
 /* Footer brand block: centred, logo on top */
 .f-brand { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 28px 24px; border-radius: 22px; background: var(--g2); align-self: start; }
@@ -675,17 +692,19 @@ footer h3 { color: var(--fg); }
     </div>
   </section>
 
-  <section class="sec center" id="gallery" style="padding-bottom:50px">
-    <div class="wrap fade">
-      <p class="eyebrow">Our work</p>
-      <h2 class="title">Gallery</h2>
-      <p class="lede">Sorted by backdrop, so every set flows together. Choose a category, or tap any photo to view it full screen.</p>
-      <div class="filters" id="filters" role="group" aria-label="Filter by category"></div>
-      <label class="sr" for="filter-select">Category</label>
-      <select class="filter-select" id="filter-select"></select>
+  <section class="sec gallery-sec" id="gallery">
+    <div class="wrap">
+      <div class="center fade">
+        <p class="eyebrow">Our work</p>
+        <h2 class="title">Gallery</h2>
+        <p class="lede">Our favourite sessions, grouped by studio backdrop. Choose a category, or tap any photo to view it full screen.</p>
+        <div class="filters" id="filters" role="group" aria-label="Filter by category"></div>
+      </div>
+      <div class="g-meta"><span id="g-count" aria-live="polite"></span><nav class="g-jump" id="g-jump" aria-label="Jump to backdrop"></nav></div>
+      <div id="tones"></div>
+      <div class="g-foot"><button class="btn" type="button" id="g-all">View all photos</button><p>Tap a photo to open the slideshow &middot; swipe to browse</p></div>
     </div>
   </section>
-  <div id="tones"></div>
 
   <section class="sec" id="sessions">
     <div class="wrap">
@@ -1173,43 +1192,33 @@ footer h3 { color: var(--fg); }
 
   // Gallery: one section per backdrop colour, each laid out in justified rows
   var tonesEl = $("#tones"), current = "all", visible = [];
-  $("#filters").innerHTML = CATS.map(function (c) { return '<button type="button" data-cat="' + c[0] + '" aria-pressed="' + (c[0] === "all") + '">' + c[1] + "</button>"; }).join("");
-  $("#filter-select").innerHTML = CATS.map(function (c) { return '<option value="' + c[0] + '">' + (c[0] === "all" ? "All photos" : c[1]) + " (" + count(c[0]) + ")</option>"; }).join("");
+  $("#filters").innerHTML = CATS.map(function (c) { return '<button type="button" data-cat="' + c[0] + '" aria-pressed="' + (c[0] === "all") + '">' + c[1] + "<small>" + count(c[0]) + "</small></button>"; }).join("");
   $$("#filters button").forEach(function (b) { b.addEventListener("click", function () { setCat(b.dataset.cat); }); });
-  $("#filter-select").addEventListener("change", function (e) { setCat(e.target.value); });
+  $("#g-all").addEventListener("click", function () { openAllPhotos(); });
+  var SWATCH = { dark: "#0d0d0e", grey: "#8f8f91", white: "#ffffff", colour: "#f3c9c1", outdoor: "#9db08f" };
 
-  function justify(row) {
-    var figs = $$(".shot", row), W = row.clientWidth, gap = 6, target = W < 600 ? 170 : W < 1000 ? 240 : 300, line = [], sum = 0;
-    function place(list, h) { list.forEach(function (f) { f.style.width = Math.floor(f._ar * h) + "px"; f.style.height = Math.floor(h) + "px"; }); }
-    figs.forEach(function (f) {
-      f._ar = +f.dataset.w / +f.dataset.h; line.push(f); sum += f._ar;
-      var h = (W - gap * (line.length - 1)) / sum;
-      if (h <= target) { place(line, h - .5); line = []; sum = 0; }
-    });
-    if (line.length) place(line, Math.min(target, (W - gap * (line.length - 1)) / sum));
-  }
   function render() {
     visible = [];
-    var n = 0;
+    var groups = [];
     tonesEl.innerHTML = TONES.map(function (t) {
       var list = t.photos.filter(function (p) { return current === "all" || p[2].split(" ").indexOf(current) > -1; });
       if (!list.length) return "";
-      n++;
+      groups.push([t, list.length]);
       var figs = list.map(function (p) {
-        var i = visible.push(p) - 1;
-        return '<figure class="shot" tabindex="0" role="button" aria-label="Open photo: ' + p[1] + '" data-i="' + i + '" data-w="' + p[3] + '" data-h="' + p[4] + '"><img src="' + src(p[0]) + '" width="' + p[3] + '" height="' + p[4] + '" alt="' + p[1] + '" loading="lazy"><figcaption>' + p[1] + "</figcaption></figure>";
+        var i = visible.push(p) - 1, wide = p[3] / p[4] > 1.2 ? " wide" : "";
+        return '<figure class="shot' + wide + '" tabindex="0" role="button" aria-label="Open photo: ' + p[1] + '" data-i="' + i + '"><img src="' + src(p[0]) + '" width="' + p[3] + '" height="' + p[4] + '" alt="' + p[1] + '" loading="lazy"><span class="zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span><figcaption>' + p[1] + "</figcaption></figure>";
       }).join("");
-      return '<section class="tone tone-' + t.id + '" aria-label="' + plain(t.name) + '"><div class="wrap"><div class="tone-head"><h3><span>0' + n + "</span>" + t.name + "</h3><p>" + t.note + " &middot; " + list.length + " photo" + (list.length > 1 ? "s" : "") + '</p></div><div class="rows">' + figs + "</div></div></section>";
+      return '<section class="tone tone-' + t.id + '" id="set-' + t.id + '" style="--sw:' + SWATCH[t.id] + '" aria-label="' + plain(t.name) + '"><div class="tone-head"><h3><i aria-hidden="true"></i>' + t.name + "</h3><p>" + t.note + "<b>" + list.length + " photo" + (list.length > 1 ? "s" : "") + '</b></p></div><div class="grid">' + figs + "</div></section>";
     }).join("");
-    $$(".rows", tonesEl).forEach(justify);
+    var label = current === "all" ? "" : " in " + CATS.filter(function (c) { return c[0] === current; })[0][1];
+    $("#g-count").textContent = "Showing " + visible.length + " photo" + (visible.length > 1 ? "s" : "") + label + " across " + groups.length + " backdrop" + (groups.length > 1 ? "s" : "");
+    $("#g-jump").innerHTML = groups.length > 1 ? groups.map(function (g) { return '<a href="#set-' + g[0].id + '" style="--sw:' + SWATCH[g[0].id] + '"><i aria-hidden="true"></i>' + g[0].name + "</a>"; }).join("") : "";
   }
   function setCat(cat) {
     current = cat;
     $$("#filters button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.cat === cat); });
-    $("#filter-select").value = cat;
     render();
   }
-  var rz; addEventListener("resize", function () { clearTimeout(rz); rz = setTimeout(function () { $$(".rows", tonesEl).forEach(justify); }, 120); });
   render();
 
   // Lightbox: thumbnails, slideshow, zoom, full screen, share
