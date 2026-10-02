@@ -37,6 +37,9 @@ The website's newsletter form now saves sign-ups to your sheet, and the
 
 ## Good to know
 
+- When you post a special or poster in the website manager, it's emailed to all subscribers straight away, with the poster inside the email. Untick "Email it to all subscribers" if you only want it on the website.
+- **Already set this up before posters were added?** Paste the latest `Code.gs` into Apps Script again, then use **Deploy → Manage deployments → Edit → New version** so emails can include the poster.
+
 - Gmail lets a free account send to about **100 people a day** (Google Workspace accounts get 1,500). The Subscribers tab shows how many you can still send today.
 - Every email has an **Unsubscribe** link. People who use it are marked "Unsubscribed" and won't get further emails.
 - If you change `Code.gs` later, use **Deploy → Manage deployments → Edit → New version**, so the web app URL stays the same.

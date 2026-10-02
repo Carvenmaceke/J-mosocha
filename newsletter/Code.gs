@@ -102,7 +102,10 @@ function esc_(s) { return String(s || "").replace(/[&<>"]/g, function (c) { retu
 
 function send_(d) {
   var subject = String(d.subject || "").trim(), message = String(d.message || "").trim();
-  if (!subject || !message) return { ok: false, error: "missing-subject-or-message" };
+  // Optional poster, sent as a JPEG inside the email
+  var poster = null;
+  if (d.image) { try { poster = Utilities.newBlob(Utilities.base64Decode(String(d.image)), "image/jpeg", "poster.jpg"); } catch (x) { poster = null; } }
+  if (!subject || (!message && !poster)) return { ok: false, error: "missing-subject-or-message" };
   var to = list_().filter(function (s) { return s.status === "active"; });
   if (!to.length) return { ok: false, error: "no-subscribers" };
   var quota = MailApp.getRemainingDailyQuota();
@@ -120,13 +123,16 @@ function send_(d) {
       '<div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:16px;padding:32px 28px">' +
       '<p style="margin:0 0 6px;letter-spacing:.2em;text-transform:uppercase;font-size:12px;color:#9a7a4a">J Masocha Photography</p>' +
       '<h1 style="margin:0 0 18px;font-weight:400;font-size:26px;line-height:1.25">' + esc_(subject) + "</h1>" +
-      '<p style="margin:0 0 24px;font-size:16px;line-height:1.65;color:#3a3a3a">' + body + "</p>" +
+      (poster ? '<a href="' + esc_(link) + '"><img src="cid:poster" alt="' + esc_(subject) + '" width="504" style="display:block;width:100%;max-width:504px;height:auto;border:0;border-radius:12px;margin:0 0 22px"></a>' : "") +
+      (message ? '<p style="margin:0 0 24px;font-size:16px;line-height:1.65;color:#3a3a3a">' + body + "</p>" : "") +
       '<a href="' + esc_(link) + '" style="display:inline-block;background:#1d1d1f;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:999px;font-size:14px">' + linkText + "</a>" +
       '<p style="margin:28px 0 0;font-size:13px;color:#8e8b86">Shop 5A, Centre Walk, 266 Pretorius St, Pretoria Central &middot; 066 132 2462</p>' +
       "</div>" +
       '<p style="max-width:560px;margin:14px auto 0;text-align:center;font-size:12px;color:#8e8b86">You’re receiving this because you subscribed on our website. <a href="' + unsub + '" style="color:#8e8b86">Unsubscribe</a></p>' +
       "</div>";
-    MailApp.sendEmail({ to: s.email, subject: subject, htmlBody: html, body: message + "\n\n" + link + "\n\nUnsubscribe: " + unsub, name: FROM_NAME });
+    var mail = { to: s.email, subject: subject, htmlBody: html, body: (message ? message + "\n\n" : "") + link + "\n\nUnsubscribe: " + unsub, name: FROM_NAME };
+    if (poster) mail.inlineImages = { poster: poster };
+    MailApp.sendEmail(mail);
     sent++;
   });
   return { ok: true, sent: sent, quota: MailApp.getRemainingDailyQuota() };
