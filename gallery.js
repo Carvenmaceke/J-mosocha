@@ -27,6 +27,8 @@ window.GALLERY = {
     {"id":"birthday-clock","caption":"Time to celebrate","categories":["women","birthdays"],"w":700,"h":1049}
   ],
   "white": [
+    {"id":"baby-brothers-beige","caption":"Brothers in beige","categories":["babies","kids","family"],"w":700,"h":1050},
+    {"id":"baby-blue-cap-chair","caption":"Little gentleman in blue","categories":["babies","kids"],"w":700,"h":1050},
     {"id":"birthday-may-calendar","caption":"Breaking through May","categories":["birthdays","women"],"w":700,"h":1050},
     {"id":"birthday-slaying-white","caption":"Slaying in white","categories":["birthdays","women"],"w":700,"h":1025},
     {"id":"birthday-hello-30-cake","caption":"Hello 30","categories":["birthdays","women"],"w":700,"h":467},
@@ -49,6 +51,9 @@ window.GALLERY = {
     {"id":"kids-tulle-dress","caption":"Tulle & twirls","categories":["kids"],"w":700,"h":1050}
   ],
   "colour": [
+    {"id":"baby-one-pastel-castle","caption":"Hello, ONE","categories":["babies","kids","birthdays"],"w":700,"h":494},
+    {"id":"baby-piano-17-may","caption":"Birthday tunes","categories":["babies","kids","birthdays"],"w":700,"h":1050},
+    {"id":"baby-pink-knit-swing","caption":"Little swing, big eyes","categories":["babies","kids"],"w":700,"h":1029},
     {"id":"graduation-classroom-set","caption":"I graduated!","categories":["graduation","kids"],"w":700,"h":1050},
     {"id":"portrait-pinstripe-blazer","caption":"Pinstripe & boots","categories":["portraits","women"],"w":700,"h":1050},
     {"id":"maternity-couple-baby-vest","caption":"Couple with baby’s first vest","categories":["maternity","couples"],"w":700,"h":467},
