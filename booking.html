@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="en-ZA" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Book a Session – J Masocha Photography</title>
+<meta name="description" content="Book your photo session at J Masocha Photography in Pretoria Central. Choose a session, pick an open date and time, and pay your deposit online or on WhatsApp.">
+<meta name="theme-color" content="#f2f2f1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f2f2f1; --bg-2: #e7e7e5; --card: #fbfbfa; --fg: #1d1d1f; --fg-2: #55534f; --muted: #8e8b86; --line: rgba(0,0,0,.09);
+  --accent: #9a7a4a; --ok: #2f7d4f; --danger: #c2412d; --wa: #25d366;
+  --font: "Lato", "Helvetica Neue", Arial, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 300 17px/1.7 var(--font); -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+button, input, textarea, select { font: inherit; color: inherit; }
+h1, h2, h3 { font-weight: 300; line-height: 1.15; margin: 0; }
+p { margin: 0; }
+[hidden] { display: none !important; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.wrap { width: min(1000px, 100% - 32px); margin-inline: auto; }
+
+/* Header */
+.top { background: #f6f6f5; border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; }
+.brand { display: flex; color: var(--fg); }
+.brand svg { height: 50px; width: auto; }
+.top nav { display: flex; gap: 8px; align-items: center; }
+.link { font-size: .85rem; letter-spacing: .14em; text-transform: uppercase; text-decoration: none; color: var(--fg-2); padding: 8px 10px; }
+.link:hover { color: var(--fg); }
+.wa-pill { display: inline-flex; align-items: center; gap: 8px; background: var(--wa); color: #fff; text-decoration: none; padding: 8px 16px; border-radius: 999px; font-size: .88rem; font-weight: 400; }
+.wa-pill svg { width: 18px; height: 18px; }
+
+/* Intro */
+.intro { padding: 48px 0 26px; text-align: center; }
+.eyebrow { font-style: italic; color: var(--accent); font-size: 1.05rem; margin-bottom: 8px; }
+.intro h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); }
+.intro p.lede { color: var(--fg-2); max-width: 560px; margin: 14px auto 0; }
+
+/* Progress */
+.progress { display: flex; gap: 6px; list-style: none; padding: 0; margin: 0 0 26px; counter-reset: s; }
+.progress li { flex: 1; counter-increment: s; font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); border-top: 3px solid var(--bg-2); padding-top: 10px; }
+.progress li::before { content: "0" counter(s) " "; font-style: italic; text-transform: none; letter-spacing: 0; }
+.progress li.on { color: var(--fg); border-color: var(--fg); }
+.progress li.done { color: var(--fg-2); border-color: var(--accent); }
+@media (max-width: 600px) { .progress li { font-size: 0; } .progress li::before { font-size: .85rem; } }
+
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: clamp(20px, 4vw, 36px); box-shadow: 0 16px 40px rgba(0,0,0,.05); }
+.step h2 { font-size: 1.7rem; margin-bottom: 6px; }
+.step .sub { color: var(--fg-2); margin-bottom: 22px; }
+
+/* Choices */
+.tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
+.tile { position: relative; display: block; cursor: pointer; }
+.tile input { position: absolute; opacity: 0; }
+.tile span { display: block; height: 100%; padding: 14px 16px; border: 1px solid var(--line); border-radius: 14px; background: #fff; transition: border-color .2s, box-shadow .2s; }
+.tile b { display: block; font-weight: 400; }
+.tile small { color: var(--muted); font-size: .85rem; }
+.tile input:checked + span { border-color: var(--fg); box-shadow: 0 0 0 1px var(--fg); }
+.tile input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+.pk-title { margin: 26px 0 10px; font-size: 1.2rem; }
+.pks { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; }
+.pks .tile span { padding: 18px; }
+.pks .price { font-size: 1.6rem; font-weight: 300; margin: 2px 0 8px; }
+.pks ul { margin: 0; padding: 0; list-style: none; font-size: .88rem; color: var(--fg-2); }
+.pks li { padding: 2px 0; }
+.pks .tag { position: absolute; top: -10px; right: 14px; background: var(--accent); color: #fff; font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; padding: 2px 10px; border-radius: 999px; }
+.note { margin-top: 18px; padding: 12px 16px; border-radius: 12px; background: var(--bg); color: var(--fg-2); font-size: .93rem; }
+.note b { color: var(--fg); font-weight: 700; }
+
+/* Calendar */
+.cal-wrap { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 28px; }
+@media (max-width: 760px) { .cal-wrap { grid-template-columns: 1fr; } }
+.cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.cal-head h3 { font-size: 1.25rem; }
+.cal-nav { display: flex; gap: 6px; }
+.round { width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--line); background: #fff; cursor: pointer; display: grid; place-items: center; }
+.round:hover:not(:disabled) { border-color: var(--fg); }
+.round:disabled { opacity: .35; cursor: default; }
+.round svg { width: 16px; height: 16px; }
+.cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.cal .dow { text-align: center; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 4px 0; }
+.cal button { aspect-ratio: 1; border: 0; border-radius: 12px; background: transparent; cursor: default; color: var(--g, #b9b6b1); font-size: .95rem; position: relative; }
+.cal button.open { background: #fff; color: var(--fg); cursor: pointer; box-shadow: inset 0 0 0 1px var(--line); font-weight: 400; }
+.cal button.open::after { content: ""; position: absolute; left: 50%; bottom: 6px; width: 5px; height: 5px; margin-left: -2.5px; border-radius: 50%; background: var(--ok); }
+.cal button.open:hover { box-shadow: inset 0 0 0 1px var(--fg); }
+.cal button.sel { background: var(--fg); color: #fff; box-shadow: none; }
+.cal button.sel::after { background: #fff; }
+.cal button.today { text-decoration: underline; text-underline-offset: 4px; }
+.legend { display: flex; gap: 16px; margin-top: 12px; font-size: .82rem; color: var(--muted); }
+.legend i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--ok); margin-right: 6px; vertical-align: middle; }
+.times h3 { font-size: 1.15rem; margin-bottom: 4px; }
+.times .hint { color: var(--muted); font-size: .9rem; margin-bottom: 12px; }
+.slot-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 8px; }
+.slot { padding: 10px 0; border: 1px solid var(--line); border-radius: 999px; background: #fff; cursor: pointer; text-align: center; }
+.slot:hover { border-color: var(--fg); }
+.slot[aria-pressed="true"] { background: var(--fg); color: #fff; border-color: var(--fg); }
+.loading { display: flex; align-items: center; gap: 10px; color: var(--muted); padding: 30px 0; }
+.spin { width: 18px; height: 18px; border: 2px solid var(--line); border-top-color: var(--fg); border-radius: 50%; animation: spin .8s linear infinite; flex: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Fields */
+.fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 18px; }
+.fields .full { grid-column: 1 / -1; }
+@media (max-width: 600px) { .fields { grid-template-columns: 1fr; } }
+.f label { display: block; font-size: .74rem; letter-spacing: .14em; text-transform: uppercase; color: var(--fg-2); margin-bottom: 6px; }
+.f input, .f textarea { width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: #fff; font-weight: 400; }
+.f input:focus, .f textarea:focus { outline: none; border-color: var(--fg); }
+.f input[aria-invalid="true"] { border-color: var(--danger); }
+.f small { color: var(--muted); font-size: .82rem; }
+
+/* Summary and payment choice */
+.summary { display: grid; grid-template-columns: auto 1fr; gap: 6px 18px; padding: 16px 18px; border-radius: 14px; background: var(--bg); margin-bottom: 22px; font-size: .97rem; }
+.summary dt { color: var(--muted); }
+.summary dd { margin: 0; font-weight: 400; }
+.choices { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 680px) { .choices { grid-template-columns: 1fr; } }
+.choice span { padding: 20px; }
+.choice .ic { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; margin-bottom: 10px; background: var(--bg); }
+.choice .ic svg { width: 20px; height: 20px; }
+.choice.wa .ic { background: var(--wa); color: #fff; }
+.choice b { font-size: 1.08rem; margin-bottom: 4px; }
+.choice small { display: block; font-size: .9rem; color: var(--fg-2); }
+.choice input:disabled + span { opacity: .5; cursor: not-allowed; }
+.agree { display: flex; gap: 10px; align-items: flex-start; margin-top: 18px; font-size: .9rem; color: var(--fg-2); }
+.agree input { margin-top: 5px; }
+
+/* Actions */
+.actions { display: flex; align-items: center; gap: 10px; margin-top: 28px; flex-wrap: wrap; }
+.grow { flex: 1; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 14px 26px; border: 1px solid var(--fg); background: transparent; color: var(--fg); text-decoration: none; text-transform: uppercase; letter-spacing: .18em; font-size: .74rem; font-weight: 400; cursor: pointer; transition: background .25s, color .25s; }
+.btn:hover { background: var(--fg); color: var(--bg); }
+.btn.solid { background: var(--fg); color: var(--bg); }
+.btn.solid:hover { background: transparent; color: var(--fg); }
+.btn.wa { background: var(--wa); border-color: var(--wa); color: #fff; }
+.btn.wa:hover { background: #1eb457; border-color: #1eb457; }
+.btn:disabled { opacity: .4; pointer-events: none; }
+.btn svg { width: 16px; height: 16px; }
+.err { color: var(--danger); font-size: .92rem; margin-top: 14px; min-height: 1.4em; }
+
+/* Done */
+.done { text-align: center; }
+.done .tick { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; margin: 0 auto 14px; background: #e6f2ea; color: var(--ok); }
+.done .tick.wait { background: #f5ead8; color: #8a6420; }
+.done .tick svg { width: 30px; height: 30px; }
+.done h2 { font-size: 2rem; }
+.done .lede { color: var(--fg-2); max-width: 520px; margin: 10px auto 0; }
+.code { display: inline-flex; align-items: center; gap: 12px; margin: 22px auto 6px; padding: 12px 14px 12px 22px; border: 2px dashed var(--accent); border-radius: 16px; background: #fff; }
+.code span { font-size: clamp(1.5rem, 5vw, 2rem); letter-spacing: .12em; font-weight: 700; }
+.code button { border: 1px solid var(--line); background: var(--bg); border-radius: 10px; padding: 6px 12px; cursor: pointer; font-size: .82rem; }
+.code-hint { color: var(--muted); font-size: .88rem; }
+.done .summary { text-align: left; max-width: 520px; margin: 22px auto; }
+.bank { max-width: 520px; margin: 0 auto 10px; text-align: left; padding: 14px 18px; border-left: 4px solid var(--accent); background: #fafaf9; border-radius: 10px; white-space: pre-line; font-size: .95rem; }
+.bank b { display: block; font-weight: 700; margin-bottom: 4px; white-space: normal; }
+.done .actions { justify-content: center; }
+.check { margin-top: 18px; font-size: .9rem; color: var(--muted); text-align: center; }
+.check button { background: none; border: 0; padding: 0; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; color: var(--fg-2); }
+.lookup { display: flex; gap: 8px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
+.lookup input { padding: 10px 14px; border: 1px solid var(--line); border-radius: 999px; text-transform: uppercase; letter-spacing: .1em; width: 190px; background: #fff; }
+
+footer { padding: 40px 0 50px; text-align: center; color: var(--muted); font-size: .88rem; }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-label="J Masocha Photography, home"><svg viewBox="0 0 800 520" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="24" stroke-linejoin="round"><path d="M300 128V100a22 22 0 0 1 22-22h156a22 22 0 0 1 22 22v28"/><path d="M252 150H186v58M548 150h66v58M186 350v58h66M614 350v58h-66"/><path d="M292 222a125 125 0 0 1 216 0M292 336a125 125 0 0 0 216 0"/></g><path d="M48 222h704v114H48z" fill="currentColor"/><text x="400" y="311" text-anchor="middle" fill="#f2f2f1" font-family="Lato,Arial,sans-serif" font-weight="700" font-size="94" letter-spacing="6">J MASOCHA</text><text x="400" y="478" text-anchor="middle" fill="currentColor" font-family="Lato,Arial,sans-serif" font-weight="700" font-size="38" letter-spacing="12">PHOTOGRAPHY</text></svg></a>
+    <nav>
+      <a class="link" href="index.html">Back to website</a>
+      <a class="wa-pill" id="top-wa" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1s-.5-.1-.7.1-.8 1-.9 1.2-.3.2-.6.1a8.2 8.2 0 0 1-4-3.5c-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6a1.1 1.1 0 0 0-.8.4 3.4 3.4 0 0 0-1 2.5 5.9 5.9 0 0 0 1.2 3.1 13.4 13.4 0 0 0 5.2 4.6c1.9.8 2.7.9 3.6.8a3.1 3.1 0 0 0 2-1.4 2.5 2.5 0 0 0 .2-1.4c-.1-.1-.3-.2-.6-.3zM12 21.8a9.8 9.8 0 0 1-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 1 1 12 21.8zm8.4-18.2A11.8 11.8 0 0 0 1.8 17.9L.1 24l6.3-1.6a11.8 11.8 0 0 0 5.6 1.4A11.8 11.8 0 0 0 20.4 3.6z"/></svg>WhatsApp</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="intro">
+    <p class="eyebrow">Book a session</p>
+    <h1>Book your shoot</h1>
+    <p class="lede">Choose your session, pick an open date and time, and secure it with your deposit. Online, or on WhatsApp if you&rsquo;d like to chat first.</p>
+  </div>
+
+  <form id="flow" novalidate>
+    <ol class="progress" aria-hidden="true"><li class="on">Session</li><li>Date &amp; time</li><li>Your details</li><li>Confirm</li></ol>
+    <div class="card">
+      <!-- 1. Session -->
+      <fieldset class="step" data-step="0" style="border:0;padding:0;margin:0">
+        <legend class="sr">Step 1 of 4: choose your session</legend>
+        <h2>Which session?</h2>
+        <p class="sub">Choose what you&rsquo;re booking.</p>
+        <div class="tiles" id="sessions"></div>
+        <div id="pk-box" hidden>
+          <h3 class="pk-title">Choose your package</h3>
+          <div class="pks" id="pks"></div>
+        </div>
+        <p class="note" id="cost-note" hidden></p>
+      </fieldset>
+
+      <!-- 2. Date & time -->
+      <fieldset class="step" data-step="1" hidden style="border:0;padding:0;margin:0">
+        <legend class="sr">Step 2 of 4: pick a date and time</legend>
+        <h2>Pick a date &amp; time</h2>
+        <p class="sub">Only days with open times can be chosen.</p>
+        <div id="cal-loading" class="loading"><span class="spin"></span>Loading open dates&hellip;</div>
+        <div id="cal-off" class="note" hidden></div>
+        <div class="cal-wrap" id="cal-box" hidden>
+          <div>
+            <div class="cal-head"><h3 id="cal-title"></h3><div class="cal-nav"><button class="round" type="button" id="cal-prev" aria-label="Previous month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></button><button class="round" type="button" id="cal-next" aria-label="Next month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></button></div></div>
+            <div class="cal" id="cal" role="grid"></div>
+            <p class="legend"><span><i></i>Open for bookings</span></p>
+          </div>
+          <div class="times" id="times">
+            <h3 id="times-title">Choose a day</h3>
+            <p class="hint" id="times-hint">Then pick a time that suits you.</p>
+            <div class="slot-grid" id="slots"></div>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- 3. Details -->
+      <fieldset class="step" data-step="2" hidden style="border:0;padding:0;margin:0">
+        <legend class="sr">Step 3 of 4: your details</legend>
+        <h2>Your details</h2>
+        <p class="sub">So we can confirm your booking and get in touch.</p>
+        <div class="fields">
+          <div class="f"><label for="b-name">Full name *</label><input id="b-name" name="name" autocomplete="name" maxlength="80" required></div>
+          <div class="f"><label for="b-phone">Phone / WhatsApp *</label><input id="b-phone" name="phone" type="tel" autocomplete="tel" maxlength="20" required></div>
+          <div class="f full"><label for="b-email">Email *</label><input id="b-email" name="email" type="email" autocomplete="email" maxlength="200" required><small>Your booking confirmation and code are sent here.</small></div>
+          <div class="f full"><label for="b-notes">Theme, colours or anything we should know</label><textarea id="b-notes" name="notes" rows="3" maxlength="600" placeholder="e.g. black &amp; gold theme, 2 people, bringing a cake"></textarea></div>
+        </div>
+      </fieldset>
+
+      <!-- 4. Confirm -->
+      <fieldset class="step" data-step="3" hidden style="border:0;padding:0;margin:0">
+        <legend class="sr">Step 4 of 4: confirm</legend>
+        <h2>Confirm your booking</h2>
+        <p class="sub">Check your details, then choose how you&rsquo;d like to continue.</p>
+        <dl class="summary" id="summary"></dl>
+        <div class="choices">
+          <label class="tile choice" id="choice-online"><input type="radio" name="pay" value="online"><span>
+            <i class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg></i>
+            <b>I&rsquo;m ready &ndash; pay online</b><small id="online-text">Pay your deposit now by card or instant EFT (PayFast). Your booking is confirmed straight away.</small></span></label>
+          <label class="tile choice wa"><input type="radio" name="pay" value="whatsapp"><span>
+            <i class="ic"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1s-.5-.1-.7.1-.8 1-.9 1.2-.3.2-.6.1a8.2 8.2 0 0 1-4-3.5c-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6a1.1 1.1 0 0 0-.8.4 3.4 3.4 0 0 0-1 2.5 5.9 5.9 0 0 0 1.2 3.1 13.4 13.4 0 0 0 5.2 4.6c1.9.8 2.7.9 3.6.8a3.1 3.1 0 0 0 2-1.4 2.5 2.5 0 0 0 .2-1.4c-.1-.1-.3-.2-.6-.3zM12 21.8a9.8 9.8 0 0 1-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 1 1 12 21.8zm8.4-18.2A11.8 11.8 0 0 0 1.8 17.9L.1 24l6.3-1.6a11.8 11.8 0 0 0 5.6 1.4A11.8 11.8 0 0 0 20.4 3.6z"/></svg></i>
+            <b>I have questions &ndash; continue on WhatsApp</b><small id="wa-text">We&rsquo;ll hold your time while we chat. Pay the deposit by EFT and send your proof of payment on WhatsApp.</small></span></label>
+        </div>
+        <label class="agree"><input type="checkbox" id="agree"><span>I understand that a <b>non-refundable deposit</b> secures my date and time, and the balance is paid on the day of the shoot.</span></label>
+      </fieldset>
+
+      <p class="err" id="err" role="alert"></p>
+      <div class="actions" id="actions">
+        <button type="button" class="btn" id="back" hidden>Back</button><span class="grow"></span>
+        <button type="submit" class="btn solid" id="next">Next</button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Confirmation -->
+  <section class="card done" id="done" hidden aria-live="polite"></section>
+
+  <p class="check" id="check-wrap"><button type="button" id="check-open">Already booked? Check your booking</button></p>
+  <form class="lookup" id="lookup" hidden><label for="lk-code" class="sr">Booking code</label><input id="lk-code" placeholder="JM-XXXXXX" maxlength="9" autocomplete="off"><button class="btn" type="submit">Check</button></form>
+</main>
+
+<footer>J Masocha Photography &middot; 235 Helen Joseph Street, Pretoria Central &middot; 066 132 2462</footer>
+
+<script src="packages.js"></script>
+<script src="site.js"></script>
+<script>
+(function () {
+  var WA = "27661322462";
+  var API = (window.SITE && SITE.newsletter) || "";
+  var P = window.PRICES || { depositPercent: 50, otherDeposit: 0, sessions: [], packages: [] };
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+  var waLink = function (msg) { return "https://wa.me/" + WA + "?text=" + encodeURIComponent(msg); };
+  var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  var DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  function parts(d) { var p = d.split("-"); return new Date(Date.UTC(+p[0], +p[1] - 1, +p[2])); }
+  function nice(d, t) { var x = parts(d); return DAYS[x.getUTCDay()] + " " + x.getUTCDate() + " " + MONTHS[x.getUTCMonth()] + " " + x.getUTCFullYear() + (t ? " at " + t : ""); }
+  function iso(x) { return x.getUTCFullYear() + "-" + String(x.getUTCMonth() + 1).padStart(2, "0") + "-" + String(x.getUTCDate()).padStart(2, "0"); }
+  function rand(n) { return "R" + Number(n).toLocaleString("en-ZA").replace(/ /g, " "); }
+  function call(body) {
+    return fetch(API, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(body) })
+      .then(function (r) { return r.json(); });
+  }
+  $("#top-wa").href = waLink("Hi J Masocha Photography! I'd like to book a session.");
+
+  var st = { session: "", pkg: "", date: "", time: "", days: null, payOnline: false, month: null, until: "" };
+  var url = new URLSearchParams(location.search);
+
+  /* ---------- Step 1: session and package ---------- */
+  $("#sessions").innerHTML = P.sessions.map(function (s) {
+    var n = P.packages.filter(function (k) { return k.session === s; }).length;
+    return '<label class="tile"><input type="radio" name="session" value="' + esc(s) + '"><span><b>' + esc(s) + "</b><small>" + (n ? n + " packages" : "Price on request") + "</small></span></label>";
+  }).join("");
+  function cost() {
+    var k = P.packages.filter(function (x) { return x.session === st.session && x.name === st.pkg; })[0];
+    return k ? { price: k.price, deposit: Math.round(k.price * P.depositPercent / 100) } : { price: 0, deposit: Number(P.otherDeposit) || 0 };
+  }
+  function drawPackages() {
+    var list = P.packages.filter(function (k) { return k.session === st.session; });
+    $("#pk-box").hidden = !list.length;
+    $("#pks").innerHTML = list.map(function (k) {
+      return '<label class="tile"><input type="radio" name="pkg" value="' + esc(k.name) + '"' + (k.name === st.pkg ? " checked" : "") + "><span>" + (k.tag ? '<i class="tag">' + esc(k.tag) + "</i>" : "") +
+        "<b>" + esc(k.name) + '</b><p class="price">' + rand(k.price) + "</p><ul>" + k.features.map(function (f) { return "<li>" + esc(f) + "</li>"; }).join("") + "</ul></span></label>";
+    }).join("");
+    drawCost();
+  }
+  function drawCost() {
+    var c = cost(), hasPk = P.packages.some(function (k) { return k.session === st.session; }), n = $("#cost-note");
+    if (!st.session || (hasPk && !st.pkg)) { n.hidden = true; return; }
+    n.hidden = false;
+    n.innerHTML = c.deposit
+      ? (c.price ? "Package price <b>" + rand(c.price) + "</b>. " : "") + "A <b>" + rand(c.deposit) + " deposit</b> secures your date" + (c.price ? "; the balance of " + rand(c.price - c.deposit) + " is paid on the day." : ". We&rsquo;ll confirm the full price with you.")
+      : "We&rsquo;ll confirm the price and deposit for this session with you on WhatsApp after you book.";
+  }
+  $("#sessions").addEventListener("change", function (e) { st.session = e.target.value; st.pkg = ""; drawPackages(); clearErr(); });
+  $("#pks").addEventListener("change", function (e) { st.pkg = e.target.value; drawCost(); clearErr(); });
+  // Arriving from "Book this package" on the main page
+  (function () {
+    var s = url.get("session"), k = url.get("pkg");
+    var r = s && $$('#sessions input').filter(function (i) { return i.value === s; })[0];
+    if (r) { r.checked = true; st.session = s; st.pkg = k && P.packages.some(function (x) { return x.session === s && x.name === k; }) ? k : ""; drawPackages(); }
+  })();
+
+  /* ---------- Step 2: calendar ---------- */
+  function loadDays() {
+    if (st.days) return Promise.resolve();
+    $("#cal-loading").hidden = false; $("#cal-box").hidden = true; $("#cal-off").hidden = true;
+    if (!API) return Promise.reject(new Error("off"));
+    return call({ action: "slots" }).then(function (j) {
+      if (!j.ok) throw new Error(j.error);
+      st.days = j.days; st.payOnline = j.payOnline; st.until = j.until;
+      var first = Object.keys(j.days).sort()[0];
+      st.month = first ? first.slice(0, 7) : iso(new Date()).slice(0, 7);
+      $("#cal-loading").hidden = true; $("#cal-box").hidden = false;
+      if (!first) { offline("There are no open dates right now. Message us on WhatsApp and we&rsquo;ll find a time for you."); return; }
+      drawCal();
+    });
+  }
+  function offline(msg) {
+    $("#cal-loading").hidden = true; $("#cal-box").hidden = true;
+    var o = $("#cal-off"); o.hidden = false;
+    o.innerHTML = msg + '<br><br><a class="btn wa" target="_blank" rel="noopener" href="' + waLink("Hi J Masocha Photography! I'd like to book a " + st.session + (st.pkg ? " (" + st.pkg + ")" : "") + " session. Which dates are open?") + '">Book on WhatsApp</a>';
+  }
+  function drawCal() {
+    var y = +st.month.slice(0, 4), m = +st.month.slice(5, 7) - 1;
+    var first = new Date(Date.UTC(y, m, 1)), lead = (first.getUTCDay() + 6) % 7, count = new Date(Date.UTC(y, m + 1, 0)).getUTCDate();
+    var today = iso(new Date()), html = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(function (d) { return '<span class="dow" aria-hidden="true">' + d + "</span>"; }).join("");
+    for (var i = 0; i < lead; i++) html += "<span></span>";
+    for (var d = 1; d <= count; d++) {
+      var ds = iso(new Date(Date.UTC(y, m, d))), open = !!st.days[ds];
+      html += '<button type="button" data-d="' + ds + '" class="' + (open ? "open" : "") + (ds === st.date ? " sel" : "") + (ds === today ? " today" : "") + '"' + (open ? "" : " disabled") +
+        ' aria-label="' + nice(ds) + (open ? ", " + st.days[ds].length + " open times" : ", not available") + '"' + (ds === st.date ? ' aria-pressed="true"' : "") + ">" + d + "</button>";
+    }
+    $("#cal").innerHTML = html;
+    $("#cal-title").textContent = MONTHS[m] + " " + y;
+    $("#cal-prev").disabled = st.month <= today.slice(0, 7);
+    $("#cal-next").disabled = st.month >= (st.until || today).slice(0, 7);
+    drawTimes();
+  }
+  function shiftMonth(n) { var y = +st.month.slice(0, 4), m = +st.month.slice(5, 7) - 1 + n; st.month = iso(new Date(Date.UTC(y, m, 1))).slice(0, 7); drawCal(); }
+  $("#cal-prev").addEventListener("click", function () { shiftMonth(-1); });
+  $("#cal-next").addEventListener("click", function () { shiftMonth(1); });
+  $("#cal").addEventListener("click", function (e) {
+    var b = e.target.closest("button.open"); if (!b) return;
+    if (st.date !== b.dataset.d) st.time = "";
+    st.date = b.dataset.d; drawCal(); clearErr();
+    var s = $("#slots button"); if (s && innerWidth < 760) $("#times").scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+  function drawTimes() {
+    var list = st.date && st.days[st.date];
+    $("#times-title").textContent = list ? nice(st.date) : "Choose a day";
+    $("#times-hint").textContent = list ? "Pick a time. Sessions start at these times." : "Then pick a time that suits you.";
+    $("#slots").innerHTML = (list || []).map(function (t) { return '<button type="button" class="slot" data-t="' + t + '" aria-pressed="' + (t === st.time) + '">' + t + "</button>"; }).join("");
+  }
+  $("#slots").addEventListener("click", function (e) { var b = e.target.closest(".slot"); if (!b) return; st.time = b.dataset.t; drawTimes(); clearErr(); });
+
+  /* ---------- Steps ---------- */
+  var step = 0, steps = $$(".step"), prog = $$(".progress li");
+  function err(m) { $("#err").innerHTML = m; }
+  function clearErr() { $("#err").textContent = ""; }
+  function valid(n) {
+    if (n === 0) {
+      if (!st.session) return err("Please choose a session."), false;
+      if (P.packages.some(function (k) { return k.session === st.session; }) && !st.pkg) return err("Please choose a package."), false;
+    }
+    if (n === 1 && (!st.date || !st.time)) return err("Please choose a date and a time."), false;
+    if (n === 2) {
+      var bad = null;
+      [["#b-name", function (v) { return v.length > 1; }], ["#b-phone", function (v) { return v.replace(/\D/g, "").length >= 9; }], ["#b-email", function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }]].forEach(function (f) {
+        var el = $(f[0]), ok = f[1](el.value.trim()); el.setAttribute("aria-invalid", !ok); if (!ok && !bad) bad = el;
+      });
+      if (bad) { bad.focus(); return err("Please add your name, a phone number and a valid email address."), false; }
+    }
+    return true;
+  }
+  function show(n) {
+    step = n; clearErr();
+    steps.forEach(function (s, i) { s.hidden = i !== n; });
+    prog.forEach(function (p, i) { p.className = i === n ? "on" : i < n ? "done" : ""; });
+    $("#back").hidden = n === 0;
+    $("#next").textContent = n === 3 ? "Confirm booking" : "Next";
+    if (n === 1) loadDays().catch(function () { offline(API ? "We couldn&rsquo;t load the open dates just now. Please try again in a moment, or book with us on WhatsApp." : "Online booking opens soon. For now, book your session with us on WhatsApp."); });
+    if (n === 3) drawSummary();
+    $("#flow").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  function drawSummary() {
+    var c = cost();
+    var rows = [["Session", st.session + (st.pkg ? " – " + st.pkg : "")], ["Date", nice(st.date, st.time)], ["Name", $("#b-name").value.trim()], ["Phone", $("#b-phone").value.trim()], ["Email", $("#b-email").value.trim()]];
+    if (c.price) rows.push(["Price", rand(c.price)]);
+    rows.push(["Deposit", c.deposit ? rand(c.deposit) : "Confirmed on WhatsApp"]);
+    $("#summary").innerHTML = rows.map(function (r) { return "<dt>" + r[0] + "</dt><dd>" + esc(r[1]) + "</dd>"; }).join("");
+    var canPay = st.payOnline && c.deposit > 0, on = $('#choice-online input');
+    on.disabled = !canPay;
+    $("#online-text").textContent = canPay ? "Pay your " + rand(c.deposit) + " deposit now by card or instant EFT (PayFast). Your booking is confirmed straight away."
+      : "Online payment isn’t available for this session yet. Please continue on WhatsApp.";
+    if (!canPay) { on.checked = false; $('.choice.wa input').checked = true; }
+  }
+  $("#back").addEventListener("click", function () { show(step - 1); });
+  $("#flow").addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (step < 3) { if (valid(step)) show(step + 1); return; }
+    var pay = ($('input[name="pay"]:checked') || {}).value;
+    if (!pay) return err("Please choose how you&rsquo;d like to continue.");
+    if (!$("#agree").checked) return err("Please tick the box to agree to the deposit terms.");
+    submit(pay);
+  });
+
+  /* ---------- Booking ---------- */
+  function submit(pay) {
+    var b = $("#next"); b.disabled = true; b.textContent = "Booking…";
+    call({ action: "book", pay: pay, session: st.session, pkg: st.pkg, date: st.date, time: st.time,
+      name: $("#b-name").value.trim(), phone: $("#b-phone").value.trim(), email: $("#b-email").value.trim(), notes: $("#b-notes").value.trim() })
+      .then(function (j) {
+        if (!j.ok) {
+          if (j.error === "taken") { st.days = null; st.time = ""; show(1); err(j.message); return; }
+          throw new Error(j.error);
+        }
+        if (j.payfast) { toPayfast(j.booking, j.payfast); return; }
+        done(j.booking, { fresh: true });
+      })
+      .catch(function (x) { err(x && x.message && x.message.length < 200 && !/fetch|JSON/i.test(x.message) ? esc(x.message) : "We couldn&rsquo;t complete your booking just now. Please try again, or book on WhatsApp."); })
+      .then(function () { b.disabled = false; b.textContent = "Confirm booking"; });
+  }
+  function toPayfast(bk, pf) {
+    done(bk, { redirecting: true });
+    var f = document.createElement("form"); f.method = "POST"; f.action = pf.url;
+    pf.fields.forEach(function (x) { var i = document.createElement("input"); i.type = "hidden"; i.name = x[0]; i.value = x[1]; f.appendChild(i); });
+    document.body.appendChild(f); setTimeout(function () { f.submit(); }, 900);
+  }
+  function waMsg(bk, extra) {
+    return ["Hi J Masocha Photography! My booking code is " + bk.code + ".", "",
+      "Session: " + bk.session + (bk.pkg ? " – " + bk.pkg : ""), "Date: " + nice(bk.date, bk.time), "Name: " + bk.name, bk.deposit ? "Deposit: " + rand(bk.deposit) : null, "", extra]
+      .filter(function (l) { return l !== null; }).join("\n");
+  }
+  function ics(bk) {
+    var s = new Date(bk.date + "T" + bk.time + ":00+02:00"), e = new Date(s.getTime() + 3600000);
+    var f = function (d) { return d.toISOString().replace(/[-:]/g, "").replace(/\.\d+/, ""); };
+    var body = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//J Masocha Photography//Booking//EN", "BEGIN:VEVENT", "UID:" + bk.code + "@jmasocha", "DTSTAMP:" + f(new Date()), "DTSTART:" + f(s), "DTEND:" + f(e),
+      "SUMMARY:Photo session – J Masocha Photography", "DESCRIPTION:Booking code " + bk.code + "\\n" + bk.session + (bk.pkg ? " – " + bk.pkg : ""), "LOCATION:235 Helen Joseph Street\\, Pretoria Central", "END:VEVENT", "END:VCALENDAR"].join("\r\n");
+    return URL.createObjectURL(new Blob([body], { type: "text/calendar" }));
+  }
+  function done(bk, o) {
+    o = o || {};
+    $("#flow").hidden = true; $("#check-wrap").hidden = true; $("#lookup").hidden = true;
+    var confirmed = bk.status === "confirmed", cancelled = bk.status === "cancelled";
+    var title, lede, icon = confirmed ? "ok" : "wait";
+    if (o.redirecting) { title = "Taking you to secure payment…"; lede = "Your time is held while you pay your " + rand(bk.deposit) + " deposit with PayFast. Keep your booking code below."; }
+    else if (confirmed) { title = "You&rsquo;re booked!"; lede = "Your booking is confirmed. We&rsquo;ve emailed your confirmation. See you at the studio!"; }
+    else if (cancelled) { title = "This booking was cancelled"; lede = "Message us on WhatsApp if you&rsquo;d like to book again."; }
+    else if (o.checking) { title = "Confirming your payment…"; lede = "This usually takes a few seconds. You&rsquo;ll also get a confirmation email."; }
+    else if (bk.payment === "online") { title = "Booking received"; lede = (o.cancelled ? "Your payment wasn&rsquo;t completed. " : "") + "Your time is held until " + nice(bk.holdUntil.slice(0, 10), bk.holdUntil.slice(11, 16)) + ". Pay your deposit on WhatsApp to confirm it."; }
+    else { title = "Booking received"; lede = "Your time is held until " + nice(bk.holdUntil.slice(0, 10), bk.holdUntil.slice(11, 16)) + ". To confirm it, pay your " + (bk.deposit ? rand(bk.deposit) + " " : "") + "deposit and send the proof of payment on WhatsApp with your booking code."; }
+    var rows = [["Session", bk.session + (bk.pkg ? " – " + bk.pkg : "")], ["Date", nice(bk.date, bk.time)], ["Name", bk.name]];
+    if (bk.price) rows.push(["Price", rand(bk.price)]);
+    if (bk.deposit) rows.push([confirmed ? "Deposit paid" : "Deposit due", rand(confirmed && bk.paid ? bk.paid : bk.deposit)]);
+    rows.push(["Status", confirmed ? "Confirmed" : cancelled ? "Cancelled" : "Waiting for deposit"]);
+    var waText = confirmed ? waMsg(bk, "I have a question about my booking.") : waMsg(bk, bk.payment === "whatsapp" && o.fresh ? "I have a few questions before I pay the deposit." : "Here is my proof of payment for the deposit.");
+    $("#done").innerHTML =
+      '<div class="tick ' + icon + '">' + (confirmed ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg>' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>') + "</div>" +
+      "<h2>" + title + '</h2><p class="lede">' + lede + "</p>" +
+      '<div class="code"><span id="the-code">' + esc(bk.code) + '</span><button type="button" id="copy">Copy</button></div><p class="code-hint">Your booking code. Use it as your payment reference and whenever you contact us.</p>' +
+      '<dl class="summary">' + rows.map(function (r) { return "<dt>" + r[0] + "</dt><dd>" + esc(r[1]) + "</dd>"; }).join("") + "</dl>" +
+      (!confirmed && !cancelled && !o.redirecting && bk.bank ? '<div class="bank"><b>Pay by EFT</b>' + esc(bk.bank) + "\nReference: " + esc(bk.code) + "</div>" : "") +
+      (o.redirecting || o.checking ? '<div class="loading" style="justify-content:center"><span class="spin"></span>Please wait&hellip;</div>' :
+        '<div class="actions"><a class="btn wa" target="_blank" rel="noopener" href="' + waLink(waText) + '">' + (confirmed ? "Message us on WhatsApp" : bk.payment === "whatsapp" && o.fresh ? "Continue on WhatsApp" : "Send proof of payment on WhatsApp") + "</a>" +
+        (cancelled ? "" : '<a class="btn" download="J-Masocha-booking-' + esc(bk.code) + '.ics" href="' + ics(bk) + '">Add to calendar</a>') + '<a class="btn" href="booking.html">Make another booking</a></div>');
+    $("#done").hidden = false;
+    $("#copy").addEventListener("click", function () {
+      var b = this; (navigator.clipboard ? navigator.clipboard.writeText(bk.code) : Promise.reject()).then(function () { b.textContent = "Copied"; }, function () { b.textContent = "Select and copy"; });
+    });
+    $("#done").scrollIntoView({ behavior: "smooth", block: "start" });
+    try { history.replaceState(null, "", "booking.html?code=" + encodeURIComponent(bk.code)); } catch (x) {}
+  }
+
+  /* ---------- Coming back from PayFast, or checking a booking ---------- */
+  function check(code, o) {
+    if (!API) return;
+    o = o || {};
+    call({ action: "booking", code: code }).then(function (j) {
+      if (!j.ok) { $("#lookup").hidden = false; $("#check-wrap").hidden = false; err(""); alert("We couldn’t find booking " + code + ". Check the code, or message us on WhatsApp."); return; }
+      var bk = j.booking;
+      if (o.paid && bk.status === "awaiting-payment" && (o.tries || 0) < 15) { done(bk, { checking: true }); setTimeout(function () { check(code, { paid: true, tries: (o.tries || 0) + 1 }); }, 4000); return; }
+      done(bk, { cancelled: o.cancelled });
+    }).catch(function () { alert("We couldn’t check your booking just now. Please try again."); });
+  }
+  $("#check-open").addEventListener("click", function () { $("#lookup").hidden = false; $("#lk-code").focus(); });
+  $("#lookup").addEventListener("submit", function (e) { e.preventDefault(); var c = $("#lk-code").value.trim().toUpperCase(); if (c) check(c.indexOf("JM-") === 0 ? c : "JM-" + c.replace(/^JM/, "")); });
+  if (url.get("code")) check(url.get("code").toUpperCase(), { paid: url.get("paid") === "1", cancelled: url.get("cancelled") === "1" });
+})();
+</script>
+</body>
+</html>

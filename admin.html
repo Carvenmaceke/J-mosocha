@@ -162,6 +162,67 @@ dialog::backdrop { background: rgba(10,10,11,.55); }
 @media (max-width: 640px) { .promo { grid-template-columns: 80px 1fr; } .promo .pimg { width: 80px; } .promo .acts { grid-column: 1 / -1; } .promo .acts button { flex: 1; } }
 .img-pick { display: flex; align-items: center; gap: 14px; margin-top: 8px; }
 .img-pick .pimg { width: 120px; aspect-ratio: 3/4; background-size: contain !important; background-color: var(--bg-2); border-radius: 10px; background: var(--bg-2) center/cover no-repeat; flex: none; }
+/* Bookings */
+.book-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 22px; align-items: start; }
+@media (max-width: 900px) { .book-grid { grid-template-columns: 1fr; } }
+.boxed { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px; }
+.cal-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+.cal-head h2 { font-size: 1.3rem; }
+.rbtn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line); background: #fff; cursor: pointer; display: grid; place-items: center; }
+.rbtn:hover { border-color: var(--fg); }
+.rbtn svg { width: 16px; height: 16px; }
+.bcal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+.bcal .dow { text-align: center; font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.bcal button { position: relative; min-height: 64px; border: 1px solid var(--line); border-radius: 10px; background: #fff; cursor: pointer; text-align: left; padding: 6px 7px; display: flex; flex-direction: column; justify-content: space-between; font-size: .9rem; }
+.bcal button:hover { border-color: var(--fg); }
+.bcal button.closed { background: var(--bg-2); color: var(--muted); }
+.bcal button.custom { box-shadow: inset 0 0 0 2px var(--accent); }
+.bcal button.past { opacity: .5; }
+.bcal button.today .n { background: var(--fg); color: #fff; border-radius: 999px; padding: 0 7px; }
+.bcal .n { font-weight: 700; align-self: flex-start; }
+.bcal .st { font-size: .68rem; line-height: 1.2; color: var(--muted); }
+.bcal .cnt { position: absolute; top: 6px; right: 6px; min-width: 20px; height: 20px; border-radius: 999px; background: var(--accent); color: #fff; font-size: .72rem; display: grid; place-items: center; padding: 0 5px; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; margin: 12px 0 0; font-size: .8rem; color: var(--muted); }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 4px; border: 1px solid var(--line); background: #fff; vertical-align: -2px; margin-right: 5px; }
+.legend i.c { background: var(--bg-2); } .legend i.x { box-shadow: inset 0 0 0 2px var(--accent); } .legend i.b { background: var(--accent); border-radius: 50%; border: 0; }
+.bl-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+.bl-head h2 { font-size: 1.3rem; }
+.bl-head select { padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px; background: #fff; }
+.bk-day { font-size: .76rem; letter-spacing: .12em; text-transform: uppercase; color: var(--fg-2); margin: 14px 0 6px; }
+.bk-day:first-child { margin-top: 0; }
+.bk { display: grid; grid-template-columns: 58px 1fr; gap: 4px 12px; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: #fff; margin-bottom: 8px; }
+.bk .t { font-weight: 700; font-size: 1.05rem; }
+.bk .who { font-weight: 700; }
+.bk .what { color: var(--fg-2); font-size: .9rem; }
+.bk .meta { grid-column: 2; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: .8rem; color: var(--muted); }
+.pill { display: inline-block; font-size: .72rem; padding: 2px 9px; border-radius: 999px; background: var(--bg-2); color: var(--fg-2); }
+.pill.ok { background: #e6f2ea; color: var(--ok); } .pill.wait { background: #f5ead8; color: #8a6420; } .pill.off { background: #f8e4e0; color: var(--danger); }
+.bk .acts { grid-column: 2; display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.bk .acts a, .bk .acts button { padding: 6px 11px; border-radius: 8px; border: 1px solid var(--line); background: #fff; cursor: pointer; font-size: .8rem; text-decoration: none; color: var(--fg); }
+.bk .acts a:hover, .bk .acts button:hover { border-color: var(--fg); }
+.bk .acts .ok { background: var(--ok); border-color: var(--ok); color: #fff; }
+.bk .acts .del { color: var(--danger); }
+.bk.cancelled { opacity: .55; }
+.seg { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 14px; }
+.times-edit { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.times-edit span { display: inline-flex; align-items: center; gap: 4px; padding: 5px 6px 5px 12px; border-radius: 999px; background: #fff; border: 1px solid var(--line); font-size: .9rem; }
+.times-edit button { border: 0; background: none; cursor: pointer; color: var(--muted); font-size: 1.1rem; line-height: 1; padding: 0 4px; }
+.times-edit button:hover { color: var(--danger); }
+.add-time { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.add-time input { padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+@media (max-width: 560px) { .grid2 { grid-template-columns: 1fr; } }
+.field textarea { width: 100%; padding: 11px 14px; border: 1px solid var(--line); border-radius: 10px; background: #fff; font: inherit; }
+.week { display: grid; gap: 8px; margin-bottom: 8px; }
+.week-row { display: grid; grid-template-columns: 130px 1fr; gap: 10px; align-items: center; }
+.week-row input[type=text] { width: 100%; padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+.week-row input[type=text]:disabled { background: var(--bg-2); color: var(--muted); }
+.week-row label { display: flex; align-items: center; gap: 8px; }
+@media (max-width: 560px) { .week-row { grid-template-columns: 1fr; gap: 4px; } }
+.fill { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 10px 12px; border-radius: 12px; background: var(--bg-2); font-size: .88rem; margin-bottom: 10px; }
+.fill input, .fill select { padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+.fill button { padding: 6px 12px; border-radius: 8px; border: 1px solid var(--fg); background: #fff; cursor: pointer; }
+h3.sub { font-size: 1.1rem; margin: 18px 0 8px; }
 .notice { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 24px; max-width: 680px; }
 .notice h2 { font-size: 1.35rem; margin-bottom: 6px; }
 .notice p { color: var(--fg-2); margin: 0 0 14px; }
@@ -234,6 +295,7 @@ dialog::backdrop { background: rgba(10,10,11,.55); }
     </div>
     <nav class="tabs" role="tablist" aria-label="Sections">
       <button type="button" role="tab" aria-selected="true" aria-controls="tab-gallery" data-tab="gallery">Gallery</button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="tab-book" data-tab="book">Bookings</button>
       <button type="button" role="tab" aria-selected="false" aria-controls="tab-specials" data-tab="specials">Specials &amp; posters</button>
       <button type="button" role="tab" aria-selected="false" aria-controls="tab-subs" data-tab="subs">Subscribers</button>
     </nav>
@@ -248,6 +310,42 @@ dialog::backdrop { background: rgba(10,10,11,.55); }
       </div>
       <div id="groups"></div>
       <div class="orderbar" id="orderbar" role="region" aria-label="Unsaved order" hidden><span>You changed the order of the photos.</span><button class="btn" type="button" id="order-undo">Undo</button><button class="btn solid" type="button" id="order-save">Save order</button></div>
+    </section>
+    <section id="tab-book" role="tabpanel" hidden>
+      <div id="book-setup" class="notice" hidden>
+        <h2>Connect online bookings</h2>
+        <p>Bookings and your open dates are kept in the same free Google Sheet as your subscribers. Set it up once:</p>
+        <ol>
+          <li>Follow the steps in <b>newsletter/README.md</b> in your website files (about 5 minutes).</li>
+          <li>Open <b>Settings</b> (the gear above) and paste the <b>web app URL</b> and <b>admin key</b>.</li>
+        </ol>
+        <button class="btn solid" type="button" data-open-settings>Open settings</button>
+      </div>
+      <div id="book-app" hidden>
+        <div class="bar">
+          <button class="btn solid" type="button" id="appt-add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Add appointment</button>
+          <button class="btn" type="button" id="hours-open">Opening hours &amp; payments</button>
+          <a class="btn" href="booking.html" target="_blank" rel="noopener">View booking page</a>
+          <p id="book-meta"></p>
+        </div>
+        <div class="book-grid">
+          <div class="boxed">
+            <div class="cal-head">
+              <button class="rbtn" type="button" id="bc-prev" aria-label="Previous month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></button>
+              <h2 id="bc-title"></h2>
+              <button class="rbtn" type="button" id="bc-next" aria-label="Next month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></button>
+            </div>
+            <div class="bcal" id="bcal"></div>
+            <p class="legend"><span><i></i>Open</span><span><i class="c"></i>Closed</span><span><i class="x"></i>Changed for that day</span><span><i class="b"></i>Bookings</span></p>
+            <p class="hint" style="margin:8px 0 0">Click a day to open or close it, change its times, or add an appointment.</p>
+          </div>
+          <div class="boxed">
+            <div class="bl-head"><h2>Bookings</h2>
+              <label class="sr" for="bl-show">Show</label><select id="bl-show"><option value="upcoming">Upcoming</option><option value="waiting">Waiting for deposit</option><option value="past">Past &amp; cancelled</option></select></div>
+            <div id="blist"></div>
+          </div>
+        </div>
+      </div>
     </section>
     <section id="tab-specials" role="tabpanel" hidden>
       <div class="bar">
@@ -356,6 +454,105 @@ dialog::backdrop { background: rgba(10,10,11,.55); }
   </form>
 </dialog>
 
+<!-- Bookings: one day -->
+<dialog id="day-dlg" aria-labelledby="day-title">
+  <form class="panel" id="day-form" method="dialog" novalidate>
+    <div class="panel-head"><h2 id="day-title">Day</h2><button class="x" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <span class="label">Open for online bookings?</span>
+    <div class="seg" id="day-mode">
+      <label class="tone-opt"><input type="radio" name="dmode" value="default"><span id="day-usual">Usual hours</span></label>
+      <label class="tone-opt"><input type="radio" name="dmode" value="open"><span>Open, with these times</span></label>
+      <label class="tone-opt"><input type="radio" name="dmode" value="closed"><span>Closed</span></label>
+    </div>
+    <div id="day-times-box">
+      <div class="times-edit" id="day-times"></div>
+      <div class="add-time"><label class="sr" for="day-new">Add a time</label><input type="time" id="day-new" step="900"><button class="btn" type="button" id="day-add">Add time</button></div>
+    </div>
+    <p class="hint" id="day-hint" style="margin-top:10px"></p>
+    <p class="err" id="day-err" role="alert"></p>
+    <div class="panel-foot"><button class="btn" type="button" data-close>Cancel</button><button class="btn solid" type="submit" id="day-go">Save this day</button></div>
+    <h3 class="sub">Appointments on this day</h3>
+    <div id="day-list"></div>
+    <button class="btn" type="button" id="day-appt" style="margin-top:6px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Add appointment on this day</button>
+  </form>
+</dialog>
+
+<!-- Bookings: add an appointment by hand -->
+<dialog id="appt-dlg" aria-labelledby="appt-title">
+  <form class="panel" id="appt-form" method="dialog" novalidate>
+    <div class="panel-head"><h2 id="appt-title">Add appointment</h2><button class="x" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <p class="hint" style="margin:-8px 0 14px">For bookings made at the studio, by phone or on WhatsApp. The time is taken off the booking page straight away.</p>
+    <div class="grid2">
+      <div class="field"><label for="ap-date">Date</label><input type="date" id="ap-date" required></div>
+      <div class="field"><label for="ap-time">Time</label><input type="time" id="ap-time" list="ap-times" step="900" required><datalist id="ap-times"></datalist></div>
+      <div class="field"><label for="ap-name">Client name</label><input id="ap-name" maxlength="80" required></div>
+      <div class="field"><label for="ap-phone">Phone</label><input id="ap-phone" type="tel" maxlength="20"></div>
+      <div class="field"><label for="ap-session">Session</label><select id="ap-session"></select></div>
+      <div class="field"><label for="ap-pkg">Package</label><select id="ap-pkg"></select></div>
+      <div class="field"><label for="ap-email">Email (optional)</label><input id="ap-email" type="email" maxlength="200"></div>
+      <div class="field"><label for="ap-paid">Amount paid so far (R)</label><input id="ap-paid" type="number" min="0" step="1" value="0"></div>
+    </div>
+    <div class="field"><label for="ap-notes">Notes</label><textarea id="ap-notes" rows="2" maxlength="600"></textarea></div>
+    <p class="err" id="ap-err" role="alert"></p>
+    <div class="panel-foot"><button class="btn" type="button" data-close>Cancel</button><button class="btn solid" type="submit" id="ap-go">Add appointment</button></div>
+  </form>
+</dialog>
+
+<!-- Bookings: deposit paid -->
+<dialog id="paid-dlg" aria-labelledby="paid-title">
+  <form class="panel small" id="paid-form" method="dialog" novalidate>
+    <div class="panel-head"><h2 id="paid-title">Deposit received</h2><button class="x" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <p id="paid-who" style="margin:0 0 12px"></p>
+    <div class="field"><label for="paid-amt">Amount received (R)</label><input id="paid-amt" type="number" min="0" step="1"></div>
+    <label class="chip" style="display:inline-block"><input type="checkbox" id="paid-mail" checked><span>Email the client their confirmation</span></label>
+    <p class="err" id="paid-err" role="alert"></p>
+    <div class="panel-foot"><button class="btn" type="button" data-close>Cancel</button><button class="btn solid" type="submit" id="paid-go">Confirm booking</button></div>
+  </form>
+</dialog>
+
+<!-- Bookings: reschedule -->
+<dialog id="move-dlg" aria-labelledby="move-title">
+  <form class="panel small" id="move-form" method="dialog" novalidate>
+    <div class="panel-head"><h2 id="move-title">Move booking</h2><button class="x" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <p id="move-who" style="margin:0 0 12px"></p>
+    <div class="grid2">
+      <div class="field"><label for="mv-date">New date</label><input type="date" id="mv-date"></div>
+      <div class="field"><label for="mv-time">New time</label><input type="time" id="mv-time" list="mv-times" step="900"><datalist id="mv-times"></datalist></div>
+    </div>
+    <p class="err" id="mv-err" role="alert"></p>
+    <div class="panel-foot"><button class="btn" type="button" data-close>Cancel</button><button class="btn solid" type="submit" id="mv-go">Move booking</button></div>
+  </form>
+</dialog>
+
+<!-- Bookings: opening hours and payments -->
+<dialog id="hours-dlg" aria-labelledby="hours-title">
+  <form class="panel" id="hours-form" method="dialog" novalidate>
+    <div class="panel-head"><h2 id="hours-title">Opening hours &amp; payments</h2><button class="x" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <h3 class="sub" style="margin-top:0">Usual weekly hours</h3>
+    <p class="hint" style="margin:0 0 10px">The start times clients can book on each day. You can still open, close or change any single day from the calendar.</p>
+    <div class="fill">Fill open days with times from <input type="time" id="fl-from" value="09:00" step="900"> to <input type="time" id="fl-to" value="16:00" step="900"> every <select id="fl-every"><option value="30">30 min</option><option value="45">45 min</option><option value="60" selected>1 hour</option><option value="90">1&frac12; hours</option><option value="120">2 hours</option></select> <button type="button" id="fl-go">Fill</button></div>
+    <div class="week" id="week"></div>
+    <h3 class="sub">Booking rules</h3>
+    <div class="grid2">
+      <div class="field"><label for="hs-hold">Hold a WhatsApp booking for (hours)</label><input id="hs-hold" type="number" min="1" max="720"><span class="hint">While waiting for the deposit. After this the time opens again.</span></div>
+      <div class="field"><label for="hs-payhold">Hold an online payment for (minutes)</label><input id="hs-payhold" type="number" min="10" max="1440"></div>
+      <div class="field"><label for="hs-notice">Book at least (hours ahead)</label><input id="hs-notice" type="number" min="0" max="720"></div>
+      <div class="field"><label for="hs-ahead">Book up to (days ahead)</label><input id="hs-ahead" type="number" min="7" max="365"></div>
+    </div>
+    <div class="field"><label for="hs-bank">Banking details for EFT deposits</label><textarea id="hs-bank" rows="4" maxlength="600" placeholder="Bank: …&#10;Account name: …&#10;Account number: …&#10;Branch code: …"></textarea><span class="hint">Shown to clients who choose WhatsApp, with their booking code as the reference.</span></div>
+    <h3 class="sub">Online payments (PayFast)</h3>
+    <p class="hint" style="margin:0 0 10px">From your PayFast account: Settings &rarr; Developer settings. Leave empty to only take bookings through WhatsApp.</p>
+    <div class="grid2">
+      <div class="field"><label for="pf-id">Merchant ID</label><input id="pf-id" autocomplete="off"></div>
+      <div class="field"><label for="pf-key">Merchant key</label><input id="pf-key" autocomplete="off"></div>
+      <div class="field"><label for="pf-pass">Passphrase</label><input id="pf-pass" type="password" autocomplete="off"></div>
+      <div class="field" style="align-self:end"><label class="chip"><input type="checkbox" id="pf-sandbox"><span>Test mode (PayFast sandbox)</span></label></div>
+    </div>
+    <p class="err" id="hs-err" role="alert"></p>
+    <div class="panel-foot"><button class="btn" type="button" data-close>Cancel</button><button class="btn solid" type="submit" id="hs-go">Save</button></div>
+  </form>
+</dialog>
+
 <!-- Delete a photo -->
 <dialog id="del-dlg" aria-labelledby="del-title">
   <form class="panel small" id="del-form" method="dialog" novalidate>
@@ -367,6 +564,7 @@ dialog::backdrop { background: rgba(10,10,11,.55); }
   </form>
 </dialog>
 
+<script src="packages.js"></script>
 <script>
 (function () {
   // Where the website lives on GitHub
@@ -831,6 +1029,7 @@ dialog::backdrop { background: rgba(10,10,11,.55); }
       $$(".tabs button").forEach(function (x) { x.setAttribute("aria-selected", x === b); $("#" + x.getAttribute("aria-controls")).hidden = x !== b; });
       status();
       if (b.dataset.tab === "subs") subsView(true);
+      if (b.dataset.tab === "book") bookView(true);
     });
   });
 
@@ -930,7 +1129,8 @@ dialog::backdrop { background: rgba(10,10,11,.55); }
         if (!j.ok) {
           var m = { "not-allowed": "The admin key doesn\u2019t match your Google script. Check it in Settings.", "no-subscribers": "There are no subscribers yet.",
             "over-quota": "Gmail can send " + j.quota + " more emails today, but you have " + j.count + " subscribers. Try again tomorrow." }[j.error];
-          throw new Error(m || "The newsletter service said: " + j.error);
+          if (j.error === "unknown-action") m = "Your Google script needs updating for bookings. Paste the latest newsletter/Code.gs into Apps Script and deploy a new version (see newsletter/README.md).";
+          throw new Error(m || (/\s/.test(j.error) ? j.error : "The Google script said: " + j.error));
         }
         return j;
       });
@@ -1060,8 +1260,245 @@ dialog::backdrop { background: rgba(10,10,11,.55); }
       if (site.newsletter === url) return;
       btn.textContent = "Saving\u2026";
       return save(function (dd) { dd.site.newsletter = url; return { add: [], remove: [], message: url ? "Connect the newsletter sign-up form" : "Disconnect the newsletter sign-up form" }; });
-    }).then(function () { busy(d, false, btn, "Save"); d.close(); subs = null; renderPromos(); subsView(); status("ok", "Settings saved."); })
+    }).then(function () { busy(d, false, btn, "Save"); d.close(); subs = null; bk = null; renderPromos(); subsView(); bookView(); status("ok", "Settings saved."); })
       .catch(function (x) { busy(d, false, btn, "Save"); err.textContent = x.status ? failMsg(x) : x.message; });
+  });
+
+  /* ---------- Bookings (Google Apps Script) ---------- */
+  // bk: { today, bookings, days (single-day changes), settings, payOnline } from the script
+  var bk = null, bMonth = null, dayOpen = null, dayTimes = [], paying = null, moving = null;
+  var PR = window.PRICES || { sessions: [], packages: [] };
+  var WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  function utc(d) { var p = d.split("-"); return new Date(Date.UTC(+p[0], +p[1] - 1, +p[2])); }
+  function isoD(x) { return x.getUTCFullYear() + "-" + String(x.getUTCMonth() + 1).padStart(2, "0") + "-" + String(x.getUTCDate()).padStart(2, "0"); }
+  function longDate(d) { var x = utc(d); return WEEKDAYS[x.getUTCDay()] + " " + x.getUTCDate() + " " + MONTHS[x.getUTCMonth()] + " " + x.getUTCFullYear(); }
+  function nowSA() { return new Date(Date.now() + 2 * 3600000).toISOString().slice(0, 16).replace("T", " "); }   // South African time, "yyyy-mm-dd hh:mm"
+  function holds(b) { return b.status === "confirmed" || (b.status === "awaiting-payment" && (!b.holdUntil || b.holdUntil.replace("T", " ") > nowSA())); }
+  function usual(d) { return (bk.settings.week[String(utc(d).getUTCDay())] || []).slice(); }
+  function timesOn(d) { var o = bk.days[d]; return o ? (o.open ? o.times.slice() : []) : usual(d); }
+  function freeOn(d) { var taken = bk.bookings.filter(function (b) { return b.date === d && holds(b); }).map(function (b) { return b.time; }); return timesOn(d).filter(function (t) { return taken.indexOf(t) < 0; }); }
+  function rands(n) { return "R" + Number(n || 0).toLocaleString("en-ZA").replace(/\u00a0/g, " "); }
+
+  function bookView(reload) {
+    var ready = nlReady();
+    $("#book-setup").hidden = ready; $("#book-app").hidden = !ready;
+    if (ready && (reload || !bk)) loadBookings();
+  }
+  function useBk(j) { bk = j; if (!bMonth) bMonth = bk.today.slice(0, 7); drawBookings(); return j; }
+  function loadBookings() {
+    $("#blist").innerHTML = '<p class="empty">Loading bookings\u2026</p>';
+    return nl({ action: "bookings" }).then(useBk).catch(function (x) { $("#blist").innerHTML = ""; status("bad", x.message); });
+  }
+  function drawBookings() {
+    if (!bk) return;
+    var waiting = bk.bookings.filter(function (b) { return b.status === "awaiting-payment" && holds(b); }).length;
+    $("#book-meta").textContent = (bk.payOnline ? "Online payments are on." : "Online payments are off (clients book through WhatsApp).") + (waiting ? " " + waiting + " waiting for a deposit." : "");
+    drawBCal(); drawBList();
+  }
+  function drawBCal() {
+    var y = +bMonth.slice(0, 4), m = +bMonth.slice(5, 7) - 1, first = new Date(Date.UTC(y, m, 1)), lead = (first.getUTCDay() + 6) % 7, count = new Date(Date.UTC(y, m + 1, 0)).getUTCDate();
+    var html = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(function (d) { return '<span class="dow">' + d + "</span>"; }).join("");
+    for (var i = 0; i < lead; i++) html += "<span></span>";
+    for (var d = 1; d <= count; d++) {
+      var ds = isoD(new Date(Date.UTC(y, m, d))), times = timesOn(ds), n = bk.bookings.filter(function (b) { return b.date === ds && holds(b); }).length;
+      var free = freeOn(ds).length, label = !times.length ? "Closed" : free ? free + " open" : "Full";
+      html += '<button type="button" data-day="' + ds + '" class="' + (times.length ? "" : "closed") + (bk.days[ds] ? " custom" : "") + (ds < bk.today ? " past" : "") + (ds === bk.today ? " today" : "") +
+        '" aria-label="' + longDate(ds) + ", " + label + (n ? ", " + n + " booked" : "") + '"><span class="n">' + d + '</span><span class="st">' + label + "</span>" + (n ? '<span class="cnt">' + n + "</span>" : "") + "</button>";
+    }
+    $("#bcal").innerHTML = html;
+    $("#bc-title").textContent = MONTHS[m] + " " + y;
+  }
+  $("#bc-prev").addEventListener("click", function () { var y = +bMonth.slice(0, 4), m = +bMonth.slice(5, 7) - 2; bMonth = isoD(new Date(Date.UTC(y, m, 1))).slice(0, 7); drawBCal(); });
+  $("#bc-next").addEventListener("click", function () { var y = +bMonth.slice(0, 4), m = +bMonth.slice(5, 7); bMonth = isoD(new Date(Date.UTC(y, m, 1))).slice(0, 7); drawBCal(); });
+  $("#bl-show").addEventListener("change", drawBList);
+
+  function bkCard(b, withDate) {
+    var live = holds(b), st = b.status === "confirmed" ? '<span class="pill ok">Confirmed</span>' : b.status === "cancelled" ? '<span class="pill off">Cancelled</span>' :
+      live ? '<span class="pill wait">Waiting for deposit</span>' : '<span class="pill off">Deposit not received, time released</span>';
+    var how = b.source === "studio" ? "Added by you" : b.payment === "online" ? "Online, PayFast" : "Online, WhatsApp";
+    var phone = String(b.phone || "").replace(/\D/g, "").replace(/^0/, "27");
+    var msg = "Hi " + b.name.split(" ")[0] + ", this is J Masocha Photography about your booking " + b.code + " on " + longDate(b.date) + " at " + b.time + ".";
+    return '<article class="bk' + (b.status === "cancelled" ? " cancelled" : "") + '"><div class="t">' + esc(b.time) + "</div><div><div class=\"who\">" + esc(b.name) + '</div><div class="what">' + esc(b.session) + (b.pkg ? " &ndash; " + esc(b.pkg) : "") + (withDate ? " &middot; " + longDate(b.date) : "") + "</div></div>" +
+      '<div class="meta">' + st + "<span>" + esc(b.code) + "</span><span>&middot; " + how + "</span>" +
+      (b.deposit ? "<span>&middot; deposit " + rands(b.deposit) + (b.paid ? ", paid " + rands(b.paid) : "") + "</span>" : b.paid ? "<span>&middot; paid " + rands(b.paid) + "</span>" : "") +
+      (b.status === "awaiting-payment" && live && b.holdUntil ? "<span>&middot; held until " + esc(b.holdUntil.replace("T", " ")) + "</span>" : "") + "</div>" +
+      (b.notes ? '<div class="meta">' + esc(b.notes) + "</div>" : "") + (b.email || b.phone ? '<div class="meta">' + esc(b.phone) + (b.email ? " &middot; " + esc(b.email) : "") + "</div>" : "") +
+      '<div class="acts">' + (b.status === "awaiting-payment" ? '<button type="button" class="ok" data-paid="' + b.code + '">Deposit received</button>' : "") +
+      (phone ? '<a href="https://wa.me/' + phone + "?text=" + encodeURIComponent(msg) + '" target="_blank" rel="noopener">WhatsApp</a>' : "") +
+      (b.status !== "cancelled" ? '<button type="button" data-move="' + b.code + '">Move</button><button type="button" class="del" data-cancel="' + b.code + '">Cancel</button>' : "") + "</div></article>";
+  }
+  function drawBList() {
+    var show = $("#bl-show").value, list = bk.bookings.slice().sort(function (a, b) { return (a.date + a.time).localeCompare(b.date + b.time); });
+    if (show === "upcoming") list = list.filter(function (b) { return b.date >= bk.today && b.status !== "cancelled" && (b.status === "confirmed" || holds(b)); });
+    if (show === "waiting") list = list.filter(function (b) { return b.status === "awaiting-payment"; });
+    if (show === "past") list = list.filter(function (b) { return b.date < bk.today || b.status === "cancelled" || !holds(b); }).reverse();
+    var day = "", html = "";
+    list.forEach(function (b) { if (b.date !== day) { day = b.date; html += '<p class="bk-day">' + longDate(day) + (day === bk.today ? " &middot; today" : "") + "</p>"; } html += bkCard(b); });
+    $("#blist").innerHTML = html || '<p class="empty">' + { upcoming: "No upcoming bookings yet.", waiting: "No bookings waiting for a deposit.", past: "Nothing here yet." }[show] + "</p>";
+  }
+  function findBk(code) { return bk.bookings.filter(function (b) { return b.code === code; })[0]; }
+  function bkAction(e) {
+    var t = e.target.closest("button"); if (!t) return;
+    if (t.dataset.paid) openPaid(t.dataset.paid);
+    if (t.dataset.move) openMove(t.dataset.move);
+    if (t.dataset.cancel) {
+      var b = findBk(t.dataset.cancel);
+      if (!confirm("Cancel " + b.name + "’s booking on " + longDate(b.date) + " at " + b.time + "? The time opens up for other clients.")) return;
+      status("busy", "Cancelling\u2026");
+      nl({ action: "updateBooking", code: b.code, status: "cancelled" }).then(useBk).then(function () { status("ok", "Booking cancelled."); if ($("#day-dlg").open) drawDayList(); }, function (x) { status("bad", x.message); });
+    }
+  }
+  $("#blist").addEventListener("click", bkAction);
+  $("#day-list").addEventListener("click", bkAction);
+
+  // One day: open, closed or changed times, and its appointments
+  $("#bcal").addEventListener("click", function (e) { var b = e.target.closest("[data-day]"); if (b) openDay(b.dataset.day); });
+  function openDay(d) {
+    dayOpen = d; var o = bk.days[d], u = usual(d);
+    $("#day-title").textContent = longDate(d);
+    $("#day-usual").textContent = "Usual hours" + (u.length ? " (" + u[0] + "\u2013" + u[u.length - 1] + ")" : " (closed)");
+    dayTimes = o && o.open ? o.times.slice() : u.slice();
+    $$('input[name="dmode"]').forEach(function (r) { r.checked = r.value === (o ? (o.open ? "open" : "closed") : "default"); });
+    $("#day-err").textContent = ""; drawDay(); drawDayList(); openDlg($("#day-dlg"));
+  }
+  function dayMode() { return ($('input[name="dmode"]:checked') || {}).value; }
+  function drawDay() {
+    var mode = dayMode(), taken = bk.bookings.filter(function (b) { return b.date === dayOpen && holds(b); }).map(function (b) { return b.time; });
+    $("#day-times-box").hidden = mode === "closed";
+    var list = mode === "default" ? usual(dayOpen) : dayTimes;
+    $("#day-times").innerHTML = list.length ? list.map(function (t) { return "<span>" + t + (taken.indexOf(t) > -1 ? " &middot; booked" : "") + (mode === "open" ? '<button type="button" data-rmt="' + t + '" aria-label="Remove ' + t + '">&times;</button>' : "") + "</span>"; }).join("") : '<p class="hint" style="margin:0">No times yet. Add one below.</p>';
+    $(".add-time", $("#day-dlg")).hidden = mode !== "open";
+    $("#day-hint").textContent = mode === "default" ? "This day follows your usual weekly hours. Choose \u201cOpen, with these times\u201d to change the times for this day only." :
+      mode === "closed" ? "Clients can\u2019t book this day online. Existing appointments stay as they are." : "Clients can book these times on this day only.";
+  }
+  $("#day-mode").addEventListener("change", function () { if (dayMode() === "open" && !dayTimes.length) dayTimes = usual(dayOpen); drawDay(); });
+  $("#day-times").addEventListener("click", function (e) { var b = e.target.closest("[data-rmt]"); if (b) { dayTimes = dayTimes.filter(function (t) { return t !== b.dataset.rmt; }); drawDay(); } });
+  $("#day-add").addEventListener("click", function () {
+    var t = $("#day-new").value; if (!t) return;
+    if (dayTimes.indexOf(t) < 0) dayTimes.push(t);
+    dayTimes.sort(); $("#day-new").value = ""; drawDay();
+  });
+  $("#day-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var mode = dayMode(), d = $("#day-dlg"), btn = $("#day-go");
+    if (mode === "open" && !dayTimes.length) { $("#day-err").textContent = "Add at least one time, or choose Closed."; return; }
+    busy(d, true, btn, "Saving\u2026");
+    nl({ action: "setDay", date: dayOpen, mode: mode, times: dayTimes }).then(useBk)
+      .then(function () { busy(d, false, btn, "Save this day"); d.close(); status("ok", longDate(dayOpen) + " saved. The booking page shows it straight away."); },
+        function (x) { busy(d, false, btn, "Save this day"); $("#day-err").textContent = x.message; });
+  });
+  function drawDayList() {
+    var list = bk.bookings.filter(function (b) { return b.date === dayOpen; }).sort(function (a, b) { return a.time.localeCompare(b.time); });
+    $("#day-list").innerHTML = list.length ? list.map(function (b) { return bkCard(b); }).join("") : '<p class="empty" style="padding:0 0 8px">No appointments yet.</p>';
+  }
+  $("#day-appt").addEventListener("click", function () { var d = dayOpen; $("#day-dlg").close(); openAppt(d); });
+
+  // Add an appointment by hand
+  $("#ap-session").innerHTML = PR.sessions.concat(["Studio session", "Printing collection", "Other"]).map(function (x) { return "<option>" + esc(x) + "</option>"; }).join("");
+  function drawPkgs() {
+    var list = PR.packages.filter(function (k) { return k.session === $("#ap-session").value; });
+    $("#ap-pkg").innerHTML = '<option value="">' + (list.length ? "Choose a package" : "No packages") + "</option>" + list.map(function (k) { return '<option value="' + esc(k.name) + '">' + esc(k.name) + " (R" + k.price + ")</option>"; }).join("");
+    $("#ap-pkg").disabled = !list.length;
+  }
+  $("#ap-session").addEventListener("change", drawPkgs);
+  function fillTimes(dateEl, list) { var d = dateEl.value; $(list).innerHTML = d && bk ? freeOn(d).map(function (t) { return '<option value="' + t + '">'; }).join("") : ""; }
+  $("#ap-date").addEventListener("change", function () { fillTimes($("#ap-date"), "#ap-times"); });
+  $("#mv-date").addEventListener("change", function () { fillTimes($("#mv-date"), "#mv-times"); });
+  function openAppt(date) {
+    $("#appt-form").reset(); $("#ap-err").textContent = ""; drawPkgs();
+    $("#ap-date").value = date || bk.today; fillTimes($("#ap-date"), "#ap-times");
+    var free = freeOn($("#ap-date").value); $("#ap-time").value = free[0] || "";
+    openDlg($("#appt-dlg"));
+  }
+  $("#appt-add").addEventListener("click", function () { openAppt(); });
+  $("#appt-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var err = $("#ap-err"), date = $("#ap-date").value, time = $("#ap-time").value, name = $("#ap-name").value.trim();
+    if (!date || !time) { err.textContent = "Choose a date and time."; return; }
+    if (!name) { err.textContent = "Add the client\u2019s name."; $("#ap-name").focus(); return; }
+    var d = $("#appt-dlg"), btn = $("#ap-go");
+    busy(d, true, btn, "Adding\u2026");
+    nl({ action: "appointment", date: date, time: time, name: name, phone: $("#ap-phone").value.trim(), email: $("#ap-email").value.trim(), session: $("#ap-session").value, pkg: $("#ap-pkg").value, notes: $("#ap-notes").value.trim(), paid: $("#ap-paid").value })
+      .then(useBk).then(function () { busy(d, false, btn, "Add appointment"); d.close(); status("ok", "Appointment added for " + longDate(date) + " at " + time + ". That time is no longer bookable online."); },
+        function (x) { busy(d, false, btn, "Add appointment"); err.textContent = x.message; });
+  });
+
+  // Deposit received
+  function openPaid(code) {
+    paying = findBk(code);
+    $("#paid-who").textContent = paying.name + " \u00b7 " + longDate(paying.date) + " at " + paying.time + " \u00b7 " + paying.code;
+    $("#paid-amt").value = paying.deposit || ""; $("#paid-mail").checked = !!paying.email; $("#paid-mail").disabled = !paying.email; $("#paid-err").textContent = "";
+    openDlg($("#paid-dlg"));
+  }
+  $("#paid-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var d = $("#paid-dlg"), btn = $("#paid-go");
+    busy(d, true, btn, "Saving\u2026");
+    nl({ action: "updateBooking", code: paying.code, status: "confirmed", paid: $("#paid-amt").value, notify: $("#paid-mail").checked })
+      .then(useBk).then(function () { busy(d, false, btn, "Confirm booking"); d.close(); if ($("#day-dlg").open) drawDayList(); status("ok", "Booking " + paying.code + " confirmed."); },
+        function (x) { busy(d, false, btn, "Confirm booking"); $("#paid-err").textContent = x.message; });
+  });
+
+  // Move a booking
+  function openMove(code) {
+    moving = findBk(code);
+    $("#move-who").textContent = moving.name + " \u00b7 now " + longDate(moving.date) + " at " + moving.time;
+    $("#mv-date").value = moving.date; $("#mv-time").value = moving.time; $("#mv-err").textContent = ""; fillTimes($("#mv-date"), "#mv-times");
+    openDlg($("#move-dlg"));
+  }
+  $("#move-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var date = $("#mv-date").value, time = $("#mv-time").value;
+    if (!date || !time) { $("#mv-err").textContent = "Choose the new date and time."; return; }
+    var d = $("#move-dlg"), btn = $("#mv-go");
+    busy(d, true, btn, "Moving\u2026");
+    nl({ action: "updateBooking", code: moving.code, date: date, time: time }).then(useBk)
+      .then(function () { busy(d, false, btn, "Move booking"); d.close(); if ($("#day-dlg").open) drawDayList(); status("ok", "Booking moved to " + longDate(date) + " at " + time + ". Let the client know on WhatsApp."); },
+        function (x) { busy(d, false, btn, "Move booking"); $("#mv-err").textContent = x.message; });
+  });
+
+  // Weekly hours, rules and PayFast
+  function parseTimes(v) { return String(v).split(/[\s,;]+/).map(function (t) { var m = t.match(/^(\d{1,2})[:h.]?(\d{2})$/); return m && +m[1] < 24 && +m[2] < 60 ? String(+m[1]).padStart(2, "0") + ":" + m[2] : null; }).filter(Boolean); }
+  $("#hours-open").addEventListener("click", function () {
+    var s = bk.settings;
+    $("#week").innerHTML = [1, 2, 3, 4, 5, 6, 0].map(function (i) {
+      var t = s.week[String(i)] || [];
+      return '<div class="week-row"><label><input type="checkbox" data-wd="' + i + '"' + (t.length ? " checked" : "") + "> " + WEEKDAYS[i] + '</label><input type="text" data-wt="' + i + '" value="' + t.join(", ") + '" placeholder="Closed" aria-label="' + WEEKDAYS[i] + ' start times"' + (t.length ? "" : " disabled") + "></div>";
+    }).join("");
+    $("#hs-hold").value = s.holdHours; $("#hs-payhold").value = s.payHoldMinutes; $("#hs-notice").value = s.noticeHours; $("#hs-ahead").value = s.daysAhead; $("#hs-bank").value = s.bank || "";
+    $("#pf-id").value = s.payfast.merchantId || ""; $("#pf-key").value = s.payfast.merchantKey || ""; $("#pf-pass").value = s.payfast.passphrase || ""; $("#pf-sandbox").checked = !!s.payfast.sandbox;
+    $("#hs-err").textContent = ""; openDlg($("#hours-dlg"));
+  });
+  $("#week").addEventListener("change", function (e) {
+    var i = e.target.dataset.wd; if (i === undefined) return;
+    var t = $('[data-wt="' + i + '"]'); t.disabled = !e.target.checked;
+    if (e.target.checked && !t.value.trim()) t.value = fillList().join(", ");
+  });
+  function fillList() {
+    var f = $("#fl-from").value || "09:00", to = $("#fl-to").value || "16:00", step = +$("#fl-every").value, out = [];
+    var m = +f.slice(0, 2) * 60 + +f.slice(3), end = +to.slice(0, 2) * 60 + +to.slice(3);
+    for (; m <= end && out.length < 48; m += step) out.push(String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0"));
+    return out;
+  }
+  $("#fl-go").addEventListener("click", function () { var l = fillList().join(", "); $$("[data-wt]").forEach(function (t) { if (!t.disabled) t.value = l; }); });
+  $("#hours-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var week = {}, bad = null;
+    $$("[data-wt]").forEach(function (t) {
+      var i = t.dataset.wt, on = $('[data-wd="' + i + '"]').checked, list = on ? parseTimes(t.value) : [];
+      if (on && !list.length && !bad) bad = WEEKDAYS[i];
+      week[i] = list;
+    });
+    if (bad) { $("#hs-err").textContent = "Add start times for " + bad + " (like 09:00, 10:00), or untick it."; return; }
+    var pfId = $("#pf-id").value.trim(), pfKey = $("#pf-key").value.trim();
+    if (!!pfId !== !!pfKey) { $("#hs-err").textContent = "Add both the PayFast merchant ID and merchant key, or leave both empty."; return; }
+    var d = $("#hours-dlg"), btn = $("#hs-go");
+    busy(d, true, btn, "Saving\u2026");
+    nl({ action: "bookingSettings", settings: { week: week, holdHours: $("#hs-hold").value, payHoldMinutes: $("#hs-payhold").value, noticeHours: $("#hs-notice").value, daysAhead: $("#hs-ahead").value, bank: $("#hs-bank").value,
+      payfast: { merchantId: pfId, merchantKey: pfKey, passphrase: $("#pf-pass").value, sandbox: $("#pf-sandbox").checked } } })
+      .then(useBk).then(function () { busy(d, false, btn, "Save"); d.close(); status("ok", "Opening hours and payment settings saved."); },
+        function (x) { busy(d, false, btn, "Save"); $("#hs-err").textContent = x.message; });
   });
 
   start();

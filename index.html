@@ -140,6 +140,13 @@ em { font-style: italic; }
 /* ---------- Hero ---------- */
 main { padding-top: var(--header-h, 147px); }
 .hero { position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100svh - var(--header-h, 147px)); padding: 30px 0 46px; background: radial-gradient(1100px 520px at 50% 42%, #2a2a2d 0%, #121214 62%, #0b0b0c 100%); color: #fff; }
+.hero-btns { display: inline-flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.hero-text .btn.hero-book { background: #fff; color: #111; border-color: #fff; }
+.hero-text .btn.hero-book:hover { background: transparent; color: #fff; }
+.book-link { display: inline-flex; align-items: center; height: 40px; padding: 0 20px; border-radius: 999px; background: var(--fg); color: var(--bg); text-decoration: none; font-size: .78rem; font-weight: 400; letter-spacing: .16em; text-transform: uppercase; margin-right: 6px; transition: opacity .2s; }
+.book-link:hover { opacity: .85; }
+.menu > li.menu-book { display: none; }
+@media (max-width: 700px) { .brand-tools .book-link { display: none; } .menu > li.menu-book { display: flex; } }
 .ring-stage { position: relative; width: 100%; height: calc(var(--ch, 300px) + 70px); perspective: 1150px; perspective-origin: 50% 35%; }
 .ring { position: absolute; left: 50%; top: 20px; width: var(--cw, 210px); height: var(--ch, 300px); margin-left: calc(var(--cw, 210px) / -2); transform-style: preserve-3d; }
 .ring-card { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: block; border-radius: 18px; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden; background: #1d1d1f; box-shadow: 0 30px 60px rgba(0,0,0,.55); text-decoration: none; color: #fff; transition: box-shadow .3s; will-change: transform, opacity; }
@@ -787,6 +794,7 @@ footer h3 { color: var(--fg); }
       <svg viewBox="0 0 800 520" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="24" stroke-linejoin="round"><path d="M300 128V100a22 22 0 0 1 22-22h156a22 22 0 0 1 22 22v28"/><path d="M252 150H186v58M548 150h66v58M186 350v58h66M614 350v58h-66"/><path d="M292 222a125 125 0 0 1 216 0M292 336a125 125 0 0 0 216 0"/></g><path d="M48 222h704v114H48z" fill="currentColor"/><text x="400" y="311" text-anchor="middle" style="fill:var(--bg)" font-family="Lato,Arial,sans-serif" font-weight="700" font-size="94" letter-spacing="6">J MASOCHA</text><text x="400" y="478" text-anchor="middle" fill="currentColor" font-family="Lato,Arial,sans-serif" font-weight="700" font-size="38" letter-spacing="12">PHOTOGRAPHY</text></svg>
     </a>
     <div class="brand-tools">
+      <a class="book-link" href="booking.html">Book now</a>
       <div class="social" id="social">
         <button class="icon-btn social-btn" id="social-btn" type="button" aria-label="Follow us on social media" aria-expanded="false" aria-controls="social-menu" title="Follow us on social media"><span class="si-set" aria-hidden="true"><svg class="si si-fb" viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-7.5h2.5l.4-3h-2.9V8.6c0-.9.3-1.5 1.5-1.5h1.6V4.4c-.3 0-1.2-.1-2.3-.1-2.3 0-3.8 1.4-3.8 3.9v2.3H8v3h2.5V21z"/></svg><svg class="si si-ig" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg><svg class="si si-tt" viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 5.8A4.3 4.3 0 0 1 15.5 3h-3.1v12.4a2.6 2.6 0 1 1-2.6-2.6c.3 0 .5 0 .8.1V9.7a5.7 5.7 0 1 0 4.9 5.7V9.1a7.4 7.4 0 0 0 4.3 1.4V7.4a4.3 4.3 0 0 1-3.2-1.6z"/></svg></span></button>
         <div class="social-menu" id="social-menu" role="menu" aria-label="Follow us">
@@ -824,6 +832,7 @@ footer h3 { color: var(--fg); }
       <li><a href="#packages" data-sec="packages">Packages &amp; Pricing</a></li>
       <li><a href="#prints" data-sec="prints">Printed Products</a></li>
       <li><a href="#contact" data-sec="contact" data-contact>Contact</a></li>
+      <li class="menu-book"><a href="booking.html"><b>Book a session</b></a></li>
     </ul>
   </nav>
 </header>
@@ -836,7 +845,7 @@ footer h3 { color: var(--fg); }
     <div class="hero-text">
       <h1>Moments, beautifully kept.</h1>
       <p class="hero-quote">&ldquo;The moments that matter only happen once. We make sure they last forever.&rdquo;</p>
-      <a class="btn" href="#gallery">View the gallery</a>
+      <span class="hero-btns"><a class="btn" href="#gallery">View the gallery</a><a class="btn btn--solid hero-book" href="booking.html">Book a session</a></span>
     </div>
   </section>
 
@@ -1238,6 +1247,7 @@ footer h3 { color: var(--fg); }
 </div>
 <div class="toast" id="toast" role="status"></div>
 
+<script src="packages.js"></script>
 <script src="gallery.js"></script>
 <script src="site.js"></script>
 <script>
@@ -1601,20 +1611,14 @@ footer h3 { color: var(--fg); }
     }).join("");
   })();
 
-  // Price list. Edit prices and inclusions here.
-  var PACKAGES = [
-    ["Standard Package", 750, ["30 minute session", "20 high-res images", "10 pro edited images", "Studio props / customised theme", "2 outfit changes", "Online gallery"]],
-    ["Snoot Package", 880, ["30 minute session", "20 high-res images", "10 pro edited images", "Gobo light effects", "2 outfit changes", "Online gallery"]],
-    ["Pop Through Paper Package", 1150, ["45 minute session", "15 pro edited images", "Paper pop-up effect", "1 minute video (tear cheer)", "2 outfit changes", "Online gallery"]],
-    ["Premium Package", 1400, ["1 hour session", "25 high-res images", "15 pro edited images", "Paper pop-up &amp; snoot effect", "1 minute video (tear cheer)", "3 different backdrops", "Studio props / customised theme", "3 outfit changes", "Online gallery"], "Everything included"]
-  ];
+  // Price list: edit prices and inclusions in packages.js
+  var PACKAGES = (window.PRICES ? PRICES.packages : []).filter(function (k) { return k.session === "Adult Birthday"; }).map(function (k) { return [esc(k.name), k.price, k.features.map(esc), k.tag]; });
   var tick = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>';
   $("#pk-grid").innerHTML = PACKAGES.map(function (k, i) {
-    var label = plain(k[0]) + " (R" + k[1] + ")";
     return '<article class="pk-card' + (k[3] ? " featured" : "") + '">' + (k[3] ? '<span class="pk-tag">' + k[3] + "</span>" : "") +
       "<h4>" + k[0] + '</h4><p class="pk-price">R' + k[1] + "<small>per session</small></p><ul>" +
       k[2].map(function (f) { return "<li>" + tick + f + "</li>"; }).join("") + '<li class="extra">' + tick + "Add family &amp; friends for free</li></ul>" +
-      '<a class="btn' + (k[3] ? "" : " btn--solid") + '" href="#planner" data-plan="Adult Birthday" data-pkg="' + esc(label) + '">Book this package</a></article>';
+      '<a class="btn' + (k[3] ? "" : " btn--solid") + '" href="booking.html?session=' + encodeURIComponent("Adult Birthday") + "&amp;pkg=" + encodeURIComponent(plain(k[0])) + '">Book this package</a></article>';
   }).join("");
 
   // Packages planner

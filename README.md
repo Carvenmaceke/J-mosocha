@@ -12,13 +12,16 @@ It is a static page (`index.html`) with its photos in `img/`, plus a private web
 - Photo sessions, services, the Adult Birthday price list, a packages request form, a print showcase with a print order form, about, team and Google reviews
 - Contact window (email, WhatsApp or call), newsletter sign-up and footer
 
-Bookings, print orders and contact messages open WhatsApp or the visitor's email app with the details already filled in, so no server is needed.
+**Online booking (`booking.html`):** clients choose a session and package, pick one of the open dates and times, enter their details, and either pay the deposit online (PayFast) or continue on WhatsApp and send proof of payment there. Each booking gets a unique booking code, shown on screen and emailed to the client. This needs the free Google Sheet set-up in [`newsletter/README.md`](newsletter/README.md). Until that's connected, the booking page sends people to WhatsApp.
+
+Package enquiries, print orders and contact messages open WhatsApp or the visitor's email app with the details already filled in.
 
 ## Website manager (owner login)
 
 Open **`/admin.html`** on the live site (for example `https://carvenmaceke.github.io/J-mosocha/admin.html`). It isn't linked from the website.
 
 - **Gallery:** add photos (choose the backdrop and one or more categories), edit captions and categories, replace a picture with a new one, change the order (drag photos or use the arrows, then **Save order**), or delete photos. Photos are resized automatically.
+- **Bookings:** a calendar of your open days. Set your usual weekly hours, close a day or change its times, add appointments for walk-ins and phone bookings, confirm deposits, and move or cancel bookings. Set PayFast and your banking details under **Opening hours & payments**.
 - **Specials & posters:** post current sales, promotions or promotion posters with an offer, end date and optional poster (shown in full). They show in "Current specials" on the website and hide themselves after the end date. When the subscriber list is connected, each new post is emailed to all subscribers straight away, with the poster inside the email.
 - **Subscribers:** see everyone who subscribed, remove people, download the list, and email a promotion to all subscribers. This needs the free Google Sheet set-up in [`newsletter/README.md`](newsletter/README.md).
 
@@ -41,7 +44,7 @@ Most settings are near the top of the `<script>` section in `index.html`.
 | --- | --- |
 | Phone/WhatsApp number and email | `var WA = "27661322462", MAIL = "wanhloni@gmail.com";` |
 | Facebook, TikTok and Instagram links | `var SOCIAL = { facebook: "", tiktok: "", instagram: "" };` (an empty link shows "coming soon") |
-| Adult Birthday prices | `var PACKAGES = [ ... ]` |
+| Sessions, packages, prices and the deposit % | `packages.js` |
 | Gallery photos | `gallery.js` (easier from the website manager) |
 | Specials and the newsletter connection | `site.js` (easier from the website manager) |
 
