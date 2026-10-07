@@ -142,10 +142,8 @@ main { padding-top: var(--header-h, 147px); }
 .hero { position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100svh - var(--header-h, 147px)); padding: 30px 0 46px; background: radial-gradient(1100px 520px at 50% 42%, #2a2a2d 0%, #121214 62%, #0b0b0c 100%); color: #fff; }
 .ring-stage { position: relative; width: 100%; height: calc(var(--ch, 300px) + 70px); perspective: 1150px; perspective-origin: 50% 35%; }
 .ring { position: absolute; left: 50%; top: 20px; width: var(--cw, 210px); height: var(--ch, 300px); margin-left: calc(var(--cw, 210px) / -2); transform-style: preserve-3d; }
-.ring-card { position: absolute; inset: 0; display: block; border-radius: 18px; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden; background: #1d1d1f; box-shadow: 0 30px 60px rgba(0,0,0,.55); text-decoration: none; color: #fff; transition: box-shadow .3s; will-change: transform, opacity; }
+.ring-card { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: block; border-radius: 18px; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden; background: #1d1d1f; box-shadow: 0 30px 60px rgba(0,0,0,.55); text-decoration: none; color: #fff; transition: box-shadow .3s; will-change: transform, opacity; }
 .ring-card img { width: 100%; height: 100%; object-fit: cover; object-position: center 22%; display: block; }
-.ring-card::after { content: ""; position: absolute; inset: 0; background: linear-gradient(transparent 62%, rgba(0,0,0,.65)); }
-.ring-card span { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 1; padding: 6px 14px; border-radius: 99px; background: rgba(255,255,255,.16); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); font-size: .78rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; white-space: nowrap; }
 .ring-card:focus-visible { outline: 3px solid #d6b47f; outline-offset: 4px; }
 .ring-floor { position: absolute; left: 50%; bottom: 6px; width: min(900px, 90vw); height: 60px; transform: translateX(-50%); background: radial-gradient(closest-side, rgba(214,180,127,.18), transparent); pointer-events: none; }
 .hero-text { position: relative; z-index: 2; text-align: center; padding: 6px 16px 0; color: #fff; }
@@ -1823,39 +1821,54 @@ footer h3 { color: var(--fg); }
     }
   });
 
-  // Hero: a 3D circle of photos (one per category) that keeps turning; only the front half is visible
+  // Hero: a 3D circle of photos that keeps turning; only the front half is visible.
+  // The photos are in story order, from love and a baby on the way through childhood,
+  // graduation, friends and family, and back to the studio where every chapter is kept.
   (function () {
     var ring = $("#ring"), stage = $("#ring-stage"); if (!ring) return;
-    var hcats = CATS.slice(1), all = [];
-    TONES.forEach(function (t) { t.photos.forEach(function (p) { all.push(p); }); });
-    var used = {}, picks = [];
-    for (var round = 0; round < 2; round++) {   // two passes: up to two photos per category, newest uploads first
-      hcats.forEach(function (c) {
-        for (var i = all.length - 1; i >= 0; i--) {
-          var p = all[i];
-          if (!used[p[0]] && p[2].split(" ").indexOf(c[0]) > -1) { used[p[0]] = 1; picks.push([p, c]); return; }
-        }
-      });
-    }
+    var STORY = [   // [file in img/story/, description, width ÷ height for landscape photos]
+      ["01-love", "A couple about to kiss, in silhouette", 1.19],
+      ["02-expecting", "A father-to-be kneeling to the baby bump, in silhouette"],
+      ["03-newborn", "A baby in a pink knitted outfit on a swing"],
+      ["04-little-man", "A baby boy in a blue cap and suspenders"],
+      ["05-first-birthday", "A little boy at a white piano with his birthday cake", 1.11],
+      ["06-baby-girl", "A baby girl in a red tartan dress"],
+      ["07-school-graduate", "A little girl in a graduation cap"],
+      ["08-gymnast", "A young gymnast holding a leg stretch"],
+      ["09-graduate", "A graduate holding her cap", 1.5],
+      ["10-celebration", "A woman in a white gown with falling confetti"],
+      ["11-friends", "Four friends in white T-shirts, laughing together", 1.5],
+      ["12-family", "A family of five in matching cream outfits", 1.43],
+      ["13-birthday", "A woman in lilac with roses and a cake on her birthday"],
+      ["14-outdoors", "A man relaxing outdoors among the flowers", 1.5],
+      ["15-studio", "The J Masocha studio, lights and camera ready"]
+    ];
+    var picks = STORY;
     if (picks.length < 3) return;
-    var n = picks.length, step = 360 / n, angle = 0, R = 0, paused = false, last = 0;
+    var n = picks.length, angles = [], angle = 0, R = 0, paused = false, last = 0;
     var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     ring.innerHTML = picks.map(function (x) {
-      var p = x[0], c = x[1];
-      return '<a class="ring-card" href="#gallery" data-cat="' + c[0] + '" aria-label="See ' + c[1] + ' photos"><img src="' + src(p[0], 700) + '" alt="' + p[1] + '" draggable="false"><span>' + c[1] + "</span></a>";
+      return '<a class="ring-card" href="#gallery" aria-label="View the gallery"><img src="img/story/' + x[0] + '.webp" alt="' + x[1] + '" draggable="false"></a>';
     }).join("");
     stage.insertAdjacentHTML("beforeend", '<div class="ring-floor" aria-hidden="true"></div>');
     var cards = $$(".ring-card", ring);
     function size() {
-      var vw = innerWidth, cw = Math.round(Math.max(120, Math.min(240, vw * (vw < 700 ? .34 : .16))));
-      stage.style.setProperty("--cw", cw + "px"); stage.style.setProperty("--ch", Math.round(cw * 1.42) + "px");
-      R = Math.max(Math.round((cw * 1.18) / (2 * Math.tan(Math.PI / n))), Math.round(vw * .5));   // ring spans the full width
+      var vw = innerWidth, cw = Math.round(Math.max(120, Math.min(240, vw * (vw < 700 ? .34 : .16)))), ch = Math.round(cw * 1.42), gap = cw * .2;
+      stage.style.setProperty("--cw", cw + "px"); stage.style.setProperty("--ch", ch + "px");
+      // landscape photos get wider cards so every photo shows in full; space them around the circle by width
+      var widths = picks.map(function (x) { return x[2] ? Math.round(ch * x[2]) : cw; });
+      var total = widths.reduce(function (t, w) { return t + w + gap; }, 0), pos = 0;
+      R = Math.max(Math.round(total / (2 * Math.PI)), Math.round(vw * .5));   // ring spans the full width
+      cards.forEach(function (el, i) {
+        el.style.width = widths[i] + "px"; el.style.left = (cw - widths[i]) / 2 + "px";
+        angles[i] = pos / total * 360; pos += (widths[i] + (widths[i + 1] || widths[0])) / 2 + gap;
+      });
       draw();
     }
     function draw() {
       ring.style.transform = "translateZ(" + (-R) + "px) rotateY(" + angle + "deg)";
       cards.forEach(function (el, i) {
-        var a = i * step, rad = (a + angle) * Math.PI / 180, front = Math.cos(rad);
+        var a = angles[i], rad = (a + angle) * Math.PI / 180, front = Math.cos(rad);
         el.style.transform = "rotateY(" + a + "deg) translateZ(" + R + "px)";
         el.style.opacity = front <= 0.05 ? 0 : Math.min(1, 0.25 + front);
         el.style.pointerEvents = front > 0.6 ? "auto" : "none";
@@ -1872,7 +1885,7 @@ footer h3 { color: var(--fg); }
     stage.addEventListener("focusout", function () { paused = false; });
     ring.addEventListener("click", function (e) {
       var a = e.target.closest(".ring-card"); if (!a) return;
-      e.preventDefault(); setCat(a.dataset.cat);
+      e.preventDefault();
       document.getElementById("gallery").scrollIntoView({ behavior: reduce ? "auto" : "smooth" });
     });
     addEventListener("resize", size); size();
