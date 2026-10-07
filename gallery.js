@@ -21,7 +21,6 @@ window.GALLERY = {
     {"id":"portrait-spotlight-navy","caption":"Spotlight portrait","categories":["portraits","women"],"w":700,"h":1050},
     {"id":"graduation-family","caption":"Graduate & grandmother","categories":["men","graduation","family"],"w":700,"h":1050},
     {"id":"couple-mom-dad-caps","caption":"Mom & Dad to be","categories":["couples","family"],"w":700,"h":467},
-    {"id":"maternity-silhouette","caption":"Maternity silhouette","categories":["maternity","couples"],"w":700,"h":1047},
     {"id":"maternity-red-gown","caption":"Maternity in red","categories":["maternity","women"],"w":700,"h":977},
     {"id":"birthday-25th","caption":"25th birthday","categories":["women","birthdays"],"w":700,"h":913},
     {"id":"birthday-clock","caption":"Time to celebrate","categories":["women","birthdays"],"w":700,"h":1049}
