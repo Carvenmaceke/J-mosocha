@@ -2,6 +2,7 @@
 // Each photo: id (its file name in img/ without -700/-1600), caption, categories, and the width and height of the 700px image.
 window.GALLERY = {
   "dark": [
+    {"id":"graduation-directors-chair","caption":"Graduate in the director’s chair","categories":["graduation","women"],"w":700,"h":956},
     {"id":"graduation-success-book","caption":"Success, in print","categories":["graduation","women"],"w":700,"h":467},
     {"id":"couple-black-embrace","caption":"Together in black","categories":["couples"],"w":700,"h":1050},
     {"id":"maternity-white-tulle-train","caption":"White tulle maternity","categories":["maternity","women"],"w":700,"h":1033},
@@ -21,6 +22,8 @@ window.GALLERY = {
     {"id":"birthday-clock","caption":"Time to celebrate","categories":["women","birthdays"],"w":700,"h":1049}
   ],
   "white": [
+    {"id":"graduation-mom-kiss","caption":"A kiss from Mom","categories":["graduation","family"],"w":700,"h":1050},
+    {"id":"graduation-little-scholar","caption":"Little scholar","categories":["graduation","kids"],"w":700,"h":1050},
     {"id":"graduation-class-of-2025","caption":"Class of 2025","categories":["graduation","women"],"w":700,"h":467},
     {"id":"couple-red-roses","caption":"Roses & forehead touch","categories":["couples"],"w":700,"h":1050},
     {"id":"portrait-timberland-step","caption":"Fresh steps","categories":["portraits","men"],"w":700,"h":1050},
@@ -38,6 +41,7 @@ window.GALLERY = {
     {"id":"kids-tulle-dress","caption":"Tulle & twirls","categories":["kids"],"w":700,"h":1050}
   ],
   "colour": [
+    {"id":"graduation-classroom-set","caption":"I graduated!","categories":["graduation","kids"],"w":700,"h":1050},
     {"id":"portrait-pinstripe-blazer","caption":"Pinstripe & boots","categories":["portraits","women"],"w":700,"h":1050},
     {"id":"maternity-couple-baby-vest","caption":"Couple with baby’s first vest","categories":["maternity","couples"],"w":700,"h":467},
     {"id":"maternity-mountain-sparkle","caption":"Sparkle gown against the mountains","categories":["maternity","women"],"w":700,"h":467},
