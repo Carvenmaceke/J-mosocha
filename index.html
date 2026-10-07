@@ -142,9 +142,6 @@ em { font-style: italic; }
 /* ---------- Hero ---------- */
 main { padding-top: var(--header-h, 147px); }
 .hero { position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100svh - var(--header-h, 147px)); padding: 30px 0 46px; background: radial-gradient(1100px 520px at 50% 42%, #2a2a2d 0%, #121214 62%, #0b0b0c 100%); color: #fff; }
-.hero-btns { display: inline-flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
-.hero-text .btn.hero-book { background: #fff; color: #111; border-color: #fff; }
-.hero-text .btn.hero-book:hover { background: transparent; color: #fff; }
 .book-link { display: inline-flex; align-items: center; height: 40px; padding: 0 20px; border-radius: 999px; background: var(--fg); color: var(--bg); text-decoration: none; font-size: .78rem; font-weight: 400; letter-spacing: .16em; text-transform: uppercase; margin-right: 6px; transition: opacity .2s; }
 .book-link:hover { opacity: .85; }
 .menu > li.menu-book { display: none; }
@@ -644,8 +641,6 @@ footer h3 { color: #f2efea; font-size: .78rem; text-transform: uppercase; letter
 .f-top i { width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(255,255,255,.2); display: grid; place-items: center; transition: background .2s, color .2s; }
 .f-top i svg { width: 15px; height: 15px; }
 .f-top:hover i { background: #f2f0ec; color: #111; }
-.fab { position: fixed; right: 18px; bottom: 18px; z-index: 80; width: 54px; height: 54px; border-radius: 50%; background: #25d366; color: #fff; display: grid; place-items: center; box-shadow: 0 10px 26px rgba(0,0,0,.25); transition: bottom .4s; }
-.fab svg { width: 28px; height: 28px; }
 .toast { position: fixed; top: 20px; left: 50%; transform: translate(-50%, -20px); opacity: 0; z-index: 500; padding: 11px 20px; background: var(--fg); color: var(--bg); font-size: .9rem; font-weight: 400; transition: .3s; pointer-events: none; }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 .fade { opacity: 0; transform: translateY(26px); transition: opacity 1s ease, transform 1s ease; }
@@ -847,7 +842,7 @@ footer h3 { color: var(--fg); }
     <div class="hero-text">
       <h1>Moments, beautifully kept.</h1>
       <p class="hero-quote">&ldquo;The moments that matter only happen once. We make sure they last forever.&rdquo;</p>
-      <span class="hero-btns"><a class="btn" href="#gallery">View the gallery</a><a class="btn btn--solid hero-book" href="booking.html">Book a session</a></span>
+      <a class="btn" href="#gallery">View the gallery</a>
     </div>
   </section>
 
@@ -1148,7 +1143,6 @@ footer h3 { color: var(--fg); }
   </div>
 </footer>
 
-<a class="fab" href="https://wa.me/27661322462" target="_blank" rel="noopener" aria-label="Chat on WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1s-.5-.1-.7.1-.8 1-.9 1.2-.3.2-.6.1a8.2 8.2 0 0 1-4-3.5c-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6a1.1 1.1 0 0 0-.8.4 3.4 3.4 0 0 0-1 2.5 5.9 5.9 0 0 0 1.2 3.1 13.4 13.4 0 0 0 5.2 4.6c1.9.8 2.7.9 3.6.8a3.1 3.1 0 0 0 2-1.4 2.5 2.5 0 0 0 .2-1.4c-.1-.1-.3-.2-.6-.3zM12 21.8a9.8 9.8 0 0 1-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 1 1 12 21.8zm8.4-18.2A11.8 11.8 0 0 0 1.8 17.9L.1 24l6.3-1.6a11.8 11.8 0 0 0 5.6 1.4A11.8 11.8 0 0 0 20.4 3.6z"/></svg></a>
 
 <dialog class="ap" id="all-photos" aria-labelledby="ap-title">
   <div class="ap-box">
