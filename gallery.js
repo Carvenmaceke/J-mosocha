@@ -27,6 +27,7 @@ window.GALLERY = {
     {"id":"birthday-clock","caption":"Time to celebrate","categories":["women","birthdays"],"w":700,"h":1049}
   ],
   "white": [
+    {"id":"baby-denim-clap","caption":"Clap, clap!","categories":["babies","kids"],"w":700,"h":508},
     {"id":"family-red-and-navy","caption":"Red & navy family","categories":["family","kids"],"w":700,"h":1100},
     {"id":"family-50th-birthday-crew","caption":"The 50th birthday crew","categories":["family","birthdays"],"w":700,"h":1050},
     {"id":"family-upside-down-smiles","caption":"Upside-down smiles","categories":["family"],"w":700,"h":467},
@@ -56,6 +57,8 @@ window.GALLERY = {
     {"id":"kids-tulle-dress","caption":"Tulle & twirls","categories":["kids"],"w":700,"h":1050}
   ],
   "colour": [
+    {"id":"baby-piano-one-unicorn","caption":"ONE & a little tune","categories":["babies","kids","birthdays"],"w":700,"h":481},
+    {"id":"baby-unicorn-cake-castle","caption":"Not sure about this cake","categories":["babies","kids","birthdays"],"w":700,"h":964},
     {"id":"baby-one-pastel-castle","caption":"Hello, ONE","categories":["babies","kids","birthdays"],"w":700,"h":494},
     {"id":"baby-piano-17-may","caption":"Birthday tunes","categories":["babies","kids","birthdays"],"w":700,"h":1050},
     {"id":"baby-pink-knit-swing","caption":"Little swing, big eyes","categories":["babies","kids"],"w":700,"h":1029},
