@@ -234,11 +234,12 @@ main { padding-top: var(--header-h, 147px); }
 .tone-head h3 { display: flex; align-items: center; gap: 10px; font-size: clamp(1.25rem, 2.2vw, 1.6rem); }
 .tone-head p { font-style: italic; opacity: .75; font-size: .92rem; }
 .tone-head p b { font-style: normal; font-weight: 400; padding: 3px 10px; margin-left: 8px; border-radius: 999px; background: rgba(127,127,127,.2); font-size: .8rem; }
-.grid { display: grid; grid-template-columns: repeat(5, 1fr); grid-auto-flow: dense; gap: 8px; }
-@media (max-width: 1000px) { .grid { grid-template-columns: repeat(4, 1fr); } }
-@media (max-width: 700px) { .grid { grid-template-columns: repeat(2, 1fr); gap: 6px; } .tone { border-radius: 16px; } }
-.shot { margin: 0; overflow: hidden; cursor: zoom-in; position: relative; aspect-ratio: 3/4; border-radius: 10px; background: rgba(127,127,127,.15); }
-.shot.wide { grid-column: span 2; aspect-ratio: 3/2; }
+/* Justified rows: every photo keeps its own shape, so nothing is cropped */
+.grid { display: flex; flex-wrap: wrap; gap: 8px; --rh: 260px; }
+.grid::after { content: ""; flex-grow: 1000000; }
+@media (max-width: 1000px) { .grid { --rh: 210px; } }
+@media (max-width: 700px) { .grid { gap: 6px; --rh: 115px; } .tone { border-radius: 16px; } }
+.shot { margin: 0; overflow: hidden; cursor: zoom-in; position: relative; aspect-ratio: var(--ar, .75); flex: var(--ar, .75) 1 calc(var(--ar, .75) * var(--rh)); border-radius: 10px; background: rgba(127,127,127,.15); }
 .shot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; transition: transform 1s cubic-bezier(.2,.8,.2,1), opacity .6s; }
 .shot:hover img { transform: scale(1.05); }
 .shot:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
@@ -542,6 +543,10 @@ footer { background: #0b0b0c; color: #b9b4ac; }
 .f-ways svg { width: 17px; height: 17px; color: #cfae7a; }
 .f-cta-art { position: relative; height: 420px; }
 .f-cta-art img { position: absolute; width: 46%; aspect-ratio: 2/3; object-fit: cover; object-position: top; border: 8px solid #f6f3ee; box-shadow: 0 24px 60px rgba(0,0,0,.55); transition: transform .5s ease; }
+/* Show every photo whole: prints, frames and albums take each photo's own shape */
+.mk-frame img, .mk-album img, .mk-prints img, .mk-trio img, .f-cta-art img { aspect-ratio: auto; height: auto; object-fit: fill; }
+.mk-album { align-items: flex-start; }
+.stage > img { object-fit: contain; }
 .f-cta-art .p1 { left: 27%; top: 0; z-index: 2; transform: rotate(-2deg); }
 .f-cta-art .p2 { left: 0; top: 60px; transform: rotate(-9deg); }
 .f-cta-art .p3 { right: 0; top: 70px; transform: rotate(8deg); }
@@ -584,11 +589,11 @@ footer { background: #0b0b0c; color: #b9b4ac; }
 .cm-note { text-align: center; color: var(--muted); font-size: .85rem; margin-top: 12px; }
 .cm-call-num { display: block; text-align: center; font-size: 2rem; font-weight: 300; text-decoration: none; margin: 10px 0 18px; letter-spacing: .02em; }
 
-.f-strip { display: grid; grid-template-columns: repeat(8, 1fr); }
-.f-strip a { position: relative; overflow: hidden; aspect-ratio: 1; display: block; }
+.f-strip { display: flex; align-items: flex-start; }
+.f-strip a { position: relative; overflow: hidden; display: block; flex: var(--ar, 1) 1 0; aspect-ratio: var(--ar, 1); }
 .f-strip img { width: 100%; height: 100%; object-fit: cover; object-position: center 25%; transition: transform .8s, filter .4s; filter: grayscale(.35) brightness(.85); }
 .f-strip a:hover img { transform: scale(1.08); filter: none; }
-@media (max-width: 800px) { .f-strip { grid-template-columns: repeat(4, 1fr); } .f-strip a:nth-child(n+5) { display: none; } }
+@media (max-width: 800px) { .f-strip a:nth-child(n+5) { display: none; } }
 .f-main { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.4fr; gap: 44px; padding: 70px 0 50px; }
 .f-brand .brand { color: #f2efea; display: inline-flex; }
 .f-brand .brand svg { height: 70px; }
@@ -1402,8 +1407,8 @@ footer h3 { color: var(--fg); }
       if (!list.length) return "";
       groups.push([t, list.length]);
       var figs = list.map(function (p) {
-        var i = visible.push(p) - 1, wide = p[3] / p[4] > 1.2 ? " wide" : "";
-        return '<figure class="shot' + wide + '" tabindex="0" role="button" aria-label="Open photo: ' + p[1] + '" data-i="' + i + '"><img src="' + src(p[0]) + '" width="' + p[3] + '" height="' + p[4] + '" alt="' + p[1] + '" loading="lazy"><span class="zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span><figcaption>' + p[1] + "</figcaption></figure>";
+        var i = visible.push(p) - 1;
+        return '<figure class="shot" style="--ar:' + (p[3] / p[4]).toFixed(4) + '" tabindex="0" role="button" aria-label="Open photo: ' + p[1] + '" data-i="' + i + '"><img src="' + src(p[0]) + '" width="' + p[3] + '" height="' + p[4] + '" alt="' + p[1] + '" loading="lazy"><span class="zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span><figcaption>' + p[1] + "</figcaption></figure>";
       }).join("");
       return '<section class="tone tone-' + t.id + '" id="set-' + t.id + '" style="--sw:' + SWATCH[t.id] + '" aria-label="' + plain(t.name) + '"><div class="tone-head"><h3><i aria-hidden="true"></i>' + t.name + "</h3><p>" + t.note + '</p></div><div class="grid">' + figs + "</div></section>";
     }).join("");
@@ -1513,7 +1518,7 @@ footer h3 { color: var(--fg); }
   (function () {
     var pick = [], i = 0, more = true;
     while (pick.length < 8 && more) { more = false; TONES.forEach(function (t) { if (t.photos[i] && pick.length < 8) { pick.push(t.photos[i]); more = true; } }); i++; }
-    $("#f-strip").innerHTML = pick.map(function (p) { return '<a href="#photo=' + p[0] + '" data-photo="' + p[0] + '" aria-label="Open photo"><img src="' + src(p[0]) + '" alt="" loading="lazy"></a>'; }).join("");
+    $("#f-strip").innerHTML = pick.map(function (p) { return '<a href="#photo=' + p[0] + '" data-photo="' + p[0] + '" aria-label="Open photo" style="--ar:' + (p[3] / p[4]).toFixed(4) + '"><img src="' + src(p[0]) + '" alt="" loading="lazy"></a>'; }).join("");
   })();
   $$(".f-strip a").forEach(function (a) {
     a.addEventListener("click", function (e) {
@@ -1827,22 +1832,22 @@ footer h3 { color: var(--fg); }
   // graduation, friends and family, and back to the studio where every chapter is kept.
   (function () {
     var ring = $("#ring"), stage = $("#ring-stage"); if (!ring) return;
-    var STORY = [   // [file in img/story/, description, width ÷ height for landscape photos]
-      ["01-love", "A couple about to kiss, in silhouette", 1.19],
-      ["02-expecting", "A father-to-be kneeling to the baby bump, in silhouette"],
-      ["03-newborn", "A baby in a pink knitted outfit on a swing"],
-      ["04-little-man", "A baby boy in a blue cap and suspenders"],
-      ["05-first-birthday", "A little boy at a white piano with his birthday cake", 1.11],
-      ["06-baby-girl", "A baby girl in a red tartan dress"],
-      ["07-school-graduate", "A little girl in a graduation cap"],
-      ["08-gymnast", "A young gymnast holding a leg stretch"],
-      ["09-graduate", "A graduate holding her cap", 1.5],
-      ["10-celebration", "A woman in a white gown with falling confetti"],
-      ["11-friends", "Four friends in white T-shirts, laughing together", 1.5],
-      ["12-family", "A family of five in matching cream outfits", 1.43],
-      ["13-birthday", "A woman in lilac with roses and a cake on her birthday"],
-      ["14-outdoors", "A man relaxing outdoors among the flowers", 1.5],
-      ["15-studio", "The J Masocha studio, lights and camera ready"]
+    var STORY = [   // [file in img/story/, description, width ÷ height of the photo]
+      ["01-love", "A couple about to kiss, in silhouette", 1.187],
+      ["02-expecting", "A father-to-be kneeling to the baby bump, in silhouette", 0.656],
+      ["03-newborn", "A baby in a pink knitted outfit on a swing", 0.680],
+      ["04-little-man", "A baby boy in a blue cap and suspenders", 0.674],
+      ["05-first-birthday", "A little boy at a white piano with his birthday cake", 1.112],
+      ["06-baby-girl", "A baby girl in a red tartan dress", 0.710],
+      ["07-school-graduate", "A little girl in a graduation cap", 0.667],
+      ["08-gymnast", "A young gymnast holding a leg stretch", 0.671],
+      ["09-graduate", "A graduate holding her cap", 1.500],
+      ["10-celebration", "A woman in a white gown with falling confetti", 0.686],
+      ["11-friends", "Four friends in white T-shirts, laughing together", 1.500],
+      ["12-family", "A family of five in matching cream outfits", 1.431],
+      ["13-birthday", "A woman in lilac with roses and a cake on her birthday", 0.667],
+      ["14-outdoors", "A man relaxing outdoors among the flowers", 1.498],
+      ["15-studio", "The J Masocha studio, lights and camera ready", 0.667]
     ];
     var picks = STORY;
     if (picks.length < 3) return;
@@ -1856,8 +1861,8 @@ footer h3 { color: var(--fg); }
     function size() {
       var vw = innerWidth, cw = Math.round(Math.max(120, Math.min(240, vw * (vw < 700 ? .34 : .16)))), ch = Math.round(cw * 1.42), gap = cw * .2;
       stage.style.setProperty("--cw", cw + "px"); stage.style.setProperty("--ch", ch + "px");
-      // landscape photos get wider cards so every photo shows in full; space them around the circle by width
-      var widths = picks.map(function (x) { return x[2] ? Math.round(ch * x[2]) : cw; });
+      // each card takes its photo's own shape so nothing is cropped; space them around the circle by width
+      var widths = picks.map(function (x) { return Math.round(ch * x[2]); });
       var total = widths.reduce(function (t, w) { return t + w + gap; }, 0), pos = 0;
       R = Math.max(Math.round(total / (2 * Math.PI)), Math.round(vw * .5));   // ring spans the full width
       cards.forEach(function (el, i) {
