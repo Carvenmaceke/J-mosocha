@@ -842,7 +842,7 @@ footer h3 { color: var(--fg); }
     <div class="hero-text">
       <h1>Moments, beautifully kept.</h1>
       <p class="hero-quote">&ldquo;The moments that matter only happen once. We make sure they last forever.&rdquo;</p>
-      <a class="btn" href="#gallery">View the gallery</a>
+      <a class="btn" href="#gallery" id="hero-all">View the gallery</a>
     </div>
   </section>
 
@@ -1391,6 +1391,7 @@ footer h3 { color: var(--fg); }
   $$("#filters button").forEach(function (b) { b.addEventListener("click", function () { setCat(b.dataset.cat); setPop(false); fBtn.focus(); }); });
   $("#g-clear").addEventListener("click", function () { setCat("all"); });
   $("#g-all").addEventListener("click", function () { openAllPhotos(); });
+  $("#hero-all").addEventListener("click", function (e) { e.preventDefault(); openAllPhotos(); });
   var SWATCH = { dark: "#0d0d0e", grey: "#8f8f91", white: "#ffffff", colour: "#f3c9c1", outdoor: "#9db08f" };
 
   function render() {
