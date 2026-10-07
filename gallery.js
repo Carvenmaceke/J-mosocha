@@ -26,8 +26,6 @@ window.GALLERY = {
     {"id":"birthday-21st","caption":"21st birthday","categories":["women","birthdays"],"w":700,"h":1050},
     {"id":"birthday-crown-roses","caption":"Queen for the day","categories":["women","birthdays"],"w":700,"h":1050},
     {"id":"graduation-woman-balloons","caption":"Class of 2026","categories":["women","graduation"],"w":700,"h":1050},
-    {"id":"maternity-couple-pink","caption":"Pink & white maternity","categories":["maternity","couples"],"w":632,"h":1050},
-    {"id":"maternity-white-tulle","caption":"White tulle maternity","categories":["maternity","women"],"w":700,"h":467},
     {"id":"kids-tulle-dress","caption":"Tulle & twirls","categories":["kids"],"w":700,"h":1050}
   ],
   "colour": [
