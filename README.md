@@ -18,7 +18,7 @@ Bookings, print orders and contact messages open WhatsApp or the visitor's email
 
 Open **`/admin.html`** on the live site (for example `https://carvenmaceke.github.io/J-mosocha/admin.html`). It isn't linked from the website.
 
-- **Gallery:** add photos (choose the backdrop and one or more categories), edit captions and categories, or delete photos. Photos are resized automatically.
+- **Gallery:** add photos (choose the backdrop and one or more categories), edit captions and categories, replace a picture with a new one, change the order (drag photos or use the arrows, then **Save order**), or delete photos. Photos are resized automatically.
 - **Specials & posters:** post current sales, promotions or promotion posters with an offer, end date and optional poster (shown in full). They show in "Current specials" on the website and hide themselves after the end date. When the subscriber list is connected, each new post is emailed to all subscribers straight away, with the poster inside the email.
 - **Subscribers:** see everyone who subscribed, remove people, download the list, and email a promotion to all subscribers. This needs the free Google Sheet set-up in [`newsletter/README.md`](newsletter/README.md).
 

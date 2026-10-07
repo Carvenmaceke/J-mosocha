@@ -77,7 +77,7 @@ a { color: inherit; }
 .group h2 small { color: var(--muted); font-size: .85rem; font-style: italic; }
 .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; }
 .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
-.card .ph { aspect-ratio: 4/5; background: var(--bg-2) center/cover no-repeat; position: relative; }
+.card .ph { flex: none; overflow: hidden; aspect-ratio: 4/5; background: var(--bg-2) center/cover no-repeat; position: relative; }
 .card .ph img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
 .card .ph .new { position: absolute; top: 8px; left: 8px; background: var(--accent); color: #fff; font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; }
 .card .body { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
@@ -90,6 +90,22 @@ a { color: inherit; }
 .card .acts .del { color: var(--danger); }
 .card .acts .del:hover { border-color: var(--danger); background: var(--danger); color: #fff; }
 .empty { color: var(--muted); font-style: italic; padding: 14px 0; }
+/* Reordering: arrows on each photo, drag and drop, and a bar to save the new order */
+.card[draggable="true"] .ph { cursor: grab; }
+.card.dragging { opacity: .35; }
+.card.drop-here { outline: 3px solid var(--accent); outline-offset: 2px; }
+.card .ph .mv { position: absolute; bottom: 8px; width: 34px; height: 34px; border-radius: 50%; border: 0; background: rgba(255,255,255,.92); box-shadow: 0 2px 8px rgba(0,0,0,.2); cursor: pointer; display: grid; place-items: center; color: var(--fg); }
+.card .ph .mv svg { width: 16px; height: 16px; }
+.card .ph .mv:hover { background: var(--fg); color: #fff; }
+.card .ph .mv:disabled { opacity: 0; pointer-events: none; }
+.card .ph .mv.l { left: 8px; } .card .ph .mv.r { right: 8px; }
+.orderbar { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 30; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center; padding: 10px 12px 10px 20px; border-radius: 999px; background: var(--fg); color: var(--bg); box-shadow: 0 14px 40px rgba(0,0,0,.3); max-width: calc(100vw - 24px); }
+.orderbar[hidden] { display: none; }
+.orderbar .btn { border-color: rgba(255,255,255,.5); color: #fff; padding: 8px 16px; }
+.orderbar .btn.solid { background: #fff; color: var(--fg); border-color: #fff; }
+.orderbar .btn:hover { background: #fff; color: var(--fg); }
+.replace-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: -6px 0 16px; }
+.replace-row .hint { flex: 1; min-width: 180px; }
 
 /* Panels (add / edit / delete) */
 dialog { border: 0; padding: 0; background: transparent; max-width: 100vw; max-height: 100svh; }
@@ -228,9 +244,10 @@ dialog::backdrop { background: rgba(10,10,11,.55); }
       <div class="bar">
         <button class="btn solid" type="button" id="add-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Add photos</button>
         <div class="field"><label for="show" class="sr">Show</label><select id="show"></select></div>
-        <p>Changes appear on the website within a few minutes.</p>
+        <p>Drag photos, or use the arrows, to change their order. Changes appear on the website within a few minutes.</p>
       </div>
       <div id="groups"></div>
+      <div class="orderbar" id="orderbar" role="region" aria-label="Unsaved order" hidden><span>You changed the order of the photos.</span><button class="btn" type="button" id="order-undo">Undo</button><button class="btn solid" type="button" id="order-save">Save order</button></div>
     </section>
     <section id="tab-specials" role="tabpanel" hidden>
       <div class="bar">
@@ -284,6 +301,7 @@ dialog::backdrop { background: rgba(10,10,11,.55); }
   <form class="panel" id="edit-form" method="dialog" novalidate>
     <div class="panel-head"><h2 id="edit-title">Edit photo</h2><button class="x" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
     <img class="confirm-ph" id="edit-img" alt="">
+    <div class="replace-row"><label class="btn" for="edit-file">Replace picture</label><input class="sr" type="file" id="edit-file" accept="image/jpeg,image/png,image/webp"><span class="hint" id="edit-file-hint">Swap this photo for a new one. Its caption, backdrop, categories and place stay the same.</span></div>
     <div class="field"><label for="edit-cap">Caption</label><input id="edit-cap" maxlength="60"></div>
     <div class="section"><span class="label">Backdrop</span><div class="tones" id="edit-tones"></div></div>
     <div class="section"><span class="label">Categories</span> <span class="hint">pick one or more</span><div class="chips" id="edit-cats"></div></div>
@@ -537,7 +555,10 @@ dialog::backdrop { background: rgba(10,10,11,.55); }
       var list = gallery[t[0]].filter(function (p) { return show === "all" || p.categories.indexOf(show) > -1; });
       return '<section class="group"><h2 style="--sw:' + t[2] + '"><span class="dot"></span>' + esc(t[1]) + "</h2>" +
         (list.length ? '<div class="cards">' + list.map(function (p) {
-          return '<article class="card"><div class="ph"><img src="' + esc(imgSrc(p)) + '" alt="" loading="lazy" onerror="this.style.opacity=0">' + (fresh[p.id] ? '<span class="new">New</span>' : "") + '</div><div class="body"><div class="cap">' + esc(p.caption) + '</div><div class="tags">' +
+          var k = list.indexOf(p);
+          return '<article class="card" draggable="true" data-id="' + esc(p.id) + '" data-tone="' + t[0] + '"><div class="ph"><img src="' + esc(imgSrc(p)) + '" alt="" loading="lazy" draggable="false" onerror="this.style.opacity=0">' + (fresh[p.id] ? '<span class="new">New</span>' : "") +
+            '<button type="button" class="mv l" data-mv="-1" data-id="' + esc(p.id) + '" aria-label="Move earlier"' + (k === 0 ? " disabled" : "") + '><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m15 18-6-6 6-6"/></svg></button>' +
+            '<button type="button" class="mv r" data-mv="1" data-id="' + esc(p.id) + '" aria-label="Move later"' + (k === list.length - 1 ? " disabled" : "") + '><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m9 18 6-6-6-6"/></svg></button></div><div class="body"><div class="cap">' + esc(p.caption) + '</div><div class="tags">' +
             p.categories.map(function (c) { return "<span>" + esc(catName(c)) + "</span>"; }).join("") +
             '</div><div class="acts"><button type="button" data-edit="' + esc(p.id) + '">Edit</button><button type="button" class="del" data-del="' + esc(p.id) + '">Delete</button></div></div></article>';
         }).join("") + "</div>" : '<p class="empty">No photos here yet.</p>') + "</section>";
@@ -549,9 +570,78 @@ dialog::backdrop { background: rgba(10,10,11,.55); }
   }
   $("#groups").addEventListener("click", function (e) {
     var b = e.target.closest("button"); if (!b) return;
+    if (b.dataset.mv) { moveBy(b.dataset.id, +b.dataset.mv); return; }
+    if (orderPending()) return;
     if (b.dataset.edit) openEdit(b.dataset.edit);
     if (b.dataset.del) openDel(b.dataset.del);
   });
+
+  /* ---------- Reorder ---------- */
+  // Moves happen here first; "Save order" puts them on the website in one go.
+  var orderSnap = null;
+  function orderPending() {
+    if (!orderSnap) return false;
+    status("bad", "Save or undo the new order first.");
+    $("#orderbar").animate && $("#orderbar").animate([{ transform: "translateX(-50%) scale(1.06)" }, { transform: "translateX(-50%)" }], 300);
+    return true;
+  }
+  function moveTo(id, tone, toIndex) {
+    var l = gallery[tone], from = l.findIndex(function (x) { return x.id === id; });
+    if (from < 0 || toIndex === from) return;
+    if (!orderSnap) orderSnap = JSON.stringify(gallery);
+    l.splice(toIndex, 0, l.splice(from, 1)[0]);
+    $("#orderbar").hidden = false; render();
+  }
+  function moveBy(id, dir) {
+    var f = find(id); if (!f) return;
+    var show = $("#show").value, l = gallery[f.tone];
+    var visible = l.filter(function (p) { return show === "all" || p.categories.indexOf(show) > -1; });
+    var nb = visible[visible.indexOf(f.photo) + dir]; if (!nb) return;
+    moveTo(id, f.tone, l.indexOf(nb));
+    var btn = $('.card[data-id="' + id + '"] .mv[data-mv="' + dir + '"]'); if (btn && !btn.disabled) btn.focus();
+  }
+  var dragId = null;
+  $("#groups").addEventListener("dragstart", function (e) {
+    var c = e.target.closest(".card"); if (!c) return;
+    dragId = c.dataset.id; c.classList.add("dragging");
+    e.dataTransfer.effectAllowed = "move"; try { e.dataTransfer.setData("text/plain", dragId); } catch (x) {}
+  });
+  $("#groups").addEventListener("dragend", function () {
+    dragId = null; $$(".card.dragging, .card.drop-here").forEach(function (c) { c.classList.remove("dragging", "drop-here"); });
+  });
+  $("#groups").addEventListener("dragover", function (e) {
+    var c = e.target.closest(".card"), f = dragId && find(dragId);
+    if (!c || !f || c.dataset.tone !== f.tone) return;   // photos move within their own backdrop
+    e.preventDefault();
+    $$(".card.drop-here").forEach(function (x) { if (x !== c) x.classList.remove("drop-here"); });
+    if (c.dataset.id !== dragId) c.classList.add("drop-here");
+  });
+  $("#groups").addEventListener("drop", function (e) {
+    var c = e.target.closest(".card"), f = dragId && find(dragId);
+    if (!c || !f || c.dataset.tone !== f.tone) return;
+    e.preventDefault();
+    var l = gallery[f.tone], to = l.findIndex(function (x) { return x.id === c.dataset.id; });
+    moveTo(dragId, f.tone, to);
+  });
+  $("#order-undo").addEventListener("click", function () {
+    if (!orderSnap) return;
+    gallery = JSON.parse(orderSnap); orderSnap = null; $("#orderbar").hidden = true; status(); render();
+  });
+  $("#order-save").addEventListener("click", function () {
+    var btn = $("#order-save"), local = gallery;
+    btn.disabled = true; btn.textContent = "Saving…";
+    save(function (d) {
+      TONES.forEach(function (t) {
+        var want = local[t[0]].map(function (p) { return p.id; });
+        // Photos added from another device since loading keep their place at the front
+        d.gallery[t[0]].sort(function (a, b) { return want.indexOf(a.id) - want.indexOf(b.id); });
+      });
+      return { add: [], remove: [], message: "Change the order of the gallery photos" };
+    }).then(function () { orderSnap = null; $("#orderbar").hidden = true; render(); status("ok", "New order saved. The website will update in a few minutes."); },
+      function (x) { status("bad", x.status ? failMsg(x) : x.message); })
+      .then(function () { btn.disabled = false; btn.textContent = "Save order"; });
+  });
+  addEventListener("beforeunload", function (e) { if (orderSnap) { e.preventDefault(); e.returnValue = ""; } });
 
   /* ---------- Shared pickers ---------- */
   function tonePicker(el, name, value) {
@@ -572,6 +662,7 @@ dialog::backdrop { background: rgba(10,10,11,.55); }
   /* ---------- Add photos ---------- */
   var queue = [];
   $("#add-btn").addEventListener("click", function () {
+    if (orderPending()) return;
     queue = []; drawQueue(); $("#add-err").textContent = ""; $("#files").value = "";
     tonePicker($("#add-tones"), "tone", ""); catPicker($("#add-cats"), "cat", []);
     openDlg($("#add-dlg"));
@@ -655,10 +746,21 @@ dialog::backdrop { background: rgba(10,10,11,.55); }
   });
 
   /* ---------- Edit ---------- */
-  var editing = null;
+  var editing = null, editFile = null;
+  $("#edit-file").addEventListener("change", function (e) {
+    var f = e.target.files[0]; e.target.value = ""; if (!f) return;
+    if (!/^image\/(jpeg|png|webp)$/.test(f.type)) { $("#edit-err").textContent = f.name + " isn’t a JPG, PNG or WebP photo."; return; }
+    if (editFile) URL.revokeObjectURL(editFile.url);
+    editFile = { file: f, url: URL.createObjectURL(f) };
+    $("#edit-img").src = editFile.url; $("#edit-err").textContent = "";
+    $("#edit-file-hint").textContent = "New picture chosen. Press “Save changes” to put it on the website.";
+  });
+  function pageHtml() { return siteHtml ? Promise.resolve(siteHtml) : gh("/contents/index.html?ref=" + BRANCH).then(function (f) { return (siteHtml = decodeB64Utf8(f.content)); }); }
   function openEdit(id) {
     var f = find(id); if (!f) return; editing = f;
     $("#edit-img").src = imgSrc(f.photo); $("#edit-cap").value = f.photo.caption; $("#edit-err").textContent = "";
+    if (editFile) URL.revokeObjectURL(editFile.url); editFile = null; $("#edit-file").value = "";
+    $("#edit-file-hint").textContent = "Swap this photo for a new one. Its caption, backdrop, categories and place stay the same.";
     tonePicker($("#edit-tones"), "etone", f.tone); catPicker($("#edit-cats"), "ecat", f.photo.categories);
     openDlg($("#edit-dlg"));
   }
@@ -669,16 +771,31 @@ dialog::backdrop { background: rgba(10,10,11,.55); }
     if (!cap) { err.textContent = "Add a caption."; return; }
     if (!cats.length) { err.textContent = "Choose at least one category."; return; }
     var d = $("#edit-dlg"), btn = $("#edit-go"), id = editing.photo.id;
-    busy(d, true, btn, "Saving…");
-    save(function (d) {
-      var g = d.gallery, p, from, at;
-      TONES.forEach(function (t) { var i = g[t[0]].findIndex(function (x) { return x.id === id; }); if (i > -1) { from = t[0]; at = i; p = g[t[0]].splice(i, 1)[0]; } });
-      if (!p) throw new Error("This photo was already removed.");
-      p.caption = cap; p.categories = cats;
-      // Same backdrop: keep its place. New backdrop: show it first there.
-      if (from === tone) g[tone].splice(at, 0, p); else g[tone].unshift(p);
-      return { add: [], remove: [], message: "Update photo “" + cap + "”" };
-    }).then(function () { busy(d, false, btn, "Save changes"); d.close(); render(); status("ok", "Saved. The website will update in a few minutes."); })
+    var nf = editFile;
+    busy(d, true, btn, nf ? "Preparing picture…" : "Saving…");
+    // A replaced picture is resized like a new upload; the old files are removed unless the page uses them elsewhere
+    (nf ? Promise.all([prepare({ file: nf.file, url: nf.url, caption: cap }, 0), pageHtml()]) : Promise.resolve([])).then(function (r) {
+      var ready = r[0], html = r[1];
+      if (nf) btn.textContent = "Uploading…";
+      return save(function (d) {
+        var g = d.gallery, p, from, at, add = [], remove = [];
+        TONES.forEach(function (t) { var i = g[t[0]].findIndex(function (x) { return x.id === id; }); if (i > -1) { from = t[0]; at = i; p = g[t[0]].splice(i, 1)[0]; } });
+        if (!p) throw new Error("This photo was already removed.");
+        p.caption = cap; p.categories = cats;
+        if (ready) {
+          var oldExt = p.ext || "webp";
+          if (html.indexOf("img/" + id + "-") < 0) remove.push("img/" + id + "-700." + oldExt, "img/" + id + "-1600." + oldExt);
+          p.id = ready.id; p.w = ready.w; p.h = ready.h;
+          if (ready.ext !== "webp") p.ext = ready.ext; else delete p.ext;
+          add.push({ path: "img/" + ready.id + "-700." + ready.ext, base64: ready.small }, { path: "img/" + ready.id + "-1600." + ready.ext, base64: ready.large });
+        }
+        // Same backdrop: keep its place. New backdrop: show it first there.
+        if (from === tone) g[tone].splice(at, 0, p); else g[tone].unshift(p);
+        return { add: add, remove: remove, message: (ready ? "Replace the picture of" : "Update") + " photo “" + cap + "”" };
+      }).then(function () {
+        if (ready) { fresh[ready.id] = true; previews[ready.id] = ready.url; editFile = null; }
+      });
+    }).then(function () { busy(d, false, btn, "Save changes"); d.close(); render(); status("ok", (nf ? "Picture replaced." : "Saved.") + " The website will update in a few minutes."); })
       .catch(function (x) { busy(d, false, btn, "Save changes"); err.textContent = x.status ? failMsg(x) : x.message; });
   });
 
@@ -694,7 +811,7 @@ dialog::backdrop { background: rgba(10,10,11,.55); }
     var d = $("#del-dlg"), btn = $("#del-go"), id = deleting.photo.id;
     busy(d, true, btn, "Deleting…");
     // Photos also used elsewhere on the page (hero, print examples) keep their files
-    (siteHtml ? Promise.resolve(siteHtml) : gh("/contents/index.html?ref=" + BRANCH).then(function (f) { return (siteHtml = decodeB64Utf8(f.content)); }))
+    pageHtml()
       .then(function (html) {
         return save(function (d) {
           var g = d.gallery, p;
