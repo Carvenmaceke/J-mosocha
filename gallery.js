@@ -9,6 +9,7 @@ window.GALLERY = {
     {"id":"maternity-couple-red","caption":"Expecting couple","categories":["maternity","couples"],"w":700,"h":1023}
   ],
   "grey": [
+    {"id":"portrait-spotlight-navy","caption":"Spotlight portrait","categories":["portraits","women"],"w":700,"h":1050},
     {"id":"graduation-family","caption":"Graduate & grandmother","categories":["men","graduation","family"],"w":700,"h":1050},
     {"id":"couple-mom-dad-caps","caption":"Mom & Dad to be","categories":["couples","family"],"w":700,"h":467},
     {"id":"maternity-silhouette","caption":"Maternity silhouette","categories":["maternity","couples"],"w":700,"h":1047},
@@ -17,6 +18,9 @@ window.GALLERY = {
     {"id":"birthday-clock","caption":"Time to celebrate","categories":["women","birthdays"],"w":700,"h":1049}
   ],
   "white": [
+    {"id":"portrait-timberland-step","caption":"Fresh steps","categories":["portraits","men"],"w":700,"h":1050},
+    {"id":"portrait-beret-chair","caption":"Beret & folding chair","categories":["portraits","men"],"w":700,"h":1050},
+    {"id":"portrait-leather-jacket","caption":"Leather & shades","categories":["portraits","men"],"w":700,"h":1050},
     {"id":"friends-white-tees","caption":"Friends in white","categories":["family"],"w":700,"h":467},
     {"id":"maternity-golden-halo","caption":"Golden halo maternity","categories":["maternity","women"],"w":700,"h":467},
     {"id":"women-black-gown","caption":"Studio portrait","categories":["women"],"w":700,"h":1050},
@@ -29,6 +33,7 @@ window.GALLERY = {
     {"id":"kids-tulle-dress","caption":"Tulle & twirls","categories":["kids"],"w":700,"h":1050}
   ],
   "colour": [
+    {"id":"portrait-pinstripe-blazer","caption":"Pinstripe & boots","categories":["portraits","women"],"w":700,"h":1050},
     {"id":"maternity-couple-baby-vest","caption":"Couple with baby’s first vest","categories":["maternity","couples"],"w":700,"h":467},
     {"id":"maternity-mountain-sparkle","caption":"Sparkle gown against the mountains","categories":["maternity","women"],"w":700,"h":467},
     {"id":"kids-rainbow-castle","caption":"Rainbow cake smash","categories":["kids","birthdays"],"w":700,"h":963},
