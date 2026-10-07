@@ -126,7 +126,7 @@ function send_(d) {
       (poster ? '<a href="' + esc_(link) + '"><img src="cid:poster" alt="' + esc_(subject) + '" width="504" style="display:block;width:100%;max-width:504px;height:auto;border:0;border-radius:12px;margin:0 0 22px"></a>' : "") +
       (message ? '<p style="margin:0 0 24px;font-size:16px;line-height:1.65;color:#3a3a3a">' + body + "</p>" : "") +
       '<a href="' + esc_(link) + '" style="display:inline-block;background:#1d1d1f;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:999px;font-size:14px">' + linkText + "</a>" +
-      '<p style="margin:28px 0 0;font-size:13px;color:#8e8b86">Shop 5A, Centre Walk, 266 Pretorius St, Pretoria Central &middot; 066 132 2462</p>' +
+      '<p style="margin:28px 0 0;font-size:13px;color:#8e8b86">235 Helen Joseph Street, Pretoria Central &middot; 066 132 2462</p>' +
       "</div>" +
       '<p style="max-width:560px;margin:14px auto 0;text-align:center;font-size:12px;color:#8e8b86">You’re receiving this because you subscribed on our website. <a href="' + unsub + '" style="color:#8e8b86">Unsubscribe</a></p>' +
       "</div>";
