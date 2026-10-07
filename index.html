@@ -236,10 +236,6 @@ main { padding-top: var(--header-h, 147px); }
 .tone-head p b { font-style: normal; font-weight: 400; padding: 3px 10px; margin-left: 8px; border-radius: 999px; background: rgba(127,127,127,.2); font-size: .8rem; }
 /* Justified rows: every photo keeps its own shape, so nothing is cropped */
 .grid { display: flex; flex-wrap: wrap; gap: 8px; --rh: 260px; }
-.sub-h { display: flex; align-items: center; gap: 10px; margin: 26px 0 12px; font-size: .78rem; font-weight: 400; letter-spacing: .18em; text-transform: uppercase; opacity: .8; }
-.tone-head + .sub-h { margin-top: 4px; }
-.sub-h::after { content: ""; flex: 1; height: 1px; background: currentColor; opacity: .2; }
-.sub-h span { font-size: .7rem; letter-spacing: 0; padding: 1px 8px; border-radius: 999px; background: rgba(127,127,127,.2); }
 .grid::after { content: ""; flex-grow: 1000000; }
 @media (max-width: 1000px) { .grid { --rh: 210px; } }
 @media (max-width: 700px) { .grid { gap: 6px; --rh: 115px; } .tone { border-radius: 16px; } }
@@ -749,8 +745,6 @@ footer h3 { color: var(--fg); }
 .ap-head { border-bottom: 1px solid var(--g3); padding-bottom: 16px; }
 .ap-body { flex: 1; overflow-y: auto; padding: 8px 24px 28px; }
 .ap-group { padding-top: 18px; }
-.ap-sub { margin: 14px 0 8px; font-size: .74rem; font-weight: 400; letter-spacing: .16em; text-transform: uppercase; color: var(--fg-2); }
-.ap-group h4 + .ap-sub { margin-top: 0; }
 .ap-group h4 { display: flex; align-items: baseline; gap: 10px; font-weight: 400; font-size: 1.05rem; margin: 0 0 12px; }
 .ap-group h4::before { content: ""; width: 12px; height: 12px; border-radius: 50%; background: var(--sw); border: 1px solid var(--g4); align-self: center; }
 .ap-rows { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -918,7 +912,7 @@ footer h3 { color: var(--fg); }
         <div id="tones"></div>
         <nav class="g-time" aria-label="Jump to backdrop"><ol id="g-jump"></ol></nav>
       </div>
-      <div class="g-foot"><button class="btn" type="button" id="g-all">View all photos</button></div>
+      <div class="g-foot"><button class="btn" type="button" id="g-all">View more</button></div>
     </div>
   </section>
 
@@ -1401,7 +1395,7 @@ footer h3 { color: var(--fg); }
   });
   $$("#filters button").forEach(function (b) { b.addEventListener("click", function () { setCat(b.dataset.cat); setPop(false); fBtn.focus(); }); });
   $("#g-clear").addEventListener("click", function () { setCat("all"); });
-  $("#g-all").addEventListener("click", function () { openAllPhotos(); });
+  $("#g-all").addEventListener("click", function () { apCat = current; apScroll = 0; openAllPhotos(true); });
   $("#hero-all").addEventListener("click", function (e) { e.preventDefault(); openAllPhotos(); });
   var SWATCH = { dark: "#0d0d0e", grey: "#8f8f91", white: "#ffffff", colour: "#f3c9c1", outdoor: "#9db08f" };
 
@@ -1420,21 +1414,30 @@ footer h3 { color: var(--fg); }
       return [c ? c[1] : "More", by[k]];
     });
   }
+  function ordered(list) { return subgroups(list, "all").reduce(function (a, g) { return a.concat(g[1]); }, []); }
+  // The gallery shows a few photos per colour, picked from different kinds of shoots; "View more" opens them all
+  var PER_TONE = 5;
+  function preview(list) {
+    var gs = subgroups(list, "all").map(function (g) { return g[1].slice(); }), pick = [];
+    while (pick.length < PER_TONE && gs.some(function (g) { return g.length; })) gs.forEach(function (g) { if (g.length && pick.length < PER_TONE) pick.push(g.shift()); });
+    return ordered(list).filter(function (p) { return pick.indexOf(p) > -1; });
+  }
   function render() {
     visible = [];
-    var groups = [];
+    var groups = [], more = 0;
     tonesEl.innerHTML = TONES.map(function (t) {
       var list = t.photos.filter(function (p) { return current === "all" || p[2].split(" ").indexOf(current) > -1; });
       if (!list.length) return "";
       groups.push([t, list.length]);
-      var figs = subgroups(list, current).map(function (g) {
-        return (g[0] ? '<h4 class="sub-h">' + g[0] + "<span>" + g[1].length + "</span></h4>" : "") + '<div class="grid">' + g[1].map(function (p) {
+      more += list.length - Math.min(list.length, PER_TONE);
+      var shown = preview(list);
+      var figs = '<div class="grid">' + shown.map(function (p) {
         var i = visible.push(p) - 1;
         return '<figure class="shot" style="--ar:' + (p[3] / p[4]).toFixed(4) + '" tabindex="0" role="button" aria-label="Open photo: ' + p[1] + '" data-i="' + i + '"><img src="' + src(p[0]) + '" width="' + p[3] + '" height="' + p[4] + '" alt="' + p[1] + '" loading="lazy"><span class="zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span><figcaption>' + p[1] + "</figcaption></figure>";
       }).join("") + "</div>";
-      }).join("");
       return '<section class="tone tone-' + t.id + '" id="set-' + t.id + '" style="--sw:' + SWATCH[t.id] + '" aria-label="' + plain(t.name) + '"><div class="tone-head"><h3><i aria-hidden="true"></i>' + t.name + "</h3><p>" + t.note + '</p></div>' + figs + "</section>";
     }).join("");
+    $("#g-all").hidden = !more;
     var catName = CATS.filter(function (c) { return c[0] === current; })[0][1];
     $("#g-now").textContent = current === "all" ? "All photos" : catName;
     $("#g-jump").innerHTML = groups.map(function (g) { return '<li><a href="#set-' + g[0].id + '" data-set="' + g[0].id + '" title="' + plain(g[0].name) + '" style="--sw:' + SWATCH[g[0].id] + '"><i aria-hidden="true"></i><span>' + g[0].name + "</span></a></li>"; }).join("");
@@ -1587,9 +1590,9 @@ footer h3 { color: var(--fg); }
       var list = t.photos.filter(function (p) { return apCat === "all" || p[2].split(" ").indexOf(apCat) > -1; });
       if (!list.length) return "";
       total += list.length;
-      return '<section class="ap-group" style="--sw:' + SW[t.id] + '"><h4>' + t.name + "</h4>" + subgroups(list, apCat).map(function (g) {
-        return (g[0] ? '<h5 class="ap-sub">' + g[0] + "</h5>" : "") + '<div class="ap-rows">' +
-          g[1].map(function (p) { return '<button type="button" data-slug="' + p[0] + '" data-w="' + p[3] + '" data-h="' + p[4] + '" aria-label="View ' + p[1] + '"><img src="' + src(p[0]) + '" alt="' + p[1] + '" loading="lazy"></button>'; }).join("") + "</div>";
+      return '<section class="ap-group" style="--sw:' + SW[t.id] + '"><h4>' + t.name + "</h4>" + [ordered(list)].map(function (g) {
+        return '<div class="ap-rows">' +
+          g.map(function (p) { return '<button type="button" data-slug="' + p[0] + '" data-w="' + p[3] + '" data-h="' + p[4] + '" aria-label="View ' + p[1] + '"><img src="' + src(p[0]) + '" alt="' + p[1] + '" loading="lazy"></button>'; }).join("") + "</div>";
       }).join("") + "</section>";
     }).join("");
     $("#ap-now").textContent = apCat === "all" ? "" : CATS.filter(function (c) { return c[0] === apCat; })[0][1];
