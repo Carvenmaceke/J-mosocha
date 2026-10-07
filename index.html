@@ -237,6 +237,14 @@ main { padding-top: var(--header-h, 147px); }
 /* Justified rows: every photo keeps its own shape, so nothing is cropped */
 .grid { display: flex; flex-wrap: wrap; gap: 8px; --rh: 260px; }
 .grid::after { content: ""; flex-grow: 1000000; }
+/* Gallery preview: one row per colour; photos that don't fit are left for "View all photos" */
+#tones .grid { flex-wrap: nowrap; overflow: hidden; }
+#tones .grid::after { display: none; }
+#tones .shot.off { display: none; }
+.g-box { border: 1px solid var(--line); border-radius: 28px; padding: clamp(14px, 2.4vw, 28px); background: rgba(255,255,255,.35); }
+.g-box { margin-top: 28px; }
+.g-box .g-layout { margin-top: 0; }
+.g-box .g-foot { margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--line); }
 @media (max-width: 1000px) { .grid { --rh: 210px; } }
 @media (max-width: 700px) { .grid { gap: 6px; --rh: 115px; } .tone { border-radius: 16px; } }
 .shot { margin: 0; overflow: hidden; cursor: zoom-in; position: relative; aspect-ratio: var(--ar, .75); flex: var(--ar, .75) 1 calc(var(--ar, .75) * var(--rh)); border-radius: 10px; background: rgba(127,127,127,.15); }
@@ -908,11 +916,13 @@ footer h3 { color: var(--fg); }
       </div>
     </div>
     <div class="wrap">
+      <div class="g-box">
       <div class="g-layout">
         <div id="tones"></div>
         <nav class="g-time" aria-label="Jump to backdrop"><ol id="g-jump"></ol></nav>
       </div>
-      <div class="g-foot"><button class="btn" type="button" id="g-all">View more</button></div>
+      <div class="g-foot"><button class="btn" type="button" id="g-all">View all photos</button><p id="g-count"></p></div>
+      </div>
     </div>
   </section>
 
@@ -1416,20 +1426,36 @@ footer h3 { color: var(--fg); }
   }
   function ordered(list) { return subgroups(list, "all").reduce(function (a, g) { return a.concat(g[1]); }, []); }
   // The gallery shows a few photos per colour, picked from different kinds of shoots; "View more" opens them all
-  var PER_TONE = 5;
+  var PER_TONE = 8;   // candidates per colour; fitRows() keeps as many as fit on one line
   function preview(list) {
     var gs = subgroups(list, "all").map(function (g) { return g[1].slice(); }), pick = [];
     while (pick.length < PER_TONE && gs.some(function (g) { return g.length; })) gs.forEach(function (g) { if (g.length && pick.length < PER_TONE) pick.push(g.shift()); });
     return ordered(list).filter(function (p) { return pick.indexOf(p) > -1; });
   }
+  function fitRows() {
+    var shownTotal = 0, total = 0;
+    $$("#tones .grid").forEach(function (g) {
+      var cs = getComputedStyle(g), W = g.clientWidth, gap = parseFloat(cs.columnGap) || 8, rh = parseFloat(cs.getPropertyValue("--rh")) || 260, used = 0, n = 0;
+      $$(".shot", g).forEach(function (f) {
+        var w = parseFloat(f.style.getPropertyValue("--ar")) * rh + (n ? gap : 0);
+        var fits = !n || used + w <= W * 1.12;   // a little squeeze is fine; the row then fills the width exactly
+        f.classList.toggle("off", !fits);
+        if (fits) { used += w; n++; }
+      });
+      shownTotal += n;
+    });
+    TONES.forEach(function (t) { total += t.photos.filter(function (p) { return current === "all" || p[2].split(" ").indexOf(current) > -1; }).length; });
+    $("#g-count").textContent = total > shownTotal ? "Showing " + shownTotal + " of " + total + " photos" + (current === "all" ? "" : " in this category") : "";
+    $("#g-all").textContent = current === "all" ? "View all photos" : "View all " + CATS.filter(function (c) { return c[0] === current; })[0][1].toLowerCase() + " photos";
+  }
+  addEventListener("resize", function () { fitRows(); });
   function render() {
     visible = [];
-    var groups = [], more = 0;
+    var groups = [];
     tonesEl.innerHTML = TONES.map(function (t) {
       var list = t.photos.filter(function (p) { return current === "all" || p[2].split(" ").indexOf(current) > -1; });
       if (!list.length) return "";
       groups.push([t, list.length]);
-      more += list.length - Math.min(list.length, PER_TONE);
       var shown = preview(list);
       var figs = '<div class="grid">' + shown.map(function (p) {
         var i = visible.push(p) - 1;
@@ -1437,7 +1463,7 @@ footer h3 { color: var(--fg); }
       }).join("") + "</div>";
       return '<section class="tone tone-' + t.id + '" id="set-' + t.id + '" style="--sw:' + SWATCH[t.id] + '" aria-label="' + plain(t.name) + '"><div class="tone-head"><h3><i aria-hidden="true"></i>' + t.name + "</h3><p>" + t.note + '</p></div>' + figs + "</section>";
     }).join("");
-    $("#g-all").hidden = !more;
+    fitRows();
     var catName = CATS.filter(function (c) { return c[0] === current; })[0][1];
     $("#g-now").textContent = current === "all" ? "All photos" : catName;
     $("#g-jump").innerHTML = groups.map(function (g) { return '<li><a href="#set-' + g[0].id + '" data-set="' + g[0].id + '" title="' + plain(g[0].name) + '" style="--sw:' + SWATCH[g[0].id] + '"><i aria-hidden="true"></i><span>' + g[0].name + "</span></a></li>"; }).join("");
