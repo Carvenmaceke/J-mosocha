@@ -2,6 +2,7 @@
 // Each photo: id (its file name in img/ without -700/-1600), caption, categories, and the width and height of the 700px image.
 window.GALLERY = {
   "dark": [
+    {"id":"birthday-60th-cake","caption":"Happy 60th","categories":["birthdays","women"],"w":700,"h":1050},
     {"id":"graduation-directors-chair","caption":"Graduate in the director’s chair","categories":["graduation","women"],"w":700,"h":956},
     {"id":"graduation-success-book","caption":"Success, in print","categories":["graduation","women"],"w":700,"h":467},
     {"id":"couple-black-embrace","caption":"Together in black","categories":["couples"],"w":700,"h":1050},
@@ -12,6 +13,9 @@ window.GALLERY = {
     {"id":"maternity-couple-red","caption":"Expecting couple","categories":["maternity","couples"],"w":700,"h":1023}
   ],
   "grey": [
+    {"id":"birthday-30-wine-glass","caption":"A toast to 30","categories":["birthdays","women"],"w":700,"h":1050},
+    {"id":"birthday-25-red-stool","caption":"25 & blooming","categories":["birthdays","women"],"w":700,"h":1049},
+    {"id":"birthday-14th-spotlight","caption":"Sweet 14 in the spotlight","categories":["birthdays","kids"],"w":700,"h":1032},
     {"id":"couple-red-gown-navy-suit","caption":"Red gown & navy suit","categories":["couples"],"w":700,"h":1065},
     {"id":"portrait-spotlight-navy","caption":"Spotlight portrait","categories":["portraits","women"],"w":700,"h":1050},
     {"id":"graduation-family","caption":"Graduate & grandmother","categories":["men","graduation","family"],"w":700,"h":1050},
@@ -22,6 +26,7 @@ window.GALLERY = {
     {"id":"birthday-clock","caption":"Time to celebrate","categories":["women","birthdays"],"w":700,"h":1049}
   ],
   "white": [
+    {"id":"birthday-hello-30-cake","caption":"Hello 30","categories":["birthdays","women"],"w":700,"h":467},
     {"id":"graduation-mom-kiss","caption":"A kiss from Mom","categories":["graduation","family"],"w":700,"h":1050},
     {"id":"graduation-little-scholar","caption":"Little scholar","categories":["graduation","kids"],"w":700,"h":1050},
     {"id":"graduation-class-of-2025","caption":"Class of 2025","categories":["graduation","women"],"w":700,"h":467},
