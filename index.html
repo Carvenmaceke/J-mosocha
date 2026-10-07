@@ -563,6 +563,35 @@ footer { background: #0b0b0c; color: #b9b4ac; }
 @media (max-width: 900px) { .f-cta-grid { grid-template-columns: 1fr; } .f-cta-art { height: 340px; max-width: 460px; width: 100%; margin: 10px auto 0; } }
 
 /* ---------- Contact chooser ---------- */
+/* Tips & questions: lightbulb button and guide */
+.tip-fab { position: fixed; right: 18px; bottom: 18px; z-index: 80; display: inline-flex; align-items: center; gap: 8px; height: 54px; padding: 0 20px 0 16px; border: 0; border-radius: 999px; background: #9a7a4a; color: #fff; box-shadow: 0 12px 30px rgba(0,0,0,.28); cursor: pointer; font-size: .9rem; letter-spacing: .04em; transition: transform .25s, box-shadow .25s; }
+.tip-fab svg { width: 24px; height: 24px; color: #fff; }
+.tip-fab:hover { transform: translateY(-2px); box-shadow: 0 16px 36px rgba(0,0,0,.34); }
+.tip-fab:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+@media (max-width: 520px) { .tip-fab { height: 50px; padding: 0 16px 0 13px; right: 14px; bottom: 14px; } }
+.tip-box { width: min(760px, calc(100% - 24px)); padding: 0; display: flex; flex-direction: column; height: min(720px, calc(100svh - 24px)); }
+.tip-head { padding: clamp(22px, 4vw, 32px) clamp(20px, 4vw, 34px) 0; }
+.tip-head h3 { display: flex; align-items: center; gap: 10px; }
+.tip-head h3 svg { width: 28px; height: 28px; color: var(--accent); }
+.tip-tabs { display: flex; gap: 6px; overflow-x: auto; padding: 4px 0 14px; scrollbar-width: none; }
+.tip-tabs::-webkit-scrollbar { display: none; }
+.tip-tabs button { flex: none; padding: 8px 15px; border: 1px solid var(--line); border-radius: 999px; background: var(--g1); cursor: pointer; font-size: .88rem; white-space: nowrap; }
+.tip-tabs button[aria-selected="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.tip-body { flex: 1; overflow-y: auto; padding: 4px clamp(20px, 4vw, 34px) clamp(22px, 4vw, 32px); border-top: 1px solid var(--line); }
+.tip-intro { color: var(--fg-2); font-style: italic; margin: 16px 0 10px; }
+.tip-body details { border-bottom: 1px solid var(--line); }
+.tip-body summary { list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 15px 2px; cursor: pointer; font-weight: 400; font-size: 1.02rem; }
+.tip-body summary::-webkit-details-marker { display: none; }
+.tip-body summary::after { content: "+"; flex: none; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: var(--g2); font-size: 1.1rem; transition: transform .25s; }
+.tip-body details[open] summary::after { transform: rotate(45deg); }
+.tip-body details > div { padding: 0 2px 16px; color: var(--fg-2); font-size: .97rem; line-height: 1.7; }
+.tip-body details ul { margin: 4px 0 8px; padding-left: 20px; }
+.tip-body details li { margin: 3px 0; }
+.tip-body a { color: var(--accent); }
+.tip-help { margin-top: 20px; padding: 14px 16px; border-radius: 14px; background: var(--g1); font-size: .93rem; color: var(--fg-2); }
+.tip-help a { font-weight: 400; }
+.f-privacy { background: none; border: 0; padding: 0; color: inherit; font: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; opacity: .85; }
+.f-privacy:hover { opacity: 1; }
 .cm { border: 0; padding: 0; background: transparent; max-width: 100vw; max-height: 100vh; width: 100%; height: 100%; margin: 0; }
 .cm::backdrop { background: rgba(8,8,9,.7); backdrop-filter: blur(4px); }
 .cm[open] { display: grid; place-items: center; }
@@ -1104,7 +1133,7 @@ footer h3 { color: var(--fg); }
         <input id="news-email" name="email" type="email" autocomplete="email" placeholder="Your email address" required>
         <button class="btn f-btn-light" type="submit">Subscribe</button>
       </div>
-      <label class="f-consent"><input type="checkbox" name="consent" required> <span>Yes, send me promos and news from J Masocha Photography.</span></label>
+      <label class="f-consent"><input type="checkbox" name="consent" required> <span>Yes, send me promos and news from J Masocha Photography. I can unsubscribe at any time. <button class="f-privacy" type="button" data-tips="privacy">Privacy</button></span></label>
       <p class="f-news-msg" id="news-msg" role="status" aria-live="polite"></p>
     </form>
   </div>
@@ -1153,12 +1182,24 @@ footer h3 { color: var(--fg); }
     </div>
   </div>
   <div class="wrap legal">
-    <span>&copy; <span id="year">2026</span> J Masocha Photography &middot; Pretoria, South Africa</span>
+    <span>&copy; <span id="year">2026</span> J Masocha Photography &middot; Pretoria, South Africa &middot; <button class="f-privacy" type="button" data-tips="privacy">Privacy (POPIA)</button></span>
     <a class="f-top" href="#top">Back to top <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M6 11l6-6 6 6"/></svg></i></a>
   </div>
 </footer>
 
 
+<button class="tip-fab" type="button" id="tip-fab" aria-haspopup="dialog" aria-controls="tip-modal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1.1 2V16h5v-.2c.1-.8.5-1.5 1.1-2A6 6 0 0 0 12 3z"/></svg><span>Tips</span></button>
+<dialog class="cm" id="tip-modal" aria-labelledby="tip-title">
+  <div class="cm-box tip-box">
+    <button class="icon-btn cm-close" type="button" data-tip-close aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <div class="tip-head">
+      <h3 id="tip-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1.1 2V16h5v-.2c.1-.8.5-1.5 1.1-2A6 6 0 0 0 12 3z"/></svg>Tips &amp; questions</h3>
+      <p class="cm-sub" style="margin-bottom:14px">Everything you need to know before your shoot.</p>
+      <div class="tip-tabs" id="tip-tabs" role="tablist" aria-label="Tips topics"></div>
+    </div>
+    <div class="tip-body" id="tip-body" role="tabpanel"></div>
+  </div>
+</dialog>
 <dialog class="ap" id="all-photos" aria-labelledby="ap-title">
   <div class="ap-box">
     <div class="ap-head">
@@ -1259,6 +1300,7 @@ footer h3 { color: var(--fg); }
 <div class="toast" id="toast" role="status"></div>
 
 <script src="packages.js"></script>
+<script src="tips.js"></script>
 <script src="gallery.js"></script>
 <script src="site.js"></script>
 <script>
@@ -1354,7 +1396,7 @@ footer h3 { color: var(--fg); }
   $("#gallery-drop").innerHTML = CATS.map(function (c, i) {
     return (i === 1 ? '<li class="sep" role="separator"></li>' : "") + '<li><a href="#gallery" data-cat="' + c[0] + '">' + (c[0] === "all" ? "All photos" : c[1]) + "</a></li>";
   }).join("");
-  $("#session-drop").innerHTML = '<li class="label">Sessions</li>' + SESSIONS.map(function (s) { return '<li><a href="#session-' + s[0] + '">' + s[1] + "</a></li>"; }).join("") + '<li class="sep" role="separator"></li><li><a href="#packages">Packages &amp; pricing</a></li>';
+  $("#session-drop").innerHTML = '<li><a href="#tips" data-tips="wear">Tips: what to wear &amp; bring</a></li><li class="sep" role="separator"></li><li class="label">Sessions</li>' + SESSIONS.map(function (s) { return '<li><a href="#session-' + s[0] + '">' + s[1] + "</a></li>"; }).join("") + '<li class="sep" role="separator"></li><li><a href="#packages">Packages &amp; pricing</a></li>';
   var items = $$(".menu > li");
   function closeAll(except) { items.forEach(function (li) { if (li !== except) { li.classList.remove("open"); var b = $("button", li); if (b) b.setAttribute("aria-expanded", "false"); } }); }
   items.forEach(function (li) {
@@ -1950,6 +1992,29 @@ footer h3 { color: var(--fg); }
     });
     addEventListener("resize", size); size();
     if (!reduce) requestAnimationFrame(tick);
+  })();
+
+  // Tips & questions guide (content in tips.js)
+  (function () {
+    var tm = $("#tip-modal"), tabs = $("#tip-tabs"), body = $("#tip-body"), T = window.TIPS || [];
+    if (!tm || !T.length) { var f = $("#tip-fab"); if (f) f.hidden = true; return; }
+    tabs.innerHTML = T.map(function (t) { return '<button type="button" role="tab" data-tab="' + t[0] + '" aria-selected="false">' + t[1] + "</button>"; }).join("");
+    function show(id) {
+      var t = T.filter(function (x) { return x[0] === id; })[0] || T[0];
+      $$("button", tabs).forEach(function (b) { b.setAttribute("aria-selected", b.dataset.tab === t[0]); });
+      var sel = $('[data-tab="' + t[0] + '"]', tabs); if (sel) sel.scrollIntoView({ block: "nearest", inline: "nearest" });
+      body.innerHTML = '<p class="tip-intro">' + t[2] + "</p>" + t[3].map(function (q, i) { return "<details" + (i ? "" : " open") + "><summary>" + q[0] + "</summary><div>" + q[1] + "</div></details>"; }).join("") +
+        '<p class="tip-help">Still have a question? <a href="https://wa.me/' + WA + "?text=" + encodeURIComponent("Hi J Masocha Photography! I have a question about my photoshoot.") + '" target="_blank" rel="noopener">Ask us on WhatsApp</a> or call 066 132 2462.</p>';
+      body.scrollTop = 0;
+    }
+    function open(id) { show(id); if (tm.showModal) tm.showModal(); else tm.setAttribute("open", ""); document.body.style.overflow = "hidden"; }
+    function close() { if (tm.close) tm.close(); else tm.removeAttribute("open"); }
+    tm.addEventListener("close", function () { document.body.style.overflow = ""; });
+    tm.addEventListener("click", function (e) { if (e.target === tm || e.target.closest("[data-tip-close]")) close(); });
+    tabs.addEventListener("click", function (e) { var b = e.target.closest("[data-tab]"); if (b) show(b.dataset.tab); });
+    $("#tip-fab").addEventListener("click", function () { open("wear"); });
+    document.addEventListener("click", function (e) { var a = e.target.closest("[data-tips]"); if (a) { e.preventDefault(); open(a.dataset.tips); } });
+    if (/^#(tips|privacy)$/.test(location.hash)) open(location.hash === "#privacy" ? "privacy" : "wear");
   })();
 
   // Gentle fade-in

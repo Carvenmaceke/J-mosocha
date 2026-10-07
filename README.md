@@ -45,6 +45,7 @@ Most settings are near the top of the `<script>` section in `index.html`.
 | Phone/WhatsApp number and email | `var WA = "27661322462", MAIL = "wanhloni@gmail.com";` |
 | Facebook, TikTok and Instagram links | `var SOCIAL = { facebook: "", tiktok: "", instagram: "" };` (an empty link shows "coming soon") |
 | Sessions, packages, prices and the deposit % | `packages.js` |
+| Tips & questions guide and the privacy (POPIA) notice | `tips.js` |
 | Gallery photos | `gallery.js` (easier from the website manager) |
 | Specials and the newsletter connection | `site.js` (easier from the website manager) |
 

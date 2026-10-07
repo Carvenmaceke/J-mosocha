@@ -251,6 +251,8 @@ footer { padding: 40px 0 50px; text-align: center; color: var(--muted); font-siz
             <b>I have questions &ndash; continue on WhatsApp</b><small id="wa-text">We&rsquo;ll hold your time while we chat. Pay the deposit by EFT and send your proof of payment on WhatsApp.</small></span></label>
         </div>
         <label class="agree"><input type="checkbox" id="agree"><span>I understand that a <b>non-refundable deposit</b> secures my date and time, and the balance is paid on the day of the shoot.</span></label>
+        <label class="agree"><input type="checkbox" id="share"><span><b>Optional:</b> J Masocha Photography may share a few of my photos on its website and social media. (Untick to keep your photos private. You can change your mind at any time.)</span></label>
+        <p class="agree" style="margin-top:8px">We use your details only to manage your booking. See our <a href="index.html#privacy" target="_blank" rel="noopener">privacy notice (POPIA)</a>.</p>
       </fieldset>
 
       <p class="err" id="err" role="alert"></p>
@@ -268,7 +270,7 @@ footer { padding: 40px 0 50px; text-align: center; color: var(--muted); font-siz
   <form class="lookup" id="lookup" hidden><label for="lk-code" class="sr">Booking code</label><input id="lk-code" placeholder="JM-XXXXXX" maxlength="9" autocomplete="off"><button class="btn" type="submit">Check</button></form>
 </main>
 
-<footer>J Masocha Photography &middot; 235 Helen Joseph Street, Pretoria Central &middot; 066 132 2462</footer>
+<footer>J Masocha Photography &middot; 235 Helen Joseph Street, Pretoria Central &middot; 066 132 2462 &middot; <a href="index.html#privacy">Privacy (POPIA)</a></footer>
 
 <script src="packages.js"></script>
 <script src="site.js"></script>
@@ -439,7 +441,7 @@ footer { padding: 40px 0 50px; text-align: center; color: var(--muted); font-siz
   function submit(pay) {
     var b = $("#next"); b.disabled = true; b.textContent = "Booking…";
     call({ action: "book", pay: pay, session: st.session, pkg: st.pkg, date: st.date, time: st.time,
-      name: $("#b-name").value.trim(), phone: $("#b-phone").value.trim(), email: $("#b-email").value.trim(), notes: $("#b-notes").value.trim() })
+      name: $("#b-name").value.trim(), phone: $("#b-phone").value.trim(), email: $("#b-email").value.trim(), notes: ($("#b-notes").value.trim() + "\nPhoto sharing: " + ($("#share").checked ? "yes, may share on website/social media" : "no, keep private")).trim() })
       .then(function (j) {
         if (!j.ok) {
           if (j.error === "taken") { st.days = null; st.time = ""; show(1); err(j.message); return; }
