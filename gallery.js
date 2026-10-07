@@ -69,7 +69,6 @@ window.GALLERY = {
     {"id":"kids-princess-throne","caption":"Little princess","categories":["kids","birthdays"],"w":700,"h":1050},
     {"id":"kids-second-birthday","caption":"Butterfly second birthday","categories":["kids","birthdays"],"w":700,"h":535},
     {"id":"kids-cake-smash-bluey","caption":"Bluey cake smash","categories":["kids","birthdays"],"w":700,"h":1050},
-    {"id":"kids-first-birthday-beach","caption":"Beach first birthday","categories":["kids","birthdays"],"w":700,"h":448},
     {"id":"birthday-pink-cake","caption":"Pretty in pink","categories":["women","birthdays"],"w":700,"h":1050},
     {"id":"maternity-green-drape","caption":"Mint maternity","categories":["maternity","women"],"w":700,"h":1049},
     {"id":"graduation-portrait","caption":"Graduation close-up","categories":["women","graduation"],"w":700,"h":1050}
