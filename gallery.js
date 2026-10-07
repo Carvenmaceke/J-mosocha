@@ -2,6 +2,7 @@
 // Each photo: id (its file name in img/ without -700/-1600), caption, categories, and the width and height of the 700px image.
 window.GALLERY = {
   "dark": [
+    {"id":"birthday-burning-headline","caption":"Leveling up to 30","categories":["birthdays","women"],"w":700,"h":1050},
     {"id":"birthday-60th-cake","caption":"Happy 60th","categories":["birthdays","women"],"w":700,"h":1050},
     {"id":"graduation-directors-chair","caption":"Graduate in the director’s chair","categories":["graduation","women"],"w":700,"h":956},
     {"id":"graduation-success-book","caption":"Success, in print","categories":["graduation","women"],"w":700,"h":467},
@@ -26,6 +27,8 @@ window.GALLERY = {
     {"id":"birthday-clock","caption":"Time to celebrate","categories":["women","birthdays"],"w":700,"h":1049}
   ],
   "white": [
+    {"id":"birthday-may-calendar","caption":"Breaking through May","categories":["birthdays","women"],"w":700,"h":1050},
+    {"id":"birthday-slaying-white","caption":"Slaying in white","categories":["birthdays","women"],"w":700,"h":1025},
     {"id":"birthday-hello-30-cake","caption":"Hello 30","categories":["birthdays","women"],"w":700,"h":467},
     {"id":"graduation-mom-kiss","caption":"A kiss from Mom","categories":["graduation","family"],"w":700,"h":1050},
     {"id":"graduation-little-scholar","caption":"Little scholar","categories":["graduation","kids"],"w":700,"h":1050},
