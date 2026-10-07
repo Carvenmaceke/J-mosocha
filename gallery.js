@@ -2,6 +2,8 @@
 // Each photo: id (its file name in img/ without -700/-1600), caption, categories, and the width and height of the 700px image.
 window.GALLERY = {
   "dark": [
+    {"id":"graduation-success-book","caption":"Success, in print","categories":["graduation","women"],"w":700,"h":467},
+    {"id":"couple-black-embrace","caption":"Together in black","categories":["couples"],"w":700,"h":1050},
     {"id":"maternity-white-tulle-train","caption":"White tulle maternity","categories":["maternity","women"],"w":700,"h":1033},
     {"id":"graduation-man-portrait","caption":"Graduation portrait","categories":["men","graduation"],"w":700,"h":1047},
     {"id":"birthday-roses-black-gown","caption":"Roses & black gown","categories":["women","birthdays"],"w":700,"h":1050},
@@ -9,6 +11,7 @@ window.GALLERY = {
     {"id":"maternity-couple-red","caption":"Expecting couple","categories":["maternity","couples"],"w":700,"h":1023}
   ],
   "grey": [
+    {"id":"couple-red-gown-navy-suit","caption":"Red gown & navy suit","categories":["couples"],"w":700,"h":1065},
     {"id":"portrait-spotlight-navy","caption":"Spotlight portrait","categories":["portraits","women"],"w":700,"h":1050},
     {"id":"graduation-family","caption":"Graduate & grandmother","categories":["men","graduation","family"],"w":700,"h":1050},
     {"id":"couple-mom-dad-caps","caption":"Mom & Dad to be","categories":["couples","family"],"w":700,"h":467},
@@ -18,6 +21,8 @@ window.GALLERY = {
     {"id":"birthday-clock","caption":"Time to celebrate","categories":["women","birthdays"],"w":700,"h":1049}
   ],
   "white": [
+    {"id":"graduation-class-of-2025","caption":"Class of 2025","categories":["graduation","women"],"w":700,"h":467},
+    {"id":"couple-red-roses","caption":"Roses & forehead touch","categories":["couples"],"w":700,"h":1050},
     {"id":"portrait-timberland-step","caption":"Fresh steps","categories":["portraits","men"],"w":700,"h":1050},
     {"id":"portrait-beret-chair","caption":"Beret & folding chair","categories":["portraits","men"],"w":700,"h":1050},
     {"id":"portrait-leather-jacket","caption":"Leather & shades","categories":["portraits","men"],"w":700,"h":1050},
