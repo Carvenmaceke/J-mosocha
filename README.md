@@ -9,7 +9,7 @@ It is a static page (`index.html`) with its photos in `img/`, plus a private web
 - Header with dropdown menus (About, Gallery, Photo Session Information, Specials, Our Services, Packages & Pricing, Printed Products, Contact) and a social media button
 - Current specials (shown only while a special is running)
 - Gallery grouped by backdrop colour (dark, grey, white, colour, outdoors), with a category filter, a backdrop timeline, an "All photos" window and a full-screen viewer (slideshow, zoom, share)
-- Photo sessions, services, the Adult Birthday price list, a packages request form, a print showcase with a print order form, about, team and Google reviews
+- Photo sessions, services, the Adult Birthday price list, a packages request form, a print showcase with a print order form, about and Google reviews
 - Contact window (email, WhatsApp or call), newsletter sign-up and footer
 
 **Online booking (`booking.html`):** clients choose a session and package, pick one of the open dates and times, enter their details, and either pay the deposit online (PayFast) or continue on WhatsApp and send proof of payment there. Each booking gets a unique booking code, shown on screen and emailed to the client. This needs the free Google Sheet set-up in [`newsletter/README.md`](newsletter/README.md). Until that's connected, the booking page sends people to WhatsApp.

@@ -470,10 +470,6 @@ main { padding-top: var(--header-h, 147px); }
 .values { display: grid; gap: 22px; margin-top: 30px; }
 .values h3 { font-size: 1.2rem; font-weight: 400; }
 .values p { color: var(--fg-2); }
-.team { display: flex; gap: 40px; flex-wrap: wrap; justify-content: center; margin-top: 36px; }
-.team div { text-align: center; }
-.team b { display: block; font-weight: 400; font-size: 1.2rem; }
-.team small { font-style: italic; color: var(--muted); font-size: .95rem; }
 @media (max-width: 860px) { .about { grid-template-columns: 1fr; } }
 .quotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 50px; margin-top: 50px; }
 .quotes blockquote { margin: 0; text-align: center; }
@@ -863,7 +859,6 @@ footer h3 { color: var(--fg); }
         <button type="button" aria-expanded="false" aria-haspopup="true" data-sec="about">About J Masocha <span class="caret" aria-hidden="true"></span></button>
         <ul class="drop">
           <li><a href="#about">Our story</a></li>
-          <li><a href="#team">Meet the team</a></li>
           <li><a href="#reviews">Client reviews</a></li>
           <li class="sep" role="separator"></li>
           <li><a href="#contact">Visit the studio</a></li>
@@ -1073,13 +1068,6 @@ footer h3 { color: var(--fg); }
     </div>
   </section>
 
-  <section class="sec center video-band" id="team" style="padding-block:70px">
-    <div class="wrap fade">
-      <p class="eyebrow">The team</p>
-      <h2 class="title">Behind the lens</h2>
-      <div class="team"><div><b>Njabulo</b><small>Photographer</small></div><div><b>Lwazi Mjuba</b><small>Photographer</small></div><div><b>Siseko Ngeno</b><small>Front desk</small></div></div>
-    </div>
-  </section>
 
   <section class="sec reviews-sec" id="reviews">
     <div class="wrap rv-grid">
@@ -1453,11 +1441,11 @@ footer h3 { color: var(--fg); }
   var secIO = new IntersectionObserver(function (es) {
     es.forEach(function (e) {
       if (!e.isIntersecting) return;
-      var id = e.target.id, map = { tones: "gallery", team: "about", reviews: "about" };
+      var id = e.target.id, map = { tones: "gallery", reviews: "about" };
       $$("[data-sec]").forEach(function (el) { el.classList.toggle("active", el.dataset.sec === (map[id] || id)); });
     });
   }, { rootMargin: "-45% 0px -50% 0px" });
-  ["specials", "gallery", "tones", "sessions", "services", "packages", "prints", "about", "team", "reviews", "contact"].forEach(function (id) { secIO.observe(document.getElementById(id)); });
+  ["specials", "gallery", "tones", "sessions", "services", "packages", "prints", "about", "reviews", "contact"].forEach(function (id) { secIO.observe(document.getElementById(id)); });
 
   // Gallery: one section per backdrop colour, each laid out in justified rows
   var tonesEl = $("#tones"), current = "all", visible = [];
