@@ -1,4 +1,4 @@
-// Tips & questions guide and the POPIA privacy notice. Shown from the lightbulb button on the website.
+// Tips & questions guide, shown from the lightbulb button, and the separate POPIA privacy notice.
 // Each section: [tab id, tab name, intro, [[question, answer HTML], ...]]
 window.TIPS = [
   ["wear", "What to wear", "A few simple choices make a big difference in the studio.", [
@@ -35,8 +35,12 @@ window.TIPS = [
     ["Can I change my date?", "Message us on WhatsApp with your booking code as early as possible and we'll help you move to another open date."],
     ["Do you print photos?", "Yes. We print canvases, frames, albums, photo prints, mugs, tumblers, T-shirts and more in-house. See <a href=\"#prints\" data-tip-close>Printed products</a>."],
     ["Where is the studio?", "235 Helen Joseph Street (formerly Church Street), Pretoria Central, near Church Square. Call or WhatsApp 066 132 2462."]
-  ]],
-  ["privacy", "Privacy (POPIA)", "How we look after your personal information and your photos, in line with the Protection of Personal Information Act, 2013 (POPIA).", [
+  ]]
+];
+
+// Privacy notice (POPIA). Shown on its own from the "Privacy (POPIA)" links.
+// [title, intro, [[heading, text HTML], ...]]
+window.PRIVACY = ["Privacy notice (POPIA)", "How we look after your personal information and your photos, in line with the Protection of Personal Information Act, 2013 (POPIA).", [
     ["What we collect", "When you book, enquire, order prints or subscribe, we collect your name, phone number, email address and booking details (date, session, package, notes and payment status). We also keep the photos and videos we take of you during your session."],
     ["Why we use it", "Only to plan and confirm your booking, take payments, deliver your photos and prints, contact you about your session, and, if you subscribed, send you our specials. We do not sell your information."],
     ["Who it's shared with", "Only the services we need to run your booking: Google (our booking sheet and email), PayFast if you pay online, and WhatsApp when you message us. Each of these protects your information under its own privacy terms."],
@@ -45,5 +49,4 @@ window.TIPS = [
     ["How long we keep it", "We keep booking records and session photos only for as long as we need them for your session, prints and our accounts. Ask us any time if you would like your information deleted."],
     ["Your rights", "You may ask what information we hold about you, and ask us to correct or delete it. You can also object to us using it, withdraw your consent for photo sharing, or unsubscribe from our specials at any time (every email has an unsubscribe link). Contact us on WhatsApp or email and we'll respond within 30 days."],
     ["Complaints", "If you're unhappy with how we've handled your information, please tell us first so we can put it right. You may also complain to the Information Regulator: <a href=\"https://inforegulator.org.za\" target=\"_blank\" rel=\"noopener\">inforegulator.org.za</a> or POPIAComplaints@inforegulator.org.za."]
-  ]]
-];
+  ]];

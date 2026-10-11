@@ -564,9 +564,10 @@ footer { background: #0b0b0c; color: #b9b4ac; }
 
 /* ---------- Contact chooser ---------- */
 /* Tips & questions: lightbulb button and guide */
-.tip-fab { position: fixed; right: 18px; bottom: 18px; z-index: 80; display: inline-flex; align-items: center; gap: 8px; height: 54px; padding: 0 20px 0 16px; border: 0; border-radius: 999px; background: #9a7a4a; color: #fff; box-shadow: 0 12px 30px rgba(0,0,0,.28); cursor: pointer; font-size: .9rem; letter-spacing: .04em; transition: transform .25s, box-shadow .25s; }
+.tip-fab { position: fixed; right: 18px; bottom: 18px; z-index: 80; display: inline-flex; align-items: center; gap: 8px; height: 54px; padding: 0 20px 0 16px; border: 0; border-radius: 999px; background: #9a7a4a; color: #fff; box-shadow: 0 12px 30px rgba(0,0,0,.28); cursor: pointer; font-size: .9rem; letter-spacing: .04em; transition: transform .25s, box-shadow .25s, opacity .25s; }
 .tip-fab svg { width: 24px; height: 24px; color: #fff; }
 .tip-fab:hover { transform: translateY(-2px); box-shadow: 0 16px 36px rgba(0,0,0,.34); }
+.tip-fab.away { opacity: 0; transform: translateY(20px); pointer-events: none; }
 .tip-fab:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 @media (max-width: 520px) { .tip-fab { height: 50px; padding: 0 16px 0 13px; right: 14px; bottom: 14px; } }
 .tip-box { width: min(760px, calc(100% - 24px)); padding: 0; display: flex; flex-direction: column; height: min(720px, calc(100svh - 24px)); }
@@ -590,6 +591,9 @@ footer { background: #0b0b0c; color: #b9b4ac; }
 .tip-body a { color: var(--accent); }
 .tip-help { margin-top: 20px; padding: 14px 16px; border-radius: 14px; background: var(--g1); font-size: .93rem; color: var(--fg-2); }
 .tip-help a { font-weight: 400; }
+.f-credit { color: inherit; text-decoration: none; opacity: .75; font-size: .88em; transition: opacity .2s; }
+.f-credit b { font-weight: 700; letter-spacing: .04em; }
+.f-credit:hover { opacity: 1; text-decoration: underline; text-underline-offset: 3px; }
 .f-privacy { background: none; border: 0; padding: 0; color: inherit; font: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; opacity: .85; }
 .f-privacy:hover { opacity: 1; }
 .cm { border: 0; padding: 0; background: transparent; max-width: 100vw; max-height: 100vh; width: 100%; height: 100%; margin: 0; }
@@ -1133,7 +1137,7 @@ footer h3 { color: var(--fg); }
         <input id="news-email" name="email" type="email" autocomplete="email" placeholder="Your email address" required>
         <button class="btn f-btn-light" type="submit">Subscribe</button>
       </div>
-      <label class="f-consent"><input type="checkbox" name="consent" required> <span>Yes, send me promos and news from J Masocha Photography. I can unsubscribe at any time. <button class="f-privacy" type="button" data-tips="privacy">Privacy</button></span></label>
+      <label class="f-consent"><input type="checkbox" name="consent" required> <span>Yes, send me promos and news from J Masocha Photography. I can unsubscribe at any time. <button class="f-privacy" type="button" data-privacy>Privacy</button></span></label>
       <p class="f-news-msg" id="news-msg" role="status" aria-live="polite"></p>
     </form>
   </div>
@@ -1182,7 +1186,8 @@ footer h3 { color: var(--fg); }
     </div>
   </div>
   <div class="wrap legal">
-    <span>&copy; <span id="year">2026</span> J Masocha Photography &middot; Pretoria, South Africa &middot; <button class="f-privacy" type="button" data-tips="privacy">Privacy (POPIA)</button></span>
+    <span>&copy; <span id="year">2026</span> J Masocha Photography &middot; Pretoria, South Africa &middot; <button class="f-privacy" type="button" data-privacy>Privacy (POPIA)</button></span>
+    <a class="f-credit" href="https://axeconnect.co.za/" target="_blank" rel="noopener">Website by <b>Axe Connect</b></a>
     <a class="f-top" href="#top">Back to top <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M6 11l6-6 6 6"/></svg></i></a>
   </div>
 </footer>
@@ -1198,6 +1203,16 @@ footer h3 { color: var(--fg); }
       <div class="tip-tabs" id="tip-tabs" role="tablist" aria-label="Tips topics"></div>
     </div>
     <div class="tip-body" id="tip-body" role="tabpanel"></div>
+  </div>
+</dialog>
+<dialog class="cm" id="privacy-modal" aria-labelledby="pv-title">
+  <div class="cm-box tip-box">
+    <button class="icon-btn cm-close" type="button" data-pv-close aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <div class="tip-head" style="padding-bottom:16px">
+      <h3 id="pv-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6l-8-3z"/><path d="m9 12 2 2 4-4"/></svg>Privacy notice</h3>
+      <p class="cm-sub" style="margin-bottom:0">Protection of Personal Information Act (POPIA)</p>
+    </div>
+    <div class="tip-body" id="pv-body"></div>
   </div>
 </dialog>
 <dialog class="ap" id="all-photos" aria-labelledby="ap-title">
@@ -2013,8 +2028,23 @@ footer h3 { color: var(--fg); }
     tm.addEventListener("click", function (e) { if (e.target === tm || e.target.closest("[data-tip-close]")) close(); });
     tabs.addEventListener("click", function (e) { var b = e.target.closest("[data-tab]"); if (b) show(b.dataset.tab); });
     $("#tip-fab").addEventListener("click", function () { open("wear"); });
+    // Step out of the way at the bottom of the page so it doesn't cover the footer links
+    var legal = $(".legal"); if (legal && window.IntersectionObserver) new IntersectionObserver(function (es) { $("#tip-fab").classList.toggle("away", es[0].isIntersecting); }).observe(legal);
     document.addEventListener("click", function (e) { var a = e.target.closest("[data-tips]"); if (a) { e.preventDefault(); open(a.dataset.tips); } });
-    if (/^#(tips|privacy)$/.test(location.hash)) open(location.hash === "#privacy" ? "privacy" : "wear");
+    if (location.hash === "#tips") open("wear");
+  })();
+
+  // Privacy notice (POPIA), separate from the tips (content in tips.js)
+  (function () {
+    var pm = $("#privacy-modal"), P = window.PRIVACY; if (!pm || !P) return;
+    $("#pv-body").innerHTML = '<p class="tip-intro">' + P[1] + "</p>" + P[2].map(function (q) { return "<details open><summary>" + q[0] + "</summary><div>" + q[1] + "</div></details>"; }).join("") +
+      '<p class="tip-help">Questions about your information? Contact J Masocha Photography on <a href="https://wa.me/' + WA + '" target="_blank" rel="noopener">WhatsApp</a> or <a href="mailto:' + MAIL + '">' + MAIL + "</a>.</p>";
+    function open() { if (pm.showModal) pm.showModal(); else pm.setAttribute("open", ""); document.body.style.overflow = "hidden"; $("#pv-body").scrollTop = 0; }
+    function close() { if (pm.close) pm.close(); else pm.removeAttribute("open"); }
+    pm.addEventListener("close", function () { document.body.style.overflow = ""; });
+    pm.addEventListener("click", function (e) { if (e.target === pm || e.target.closest("[data-pv-close]")) close(); });
+    document.addEventListener("click", function (e) { if (e.target.closest("[data-privacy]")) { e.preventDefault(); open(); } });
+    if (location.hash === "#privacy") open();
   })();
 
   // Gentle fade-in
