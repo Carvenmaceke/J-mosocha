@@ -20,7 +20,7 @@ var SITE_URL = "https://jmasochaphoto.co.za/";
  * admin key if you don't have one yet. The key is shown in the log.
  */
 function setup() {
-  sheet_(); bookSheet_(); daysSheet_();
+  sheet_(); bookSheet_(); daysSheet_(); printRoot_();
   var props = PropertiesService.getScriptProperties();
   if (!props.getProperty("ADMIN_KEY")) props.setProperty("ADMIN_KEY", Utilities.getUuid().replace(/-/g, "") + Utilities.getUuid().replace(/-/g, "").slice(0, 8));
   MailApp.getRemainingDailyQuota();
@@ -36,6 +36,7 @@ function doPost(e) {
   if (action === "slots") return json_(publicSlots_());
   if (action === "book") return json_(book_(d));
   if (action === "booking") return json_(lookup_(d.code));
+  if (action === "printUpload") return json_(printUpload_(d));
 
   var key = PropertiesService.getScriptProperties().getProperty("ADMIN_KEY");
   if (!key || d.key !== key) return json_({ ok: false, error: "not-allowed" });
@@ -461,4 +462,48 @@ function saveSettings_(n) {
   });
   PropertiesService.getScriptProperties().setProperty("BOOKING_SETTINGS", JSON.stringify(s));
   return adminBookings_();
+}
+
+/* =====================================================================
+ * Print orders: photos clients upload with a print order are saved in
+ * Google Drive, in "J Masocha print orders" / one folder per order.
+ * The order message (WhatsApp or email) carries the folder link.
+ * ===================================================================== */
+
+var PRINT_MAX_BYTES = 20 * 1024 * 1024;   // per photo
+var PRINT_MAX_FILES = 20;                 // per order
+var PRINT_DAILY_FILES = 300;              // per day, all orders together
+
+function printRoot_() {
+  var props = PropertiesService.getScriptProperties(), id = props.getProperty("PRINT_FOLDER");
+  if (id) { try { return DriveApp.getFolderById(id); } catch (x) {} }
+  var f = DriveApp.createFolder("J Masocha print orders");
+  props.setProperty("PRINT_FOLDER", f.getId());
+  return f;
+}
+
+function printUpload_(d) {
+  var order = String(d.order || "").replace(/[^A-Za-z0-9-]/g, "").slice(0, 20);
+  var name = clean_(d.name, 60) || "Client";
+  var file = clean_(d.filename, 120).replace(/[\\/:*?"<>|]+/g, "_") || "photo";
+  var mime = String(d.mime || "");
+  if (!order || !d.data) return { ok: false, error: "missing-file" };
+  if (!/^(image\/[\w.+-]+|application\/pdf)$/.test(mime)) return { ok: false, error: "Only photos (JPG, PNG, HEIC…) or PDF files can be uploaded." };
+  var bytes;
+  try { bytes = Utilities.base64Decode(String(d.data)); } catch (x) { return { ok: false, error: "bad-file" }; }
+  if (bytes.length > PRINT_MAX_BYTES) return { ok: false, error: "That photo is too big (max 20 MB)." };
+
+  var lock = LockService.getScriptLock(); lock.waitLock(20000);
+  try {
+    var props = PropertiesService.getScriptProperties(), day = today_(), count = JSON.parse(props.getProperty("PRINT_COUNT") || "{}");
+    if (count.day !== day) count = { day: day, n: 0 };
+    if (count.n >= PRINT_DAILY_FILES) return { ok: false, error: "Uploads are busy today. Please send your photos on WhatsApp." };
+    var root = printRoot_(), folderName = day + " " + order + " " + name, it = root.getFoldersByName(folderName);
+    var folder = it.hasNext() ? it.next() : root.createFolder(folderName);
+    var n = 0, files = folder.getFiles(); while (files.hasNext()) { files.next(); n++; }
+    if (n >= PRINT_MAX_FILES) return { ok: false, error: "You can upload up to 20 photos per order. Send the rest on WhatsApp." };
+    folder.createFile(Utilities.newBlob(bytes, mime, file));
+    count.n++; props.setProperty("PRINT_COUNT", JSON.stringify(count));
+    return { ok: true, folder: folder.getUrl() };
+  } finally { lock.releaseLock(); }
 }

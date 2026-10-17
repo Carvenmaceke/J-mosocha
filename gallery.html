@@ -77,6 +77,15 @@ em { font-style: italic; }
 .menu { display: flex; justify-content: center; flex-wrap: nowrap; list-style: none; margin: 0 auto; padding: 0 16px; max-width: var(--wrap); }
 .menu > li { position: relative; display: flex; align-items: stretch; }
 .menu > li + li::before { content: ""; align-self: center; width: 1px; height: 18px; background: var(--band-sep); }
+/* Gallery stands out in the middle of the menu as its own page link */
+.menu > li.menu-gallery { padding: 0 12px; align-items: center; }
+.menu > li.menu-gallery::before, .menu > li.menu-gallery + li::before { display: none; }
+.menu > li.menu-gallery > a { gap: 8px; padding: 9px 20px; border-radius: 999px; background: var(--fg); color: var(--bg); font-weight: 700; letter-spacing: .04em; box-shadow: 0 6px 16px rgba(0,0,0,.18); transition: transform .2s, box-shadow .2s, background .2s; }
+.menu > li.menu-gallery > a svg { width: 18px; height: 18px; color: #e8c88c; flex: none; }
+.menu > li.menu-gallery > a::before, .menu > li.menu-gallery > a::after { display: none; }
+.menu > li.menu-gallery > a:hover { color: var(--bg); transform: translateY(-1px); box-shadow: 0 10px 22px rgba(0,0,0,.24); }
+.menu > li.menu-gallery > a.active { background: #9a7a4a; color: #fff; }
+.menu > li.menu-gallery > a.active svg { color: #fff; }
 .menu > li > a, .menu > li > button { display: flex; align-items: center; gap: 9px; padding: 15px 16px; border: 0; background: none; cursor: pointer; text-decoration: none; font-size: .97rem; font-weight: 400; letter-spacing: .01em; color: var(--band-fg); position: relative; white-space: nowrap; transition: color .2s; }
 .menu > li > a::before, .menu > li > a::after, .menu > li > button::before, .menu > li > button::after { content: ""; position: absolute; left: 0; right: 0; height: 3px; background: var(--band-bar); transform: scaleX(0); transition: transform .3s ease; }
 .menu > li > a::before, .menu > li > button::before { top: 0; }
@@ -132,7 +141,8 @@ em { font-style: italic; }
 .soc-ig .soc-ic { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285aeb 90%); }
 :root[data-theme="dark"] .soc-tt .soc-ic { background: #000; border: 1px solid #333; }
 @media (hover: hover) and (min-width: 1101px) { .menu > li:hover .drop { opacity: 1; visibility: visible; transform: none; } }
-@media (max-width: 1240px) and (min-width: 1101px) { .menu > li > a, .menu > li > button { padding-inline: 11px; font-size: .92rem; } }
+@media (min-width: 1101px) { .menu > li > a, .menu > li > button { padding-inline: 10px; font-size: .92rem; } .menu > li.menu-gallery { padding: 0 8px; } .menu > li.menu-gallery > a { padding: 8px 16px; } }
+@media (max-width: 1260px) and (min-width: 1101px) { .menu > li > a, .menu > li > button { padding-inline: 6px; font-size: .86rem; } .menu > li.menu-gallery { padding: 0 6px; } .menu > li.menu-gallery > a { padding-inline: 12px; } }
 @media (max-width: 1100px) {
   .menu-band { border: 0; }
   .menu-btn { display: grid; }
@@ -148,6 +158,8 @@ em { font-style: italic; }
   .drop { position: static; transform: none; opacity: 1; visibility: visible; box-shadow: none; border: 0; background: transparent; display: none; padding: 0 0 12px; min-width: 0; }
   .menu > li.open .drop { display: block; transform: none; }
   .drop a { padding: 8px 14px; }
+  .menu > li.menu-gallery { padding: 12px 0; }
+  .menu > li.menu-gallery > a { justify-content: center; padding: 14px 20px !important; font-size: 1.02rem; }
 }
 
 /* ---------- Hero ---------- */
@@ -474,6 +486,24 @@ html[data-page="gallery"] #gallery { min-height: calc(100svh - var(--header-h, 1
 .po-qty button { width: 34px; height: 34px; border: 0; background: none; cursor: pointer; font-size: 1.05rem; border-radius: 50%; color: var(--fg); }
 .po-qty button:hover { background: var(--bg-2); }
 .po-qty output { min-width: 22px; text-align: center; font-weight: 700; }
+.po-up-label { display: block; font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; color: var(--fg-2); margin-bottom: 6px; }
+.po-up-label small { text-transform: none; letter-spacing: 0; font-size: .85rem; color: var(--muted); }
+.po-drop { display: grid; justify-items: center; gap: 4px; text-align: center; padding: 16px; border: 1.5px dashed var(--line); border-radius: 14px; cursor: pointer; transition: border-color .2s, background .2s; }
+.po-drop:hover, .po-drop.over { border-color: var(--accent); background: var(--bg-2); }
+.po-drop svg { width: 26px; height: 26px; color: var(--accent); }
+.po-drop b { font-weight: 700; font-size: .95rem; text-transform: none; letter-spacing: 0; color: var(--fg); }
+.po-drop span { color: var(--muted); font-size: .82rem; text-transform: none; letter-spacing: 0; }
+#po-files:focus-visible + .po-files, .po-drop:focus-within { outline: 2px solid var(--accent); }
+.po-files { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 6px; }
+.po-files li { display: flex; align-items: center; gap: 10px; padding: 6px 8px; border: 1px solid var(--line); border-radius: 10px; font-size: .88rem; }
+.po-files img, .po-files .pdf { width: 40px; height: 40px; border-radius: 6px; object-fit: cover; flex: none; background: var(--bg-2); display: grid; place-items: center; font-size: .7rem; font-weight: 700; color: var(--fg-2); }
+.po-files .nm { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.po-files .sz { color: var(--muted); font-size: .8rem; }
+.po-files button { border: 0; background: none; cursor: pointer; color: var(--muted); font-size: 1.2rem; line-height: 1; padding: 2px 6px; }
+.po-files button:hover { color: #d64545; }
+.po-files li.done .sz::after { content: " ✓"; color: #25a35a; }
+.po-up-status { font-size: .85rem; color: var(--fg-2); margin-top: 6px; min-height: 1.2em; }
+.po-up-status.err { color: #d64545; }
 .po-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px; }
 .po-btns .cm-send { margin-top: 0; }
 @media (max-width: 420px) { .po-btns { grid-template-columns: 1fr; } }
@@ -881,13 +911,10 @@ footer h3 { color: var(--fg); }
       </li>
       <li><a href="#services" data-sec="services">Our Services</a></li>
       <li>
-        <button type="button" aria-expanded="false" aria-haspopup="true" data-sec="gallery">Gallery <span class="caret" aria-hidden="true"></span></button>
-        <ul class="drop" id="gallery-drop"></ul>
-      </li>
-      <li>
         <button type="button" aria-expanded="false" aria-haspopup="true" data-sec="sessions">Photo Session Information <span class="caret" aria-hidden="true"></span></button>
         <ul class="drop" id="session-drop"></ul>
       </li>
+      <li class="menu-gallery"><a href="gallery.html" data-sec="gallery"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="m21 15-4.5-4.5L6 21"/></svg>View Gallery</a></li>
       <li id="menu-specials" hidden><a href="#specials" data-sec="specials">Specials</a></li>
       <li><a href="#packages" data-sec="packages">Packages &amp; Pricing</a></li>
       <li><a href="#prints" data-sec="prints">Printed Products</a></li>
@@ -1265,12 +1292,19 @@ footer h3 { color: var(--fg); }
         <div class="po-items" id="po-items"></div>
         <div class="f"><label for="po-name">Full name *</label><input id="po-name" name="name" autocomplete="name" required><span class="err-msg"></span></div>
         <div class="f"><label for="po-phone">Phone number *</label><input id="po-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required><span class="err-msg"></span></div>
+        <div class="f po-up" id="po-up">
+          <span class="po-up-label">Your photos <small>(optional)</small></span>
+          <label class="po-drop" for="po-files"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg><b>Upload what you&rsquo;d like printed</b><span>Photos or a PDF, up to 20 files &middot; or send them on WhatsApp later</span></label>
+          <input class="sr" type="file" id="po-files" accept="image/*,.heic,.heif,application/pdf" multiple>
+          <ul class="po-files" id="po-file-list"></ul>
+          <p class="po-up-status" id="po-up-status" role="status" aria-live="polite"></p>
+        </div>
         <div class="f"><label for="po-note">Anything else?</label><textarea id="po-note" name="note" rows="2" placeholder="e.g. names to print, colours, collection date"></textarea><span class="err-msg"></span></div>
         <div class="po-btns">
           <button class="btn btn--solid cm-send wa" type="submit" value="whatsapp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1s-.5-.1-.7.1-.8 1-.9 1.2-.3.2-.6.1a8.2 8.2 0 0 1-4-3.5c-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6a1.1 1.1 0 0 0-.8.4 3.4 3.4 0 0 0-1 2.5 5.9 5.9 0 0 0 1.2 3.1 13.4 13.4 0 0 0 5.2 4.6c1.9.8 2.7.9 3.6.8a3.1 3.1 0 0 0 2-1.4 2.5 2.5 0 0 0 .2-1.4c-.1-.1-.3-.2-.6-.3zM12 21.8a9.8 9.8 0 0 1-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 1 1 12 21.8zm8.4-18.2A11.8 11.8 0 0 0 1.8 17.9L.1 24l6.3-1.6a11.8 11.8 0 0 0 5.6 1.4A11.8 11.8 0 0 0 20.4 3.6z"/></svg> Send on WhatsApp</button>
           <button class="btn cm-send" type="submit" value="email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg> Send by email</button>
         </div>
-        <p class="cm-note" id="po-note-msg">After sending, attach the photos you&rsquo;d like printed in the same chat or email.</p>
+        <p class="cm-note" id="po-note-msg">Uploading photos is optional. You can also share them in the chat or email after sending.</p>
       </form>
     </div>
   </div>
@@ -1435,10 +1469,6 @@ footer h3 { color: var(--fg); }
 
   // Dropdown menus
   var count = function (cat) { return TONES.reduce(function (n, t) { return n + t.photos.filter(function (p) { return cat === "all" || p[2].split(" ").indexOf(cat) > -1; }).length; }, 0); };
-  $("#gallery-drop").innerHTML = CATS.map(function (c, i) {
-    var href = GALLERY_PAGE ? "#gallery" : "gallery.html" + (c[0] === "all" ? "" : "?cat=" + c[0]);
-    return (i === 1 ? '<li class="sep" role="separator"></li>' : "") + '<li><a href="' + href + '"' + (GALLERY_PAGE ? ' data-cat="' + c[0] + '"' : "") + ">" + (c[0] === "all" ? "All photos" : c[1]) + "</a></li>";
-  }).join("");
   $("#session-drop").innerHTML = '<li><a href="#tips" data-tips="wear">Tips: what to wear &amp; bring</a></li><li class="sep" role="separator"></li><li class="label">Sessions</li>' + SESSIONS.map(function (s) { return '<li><a href="#session-' + s[0] + '">' + s[1] + "</a></li>"; }).join("") + '<li class="sep" role="separator"></li><li><a href="#packages">Packages &amp; pricing</a></li>';
   var items = $$(".menu > li");
   function closeAll(except) { items.forEach(function (li) { if (li !== except) { li.classList.remove("open"); var b = $("button", li); if (b) b.setAttribute("aria-expanded", "false"); } }); }
@@ -1462,8 +1492,6 @@ footer h3 { color: var(--fg); }
       closeAll(); header.classList.remove("menu-open"); menuBtn.setAttribute("aria-expanded", "false");
     });
   });
-  var apLink = GALLERY_PAGE && $('#gallery-drop a[data-cat="all"]');
-  if (apLink) apLink.addEventListener("click", function (e) { e.preventDefault(); openAllPhotos(); });
 
   // Underline the menu item for the section in view
   var secIO = new IntersectionObserver(function (es) {
@@ -1873,15 +1901,80 @@ footer h3 { color: var(--fg); }
     var lines = $$(".po-item", pm).map(function (row) {
       var d = $("input", row).value.trim(); return "• " + poQty[row.dataset.name] + " × " + row.dataset.name + (d ? " (" + d + ")" : "");
     });
-    var text = "Hi J Masocha Photography, I'd like to order prints:\n\n" + lines.join("\n") + (note ? "\n\nNotes: " + note : "") + "\n\nName: " + name + "\nPhone: " + phone + "\n\nI'll send my photos next.";
-    if (e.submitter && e.submitter.value === "email") {
-      location.href = "mailto:" + MAIL + "?subject=" + encodeURIComponent("Print order from " + name) + "&body=" + encodeURIComponent(text);
-      $("#po-note-msg").textContent = "Your email app is opening — press send, then attach your photos.";
-    } else {
-      window.open("https://wa.me/" + WA + "?text=" + encodeURIComponent(text), "_blank", "noopener");
-      $("#po-note-msg").textContent = "WhatsApp is opening — press send, then share your photos in the chat.";
-    }
+    var byEmail = e.submitter && e.submitter.value === "email";
+    // Open WhatsApp's window now (while the click counts), then fill it in once any photos are uploaded
+    var waWin = !byEmail && poFiles.length ? window.open("", "_blank") : null;
+    uploadPrintPhotos(name).then(function (folder) {
+      var photos = folder ? "Photos uploaded (" + poFiles.length + "): " + folder : poFiles.length ? "I'll send my " + poFiles.length + " photo(s) next." : "I'll send my photos next.";
+      var text = "Hi J Masocha Photography, I'd like to order prints:\n\n" + lines.join("\n") + (note ? "\n\nNotes: " + note : "") + "\n\nName: " + name + "\nPhone: " + phone + "\n\n" + photos;
+      if (byEmail) {
+        location.href = "mailto:" + MAIL + "?subject=" + encodeURIComponent("Print order from " + name) + "&body=" + encodeURIComponent(text);
+        $("#po-note-msg").textContent = folder ? "Your email app is opening — press send. Your photos are already with us." : "Your email app is opening — press send, then attach your photos.";
+      } else {
+        var url = "https://wa.me/" + WA + "?text=" + encodeURIComponent(text);
+        if (waWin) { waWin.opener = null; waWin.location = url; } else window.open(url, "_blank", "noopener");
+        $("#po-note-msg").textContent = folder ? "WhatsApp is opening — press send. Your photos are already with us." : "WhatsApp is opening — press send, then share your photos in the chat.";
+      }
+    });
   });
+
+  // Optional photo upload for print orders: saved to the studio's Google Drive through the booking script
+  var poFiles = [], poOrder = "";
+  var PRINT_API = (window.SITE && SITE.newsletter) || "";
+  if (!PRINT_API) $("#po-up").hidden = true;   // no script connected: clients share photos on WhatsApp instead
+  function kb(n) { return n > 1048576 ? (n / 1048576).toFixed(1) + " MB" : Math.max(1, Math.round(n / 1024)) + " KB"; }
+  function drawFiles() {
+    $("#po-file-list").innerHTML = poFiles.map(function (f, i) {
+      var isImg = /^image\/(jpe?g|png|webp|gif)$/.test(f.type);
+      return '<li' + (f.done ? ' class="done"' : "") + ">" + (isImg ? '<img src="' + f.url + '" alt="">' : '<span class="pdf">' + esc((f.name.split(".").pop() || "").toUpperCase().slice(0, 4)) + "</span>") +
+        '<span class="nm">' + esc(f.name) + '</span><span class="sz">' + kb(f.size) + '</span><button type="button" data-rm="' + i + '" aria-label="Remove ' + esc(f.name) + '">&times;</button></li>';
+    }).join("");
+  }
+  function addPrintFiles(list) {
+    var st = $("#po-up-status"); st.textContent = ""; st.className = "po-up-status";
+    Array.prototype.forEach.call(list, function (f) {
+      var type = f.type || (/\.(heic|heif)$/i.test(f.name) ? "image/heic" : "");
+      if (!/^(image\/|application\/pdf$)/.test(type)) { st.textContent = f.name + " isn’t a photo or PDF."; st.classList.add("err"); return; }
+      if (f.size > 20 * 1048576) { st.textContent = f.name + " is too big (max 20 MB). Send it on WhatsApp instead."; st.classList.add("err"); return; }
+      if (poFiles.length >= 20) { st.textContent = "Up to 20 files per order. Send the rest on WhatsApp."; st.classList.add("err"); return; }
+      poFiles.push({ file: f, name: f.name, size: f.size, type: type, url: URL.createObjectURL(f) });
+    });
+    poOrder = ""; drawFiles();
+  }
+  $("#po-files").addEventListener("change", function (e) { addPrintFiles(e.target.files); e.target.value = ""; });
+  var poDrop = $(".po-drop", pm);
+  ["dragenter", "dragover"].forEach(function (ev) { poDrop.addEventListener(ev, function (e) { e.preventDefault(); poDrop.classList.add("over"); }); });
+  ["dragleave", "drop"].forEach(function (ev) { poDrop.addEventListener(ev, function (e) { e.preventDefault(); poDrop.classList.remove("over"); }); });
+  poDrop.addEventListener("drop", function (e) { addPrintFiles(e.dataTransfer.files); });
+  $("#po-file-list").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-rm]"); if (!b) return;
+    URL.revokeObjectURL(poFiles[+b.dataset.rm].url); poFiles.splice(+b.dataset.rm, 1); poOrder = ""; drawFiles();
+  });
+  function readB64(f) { return new Promise(function (res, rej) { var r = new FileReader(); r.onload = function () { res(String(r.result).split(",")[1]); }; r.onerror = rej; r.readAsDataURL(f); }); }
+  // Uploads the chosen photos one at a time; resolves with the Drive folder link, or "" if there's nothing to upload or it fails
+  function uploadPrintPhotos(name) {
+    if (!poFiles.length || !PRINT_API) return Promise.resolve("");
+    var st = $("#po-up-status"), btns = $$(".po-btns button", pm), folder = "";
+    if (!poOrder) poOrder = "P" + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2, 5).toUpperCase();
+    st.className = "po-up-status"; btns.forEach(function (b) { b.disabled = true; });
+    var chain = Promise.resolve();
+    poFiles.forEach(function (f, i) {
+      chain = chain.then(function () {
+        if (f.done) { folder = f.folder; return; }
+        st.textContent = "Uploading photo " + (i + 1) + " of " + poFiles.length + "…";
+        return readB64(f.file).then(function (data) {
+          return fetch(PRINT_API, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "printUpload", order: poOrder, name: name, filename: f.name, mime: f.type, data: data }) });
+        }).then(function (r) { return r.json(); }).then(function (j) {
+          if (!j.ok) throw new Error(j.error && /\s/.test(j.error) ? j.error : "upload failed");
+          f.done = true; f.folder = folder = j.folder; drawFiles();
+        });
+      });
+    });
+    return chain.then(function () { st.textContent = "All " + poFiles.length + " photo(s) uploaded."; return folder; }, function (x) {
+      st.textContent = (x && x.message && x.message !== "upload failed" ? x.message + " " : "We couldn’t upload your photos just now. ") + "Please share them in the chat instead.";
+      st.classList.add("err"); return "";
+    }).then(function (link) { btns.forEach(function (b) { b.disabled = false; }); return link; });
+  }
 
   // Newsletter sign-up.
   // To collect sign-ups automatically, paste a form endpoint from Mailchimp, Brevo or Formspree here.

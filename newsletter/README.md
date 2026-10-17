@@ -65,6 +65,7 @@ Every booking is a row in the **Bookings** sheet. Single-day changes are in the 
 ## Good to know
 
 - When you post a special or poster in the website manager, it's emailed to all subscribers straight away, with the poster inside the email. Untick "Email it to all subscribers" if you only want it on the website.
+- **Print order photos:** photos clients upload with a print order are saved in your Google Drive, in a folder called **J Masocha print orders** (one folder per order). The order message on WhatsApp or email includes the link. If you set this up before photo uploads were added, paste the latest `Code.gs`, run **setup** once more (to allow Google Drive), then deploy a new version.
 - **Already set this up before bookings were added?** Paste the latest `Code.gs` into Apps Script, run **setup** once more (it adds the Bookings and Availability sheets and asks for the new permissions), then use **Deploy → Manage deployments → Edit → New version**.
 - **Already set this up before posters were added?** Paste the latest `Code.gs` into Apps Script again, then use **Deploy → Manage deployments → Edit → New version** so emails can include the poster.
 
