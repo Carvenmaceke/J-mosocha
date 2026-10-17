@@ -59,6 +59,12 @@ Most settings are near the top of the `<script>` section in `index.html`.
 | Gallery photos | `gallery.js` (easier from the website manager) |
 | Specials and the newsletter connection | `site.js` (easier from the website manager) |
 
+## Private preview (before launch)
+
+While the site is being finished, `index.html` and `booking.html` send visitors to `soon.html` (an "under maintenance" page). To see the real site, open it once with the secret preview link (ask the developer for it); that browser then remembers it. Add `?preview=off` to a page address to lock that browser again. The website manager (`admin.html`) is not affected.
+
+**To launch:** delete the `<script>` line marked "Private preview" near the top of `index.html` and `booking.html`, then run `python3 tools/make-gallery-page.py`.
+
 ## Publishing with GitHub Pages
 
 Settings → Pages → Deploy from a branch → `main` / root. The `CNAME` file connects it to `jmasochaphoto.co.za`. At the domain's DNS (Register Domain), `@` has A records for 185.199.108.153, 185.199.109.153, 185.199.110.153 and 185.199.111.153, and `www` is a CNAME to `carvenmaceke.github.io`. It was previously available at `https://carvenmaceke.github.io/J-mosocha/`, or at your own domain if you add one.
