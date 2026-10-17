@@ -265,7 +265,7 @@ footer { padding: 40px 0 50px; text-align: center; color: var(--muted); font-siz
         <div class="choices">
           <label class="tile choice" id="choice-online"><input type="radio" name="pay" value="online"><span>
             <i class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg></i>
-            <b>I&rsquo;m ready &ndash; pay online</b><small id="online-text">Pay your deposit now by card or instant EFT (PayFast). Your booking is confirmed straight away.</small></span></label>
+            <b>I&rsquo;m ready &ndash; pay online</b><small id="online-text">Pay your deposit now by card through Yoco&rsquo;s secure checkout. Your booking is confirmed straight away.</small></span></label>
           <label class="tile choice wa"><input type="radio" name="pay" value="whatsapp"><span>
             <i class="ic"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1s-.5-.1-.7.1-.8 1-.9 1.2-.3.2-.6.1a8.2 8.2 0 0 1-4-3.5c-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6a1.1 1.1 0 0 0-.8.4 3.4 3.4 0 0 0-1 2.5 5.9 5.9 0 0 0 1.2 3.1 13.4 13.4 0 0 0 5.2 4.6c1.9.8 2.7.9 3.6.8a3.1 3.1 0 0 0 2-1.4 2.5 2.5 0 0 0 .2-1.4c-.1-.1-.3-.2-.6-.3zM12 21.8a9.8 9.8 0 0 1-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.8 9.8 0 1 1 12 21.8zm8.4-18.2A11.8 11.8 0 0 0 1.8 17.9L.1 24l6.3-1.6a11.8 11.8 0 0 0 5.6 1.4A11.8 11.8 0 0 0 20.4 3.6z"/></svg></i>
             <b>I have questions &ndash; continue on WhatsApp</b><small id="wa-text">We&rsquo;ll hold your time while we chat. Pay the deposit by EFT and send your proof of payment on WhatsApp.</small></span></label>
@@ -464,7 +464,7 @@ footer { padding: 40px 0 50px; text-align: center; color: var(--muted); font-siz
     $("#summary").innerHTML = rows.map(function (r) { return "<dt>" + r[0] + "</dt><dd>" + esc(r[1]) + "</dd>"; }).join("");
     var canPay = st.payOnline && c.deposit > 0, on = $('#choice-online input');
     on.disabled = !canPay;
-    $("#online-text").textContent = canPay ? "Pay your " + rand(c.deposit) + " deposit now by card or instant EFT (PayFast). Your booking is confirmed straight away."
+    $("#online-text").textContent = canPay ? "Pay your " + rand(c.deposit) + " deposit now by card through Yoco’s secure checkout. Your booking is confirmed straight away."
       : "Online payment isn’t available for this session yet. Please continue on WhatsApp.";
     if (!canPay) { on.checked = false; $('.choice.wa input').checked = true; }
   }
@@ -488,17 +488,15 @@ footer { padding: 40px 0 50px; text-align: center; color: var(--muted); font-siz
           if (j.error === "taken") { st.days = null; st.time = ""; show(1); err(j.message); return; }
           throw new Error(j.error);
         }
-        if (j.payfast) { toPayfast(j.booking, j.payfast); return; }
+        if (j.pay) { toPay(j.booking, j.pay); return; }
         done(j.booking, { fresh: true });
       })
       .catch(function (x) { err(x && x.message && x.message.length < 200 && !/fetch|JSON/i.test(x.message) ? esc(x.message) : "We couldn&rsquo;t complete your booking just now. Please try again, or book on WhatsApp."); })
       .then(function () { b.disabled = false; b.textContent = "Confirm booking"; });
   }
-  function toPayfast(bk, pf) {
+  function toPay(bk, pay) {
     done(bk, { redirecting: true });
-    var f = document.createElement("form"); f.method = "POST"; f.action = pf.url;
-    pf.fields.forEach(function (x) { var i = document.createElement("input"); i.type = "hidden"; i.name = x[0]; i.value = x[1]; f.appendChild(i); });
-    document.body.appendChild(f); setTimeout(function () { f.submit(); }, 900);
+    setTimeout(function () { location.href = pay.url; }, 900);
   }
   function waMsg(bk, extra) {
     return ["Hi J Masocha Photography! My booking code is " + bk.code + ".", "",
@@ -517,7 +515,7 @@ footer { padding: 40px 0 50px; text-align: center; color: var(--muted); font-siz
     $("#flow").hidden = true; $("#check-wrap").hidden = true; $("#lookup").hidden = true;
     var confirmed = bk.status === "confirmed", cancelled = bk.status === "cancelled";
     var title, lede, icon = confirmed ? "ok" : "wait";
-    if (o.redirecting) { title = "Taking you to secure payment…"; lede = "Your time is held while you pay your " + rand(bk.deposit) + " deposit with PayFast. Keep your booking code below."; }
+    if (o.redirecting) { title = "Taking you to secure payment…"; lede = "Your time is held while you pay your " + rand(bk.deposit) + " deposit with Yoco. Keep your booking code below."; }
     else if (confirmed) { title = "You&rsquo;re booked!"; lede = "Your booking is confirmed. We&rsquo;ve emailed your confirmation. See you at the studio!"; }
     else if (cancelled) { title = "This booking was cancelled"; lede = "Message us on WhatsApp if you&rsquo;d like to book again."; }
     else if (o.checking) { title = "Confirming your payment…"; lede = "This usually takes a few seconds. You&rsquo;ll also get a confirmation email."; }
@@ -545,11 +543,11 @@ footer { padding: 40px 0 50px; text-align: center; color: var(--muted); font-siz
     try { history.replaceState(null, "", "booking.html?code=" + encodeURIComponent(bk.code)); } catch (x) {}
   }
 
-  /* ---------- Coming back from PayFast, or checking a booking ---------- */
+  /* ---------- Coming back from Yoco, or checking a booking ---------- */
   function check(code, o) {
     if (!API) return;
     o = o || {};
-    call({ action: "booking", code: code }).then(function (j) {
+    call({ action: "booking", code: code, paid: !!o.paid }).then(function (j) {
       if (!j.ok) { $("#lookup").hidden = false; $("#check-wrap").hidden = false; err(""); alert("We couldn’t find booking " + code + ". Check the code, or message us on WhatsApp."); return; }
       var bk = j.booking;
       if (o.paid && bk.status === "awaiting-payment" && (o.tries || 0) < 15) { done(bk, { checking: true }); setTimeout(function () { check(code, { paid: true, tries: (o.tries || 0) + 1 }); }, 4000); return; }

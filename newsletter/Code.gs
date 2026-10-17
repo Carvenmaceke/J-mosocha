@@ -2,8 +2,8 @@
  * J Masocha Photography – newsletter and booking service (Google Apps Script)
  *
  * Keeps the subscriber list and the bookings in this Google Sheet, sends
- * promotion and booking emails from the owner's Gmail, and receives PayFast
- * payment notices. Set-up steps are in newsletter/README.md.
+ * promotion and booking emails from the owner's Gmail, and takes deposits
+ * online through Yoco. Set-up steps are in newsletter/README.md.
  *
  * Script property needed: ADMIN_KEY (any long secret phrase). The admin page
  * uses it to manage subscribers, bookings and opening hours; visitors can only
@@ -28,14 +28,14 @@ function setup() {
 }
 
 function doPost(e) {
-  if (e && e.parameter && e.parameter.pf_payment_id) return payfastNotice_(e);   // PayFast payment notice
+  if (e && e.parameter && e.parameter.yoco) return yocoNotice_(e);   // Yoco payment notice
   var d = {};
   try { d = JSON.parse(e.postData.contents); } catch (x) { d = e.parameter || {}; }
   var action = d.action || "subscribe";
   if (action === "subscribe") return json_(subscribe_(d.email));
   if (action === "slots") return json_(publicSlots_());
   if (action === "book") return json_(book_(d));
-  if (action === "booking") return json_(lookup_(d.code));
+  if (action === "booking") return json_(lookup_(d.code, d.paid));
   if (action === "printUpload") return json_(printUpload_(d));
 
   var key = PropertiesService.getScriptProperties().getProperty("ADMIN_KEY");
@@ -171,7 +171,7 @@ var BOOK_DEFAULTS = {
   noticeHours: 12,      // how soon before a session people can still book it online
   daysAhead: 90,        // how far ahead people can book
   bank: "",             // banking details shown to people who pay by EFT
-  payfast: { merchantId: "", merchantKey: "", passphrase: "", sandbox: false }
+  yoco: { secretKey: "", hookId: "", hookToken: "" }   // hookId and hookToken are filled in by the script
 };
 
 function sheetWith_(name, cols) {
@@ -191,11 +191,11 @@ function settings_() {
   var raw = PropertiesService.getScriptProperties().getProperty("BOOKING_SETTINGS"), o = {};
   try { o = raw ? JSON.parse(raw) : {}; } catch (x) { o = {}; }
   var s = JSON.parse(JSON.stringify(BOOK_DEFAULTS));
-  Object.keys(o).forEach(function (k) { if (k !== "payfast") s[k] = o[k]; });
-  if (o.payfast) Object.keys(o.payfast).forEach(function (k) { s.payfast[k] = o.payfast[k]; });
+  Object.keys(o).forEach(function (k) { if (k !== "yoco" && k !== "payfast") s[k] = o[k]; });
+  if (o.yoco) Object.keys(o.yoco).forEach(function (k) { s.yoco[k] = o.yoco[k]; });
   return s;
 }
-function payReady_(s) { return !!(s.payfast.merchantId && s.payfast.merchantKey); }
+function payReady_(s) { return !!(s.yoco.secretKey && s.yoco.hookToken); }
 
 function str_(v) {
   if (v instanceof Date) return Utilities.formatDate(v, TZ, v.getHours() || v.getMinutes() ? "yyyy-MM-dd'T'HH:mm" : "yyyy-MM-dd");
@@ -318,52 +318,95 @@ function book_(d) {
     writeBooking_(b);
   } finally { lock.releaseLock(); }
 
-  try { mailBooking_(b, "new", s); } catch (x) {}
   var out = { ok: true, booking: publicBooking_(b, s) };
-  if (pay === "online") out.payfast = payfastForm_(b, s);
+  if (pay === "online") {
+    var ch = yocoCheckout_(b, s);
+    if (!ch) {   // Yoco didn't answer: give the time back and let the client try again or use WhatsApp
+      b.status = "cancelled"; b.ref = "Yoco checkout failed"; writeBooking_(b);
+      return { ok: false, error: "We couldn’t start the online payment just now. Please try again, or continue on WhatsApp." };
+    }
+    b.ref = "Yoco checkout " + ch.id; writeBooking_(b);
+    out.pay = { url: ch.redirectUrl };
+  }
+  try { mailBooking_(b, "new", s); } catch (x) {}
   return out;
 }
 
-function lookup_(code) {
+function lookup_(code, paid) {
   code = clean_(code, 12).toUpperCase();
-  var b = bookings_().filter(function (x) { return x.code === code; })[0];
-  return b ? { ok: true, booking: publicBooking_(b, settings_()) } : { ok: false, error: "not-found" };
+  var s = settings_(), b = bookings_().filter(function (x) { return x.code === code; })[0];
+  if (!b) return { ok: false, error: "not-found" };
+  if (paid && b.status === "awaiting-payment" && /^Yoco checkout /.test(b.ref)) b = yocoVerify_(b, s) || b;   // in case the payment notice is slow
+  return { ok: true, booking: publicBooking_(b, s) };
 }
 
-/* ---------- PayFast ---------- */
-// PHP-style urlencode, which PayFast uses for its signature
-function pfEnc_(v) { return encodeURIComponent(String(v).trim()).replace(/[!'()*~]/g, function (c) { return "%" + c.charCodeAt(0).toString(16).toUpperCase(); }).replace(/%20/g, "+"); }
-function md5_(t) { return Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, t, Utilities.Charset.UTF_8).map(function (b) { return ("0" + (b & 255).toString(16)).slice(-2); }).join(""); }
-function payfastForm_(b, s) {
+/* ---------- Yoco ----------
+ * The client pays on Yoco's secure checkout page. Yoco then tells this script
+ * about the payment (a webhook to this web app's URL with a secret token), and
+ * the booking is confirmed. The webhook is registered by itself when the owner
+ * saves the Yoco secret key in the website manager.
+ */
+var YOCO_API = "https://payments.yoco.com/api/";
+function yocoCall_(s, method, path, body) {
+  var o = { method: method, muteHttpExceptions: true, headers: { Authorization: "Bearer " + s.yoco.secretKey } };
+  if (body) { o.contentType = "application/json"; o.payload = JSON.stringify(body); }
+  var r = UrlFetchApp.fetch(YOCO_API + path, o), j = {};
+  try { j = JSON.parse(r.getContentText() || "{}"); } catch (x) {}
+  return { code: r.getResponseCode(), body: j };
+}
+function yocoCheckout_(b, s) {
   var page = SITE_URL + "booking.html?code=" + encodeURIComponent(b.code);
-  var first = b.name.split(" ")[0], last = b.name.split(" ").slice(1).join(" ");
-  var f = [["merchant_id", s.payfast.merchantId], ["merchant_key", s.payfast.merchantKey], ["return_url", page + "&paid=1"], ["cancel_url", page + "&cancelled=1"],
-    ["notify_url", ScriptApp.getService().getUrl()], ["name_first", first], ["name_last", last], ["email_address", b.email],
-    ["m_payment_id", b.code], ["amount", b.deposit.toFixed(2)], ["item_name", "Booking deposit " + b.code], ["item_description", b.session + (b.pkg ? " – " + b.pkg : "") + ", " + b.date + " " + b.time]]
-    .filter(function (x) { return x[1] !== "" && x[1] !== undefined; });
-  var sig = f.map(function (x) { return x[0] + "=" + pfEnc_(x[1]); }).join("&") + (s.payfast.passphrase ? "&passphrase=" + pfEnc_(s.payfast.passphrase) : "");
-  f.push(["signature", md5_(sig)]);
-  return { url: s.payfast.sandbox ? "https://sandbox.payfast.co.za/eng/process" : "https://www.payfast.co.za/eng/process", fields: f };
-}
-function payfastNotice_(e) {
-  var s = settings_(), raw = String(e.postData && e.postData.contents || ""), p = e.parameter;
-  var cut = raw.indexOf("&signature="), base = cut > -1 ? raw.slice(0, cut) : raw;
-  var mine = md5_(base + (s.payfast.passphrase ? "&passphrase=" + pfEnc_(s.payfast.passphrase) : ""));
-  if (mine !== p.signature) return ContentService.createTextOutput("bad signature");
-  var host = s.payfast.sandbox ? "https://sandbox.payfast.co.za" : "https://www.payfast.co.za";
-  var check = UrlFetchApp.fetch(host + "/eng/query/validate", { method: "post", payload: base, contentType: "application/x-www-form-urlencoded", muteHttpExceptions: true }).getContentText();
-  if (String(check).trim() !== "VALID") return ContentService.createTextOutput("not valid");
-  if (p.payment_status !== "COMPLETE") return ContentService.createTextOutput("ok");
-
-  var lock = LockService.getScriptLock(), b; lock.waitLock(20000);
   try {
-    b = bookings_().filter(function (x) { return x.code === p.m_payment_id; })[0];
-    if (!b || b.status === "confirmed" || Math.abs(Number(p.amount_gross) - b.deposit) > 0.01) return ContentService.createTextOutput("ok");
-    b.status = "confirmed"; b.paid = Number(p.amount_gross); b.ref = "PayFast " + p.pf_payment_id;
-    writeBooking_(b);
+    var r = yocoCall_(s, "post", "checkouts", { amount: Math.round(b.deposit * 100), currency: "ZAR",
+      successUrl: page + "&paid=1", cancelUrl: page + "&cancelled=1", failureUrl: page + "&cancelled=1",
+      metadata: { bookingCode: b.code, session: b.session + (b.pkg ? " – " + b.pkg : ""), date: b.date + " " + b.time, name: b.name } });
+    return r.code < 300 && r.body.id && r.body.redirectUrl ? r.body : null;
+  } catch (x) { return null; }
+}
+// Marks a booking paid. Call it while holding the script lock.
+function yocoPaid_(b, cents, ref) {
+  if (b.status !== "awaiting-payment" || Number(cents) !== Math.round(b.deposit * 100)) return false;
+  b.status = "confirmed"; b.paid = Number(cents) / 100; b.ref = ref;
+  writeBooking_(b);
+  return true;
+}
+function yocoNotice_(e) {
+  var s = settings_();
+  if (!s.yoco.hookToken || e.parameter.yoco !== s.yoco.hookToken) return ContentService.createTextOutput("not allowed");
+  var ev = {}; try { ev = JSON.parse(e.postData.contents); } catch (x) {}
+  var p = ev.payload || {}, m = p.metadata || {};
+  if (ev.type !== "payment.succeeded" || !m.bookingCode || !m.checkoutId) return ContentService.createTextOutput("ok");
+  var lock = LockService.getScriptLock(), b, done = false; lock.waitLock(20000);
+  try {
+    b = bookings_().filter(function (x) { return x.code === m.bookingCode; })[0];
+    if (b && b.ref === "Yoco checkout " + m.checkoutId) done = yocoPaid_(b, p.amount, "Yoco " + (p.id || m.checkoutId));
   } finally { lock.releaseLock(); }
-  try { mailBooking_(b, "paid", s); } catch (x) {}
+  if (done) { try { mailBooking_(b, "paid", s); } catch (x) {} }
   return ContentService.createTextOutput("ok");
+}
+// Asks Yoco directly whether a checkout was paid (used when the client comes back before the webhook arrives)
+function yocoVerify_(b, s) {
+  if (!s.yoco.secretKey) return null;
+  var id = b.ref.replace("Yoco checkout ", ""), r;
+  try { r = yocoCall_(s, "get", "checkouts/" + encodeURIComponent(id)); } catch (x) { return null; }
+  if (r.code >= 300 || r.body.status !== "completed") return null;
+  var lock = LockService.getScriptLock(), done = false; lock.waitLock(20000);
+  try {
+    b = bookings_().filter(function (x) { return x.code === b.code; })[0];
+    if (b && b.ref === "Yoco checkout " + id) done = yocoPaid_(b, r.body.amount, "Yoco " + (r.body.paymentId || id));
+  } finally { lock.releaseLock(); }
+  if (done) { try { mailBooking_(b, "paid", s); } catch (x) {} }
+  return b;
+}
+// Registers this script with Yoco so it hears about payments. Returns an error message, or "".
+function yocoHook_(s) {
+  var url = ScriptApp.getService().getUrl();
+  if (!url) return "Deploy the script as a web app first, then save again.";
+  var token = Utilities.getUuid().replace(/-/g, "");
+  var r = yocoCall_(s, "post", "webhooks", { name: "J Masocha bookings " + token.slice(0, 6), url: url + "?yoco=" + token });
+  if (r.code >= 300 || !r.body.id) return r.code === 401 || r.code === 403 ? "Yoco didn’t accept that secret key. Copy it again from the Yoco portal." : "Yoco couldn’t set up payment notices (" + r.code + "). Please try again.";
+  s.yoco.hookId = r.body.id; s.yoco.hookToken = token;
+  return "";
 }
 
 /* ---------- Emails ---------- */
@@ -392,14 +435,14 @@ function mailBooking_(b, kind, s) {
     var head = kind === "paid" ? "Deposit paid online: " : "New booking: ";
     MailApp.sendEmail({ to: owner, subject: head + b.name + ", " + when, name: "Website bookings", replyTo: b.email || owner,
       htmlBody: '<div style="font-family:Helvetica,Arial,sans-serif;color:#1d1d1f"><h2 style="font-weight:400">' + head + esc_(b.name) + "</h2>" + table +
-        "<p>Payment: " + (b.payment === "online" ? "online (PayFast)" : "WhatsApp / EFT") + "<br>Email: " + esc_(b.email) + (b.notes ? "<br>Notes: " + esc_(b.notes) : "") + "</p><p>Manage it in the website manager’s Bookings tab.</p></div>" });
+        "<p>Payment: " + (b.payment === "online" ? "online (Yoco)" : "WhatsApp / EFT") + "<br>Email: " + esc_(b.email) + (b.notes ? "<br>Notes: " + esc_(b.notes) : "") + "</p><p>Manage it in the website manager’s Bookings tab.</p></div>" });
   }
 }
 
 /* ---------- Owner tools (need the admin key) ---------- */
 function adminBookings_() {
   var s = settings_(), from = addDays_(today_(), -60), safe = JSON.parse(JSON.stringify(s));
-  safe.payfast.passphrase = s.payfast.passphrase ? "********" : "";
+  safe.yoco = { secretKey: s.yoco.secretKey ? "********" : "", test: /^sk_test_/.test(s.yoco.secretKey) };
   return { ok: true, today: today_(), bookings: bookings_().filter(function (b) { return b.date >= from; }), days: overrides_(), settings: safe, payOnline: payReady_(s) };
 }
 function setDay_(d) {
@@ -456,12 +499,17 @@ function saveSettings_(n) {
   if (n.week) { s.week = {}; for (var i = 0; i < 7; i++) s.week[String(i)] = (n.week[String(i)] || []).map(String).filter(validTime_).sort(); }
   ["holdHours", "payHoldMinutes", "noticeHours", "daysAhead"].forEach(function (k) { if (n[k] !== undefined && !isNaN(Number(n[k]))) s[k] = Math.max(0, Math.min(k === "daysAhead" ? 365 : 10000, Number(n[k]))); });
   if (n.bank !== undefined) s.bank = String(n.bank).replace(/\r/g, "").trim().slice(0, 600);
-  if (n.payfast) ["merchantId", "merchantKey", "passphrase", "sandbox"].forEach(function (k) {
-    if (n.payfast[k] === undefined || (k === "passphrase" && n.payfast[k] === "********")) return;
-    s.payfast[k] = k === "sandbox" ? !!n.payfast[k] : String(n.payfast[k]).trim();
-  });
+  var key = n.yoco && n.yoco.secretKey !== undefined && n.yoco.secretKey !== "********" ? String(n.yoco.secretKey).trim() : null, hookErr = "";
+  if (key !== null && key !== s.yoco.secretKey) {
+    if (key && !/^sk_(test|live)_\w+$/.test(key)) return { ok: false, error: "That doesn’t look like a Yoco secret key. It starts with sk_live_ (or sk_test_ for testing)." };
+    if (s.yoco.secretKey && s.yoco.hookId) { try { yocoCall_(s, "delete", "webhooks/" + s.yoco.hookId); } catch (x) {} }   // stop notices for the old key
+    s.yoco = { secretKey: key, hookId: "", hookToken: "" };
+    if (key) hookErr = yocoHook_(s);
+  } else if (s.yoco.secretKey && !s.yoco.hookToken) hookErr = yocoHook_(s);   // try again if it failed last time
   PropertiesService.getScriptProperties().setProperty("BOOKING_SETTINGS", JSON.stringify(s));
-  return adminBookings_();
+  var out = adminBookings_();
+  if (hookErr) { out.ok = false; out.error = "Settings saved, but online payments aren’t on yet: " + hookErr; }
+  return out;
 }
 
 /* =====================================================================

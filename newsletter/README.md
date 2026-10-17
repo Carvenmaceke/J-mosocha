@@ -3,7 +3,7 @@
 One free Google Sheet and script runs both:
 
 - **Newsletter:** people who subscribe on the website are saved in the sheet, and the promotions you send from the website manager (`admin.html`) are emailed from your Gmail.
-- **Online bookings:** the booking page (`booking.html`) shows only your open dates and times, saves each booking with its own booking code, emails the client a confirmation and you a notification, and receives PayFast payments.
+- **Online bookings:** the booking page (`booking.html`) shows only your open dates and times, saves each booking with its own booking code, emails the client a confirmation and you a notification, and takes deposits online through Yoco.
 
 Setting it up takes about 5 minutes.
 
@@ -45,7 +45,8 @@ In the website manager, open **Bookings → Opening hours & payments**:
 
 1. Set your **usual weekly hours**: the start times clients can book on each day (for example `09:00, 10:00, 11:00`). Untick days you're closed.
 2. Add your **banking details**. Clients who choose WhatsApp see them, with their booking code as the payment reference.
-3. To take payments online, add your **PayFast** merchant ID, merchant key and passphrase (PayFast: Settings → Developer settings). Leave them empty and every client books through WhatsApp instead. Tick **Test mode** to try it with PayFast's sandbox first.
+3. To take payments online, paste your **Yoco secret key** (Yoco portal: Sales → Payment gateway → API keys; it starts with `sk_live_`). Use the secret key, never the public key, and don't share it anywhere else. Saving it also tells Yoco where to send payment notices, so the script must already be deployed as a web app. Leave it empty and every client books through WhatsApp instead.
+   - To test first, paste the **test secret key** (`sk_test_…`) and pay with Yoco's test card (Yoco portal → API keys → Test card details). No real money is taken. When it works, paste the live key and save again.
 
 Then, from the calendar:
 
@@ -55,7 +56,7 @@ Then, from the calendar:
 
 How a booking works for the client:
 
-- **Pay online:** the client pays the deposit through PayFast and the booking is confirmed by itself.
+- **Pay online:** the client pays the deposit by card on Yoco's secure checkout page and the booking is confirmed by itself.
 - **Continue on WhatsApp:** the client's time is held (48 hours by default) while you chat. They pay by EFT and send the proof of payment on WhatsApp, and you click **Deposit received**. If no deposit comes in, the time opens up again by itself.
 
 The deposit is 50% of the package price. Prices and the deposit percentage are in `packages.js`. For sessions without a listed price, the deposit is agreed on WhatsApp (or set `otherDeposit` in `packages.js`).

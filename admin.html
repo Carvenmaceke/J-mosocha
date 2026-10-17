@@ -540,14 +540,9 @@ h3.sub { font-size: 1.1rem; margin: 18px 0 8px; }
       <div class="field"><label for="hs-ahead">Book up to (days ahead)</label><input id="hs-ahead" type="number" min="7" max="365"></div>
     </div>
     <div class="field"><label for="hs-bank">Banking details for EFT deposits</label><textarea id="hs-bank" rows="4" maxlength="600" placeholder="Bank: …&#10;Account name: …&#10;Account number: …&#10;Branch code: …"></textarea><span class="hint">Shown to clients who choose WhatsApp, with their booking code as the reference.</span></div>
-    <h3 class="sub">Online payments (PayFast)</h3>
-    <p class="hint" style="margin:0 0 10px">From your PayFast account: Settings &rarr; Developer settings. Leave empty to only take bookings through WhatsApp.</p>
-    <div class="grid2">
-      <div class="field"><label for="pf-id">Merchant ID</label><input id="pf-id" autocomplete="off"></div>
-      <div class="field"><label for="pf-key">Merchant key</label><input id="pf-key" autocomplete="off"></div>
-      <div class="field"><label for="pf-pass">Passphrase</label><input id="pf-pass" type="password" autocomplete="off"></div>
-      <div class="field" style="align-self:end"><label class="chip"><input type="checkbox" id="pf-sandbox"><span>Test mode (PayFast sandbox)</span></label></div>
-    </div>
+    <h3 class="sub">Online payments (Yoco)</h3>
+    <p class="hint" style="margin:0 0 10px">From the Yoco portal: Sales &rarr; Payment gateway &rarr; API keys. Paste your <b>secret key</b> (it starts with sk_live_). To try it out first, use the test secret key (sk_test_) and Yoco&rsquo;s test card. Leave it empty to only take bookings through WhatsApp.</p>
+    <div class="field"><label for="yc-key">Secret key</label><input id="yc-key" type="password" autocomplete="off" spellcheck="false" placeholder="sk_live_…"><span class="hint" id="yc-mode"></span></div>
     <p class="err" id="hs-err" role="alert"></p>
     <div class="panel-foot"><button class="btn" type="button" data-close>Cancel</button><button class="btn solid" type="submit" id="hs-go">Save</button></div>
   </form>
@@ -1316,7 +1311,7 @@ h3.sub { font-size: 1.1rem; margin: 18px 0 8px; }
   function bkCard(b, withDate) {
     var live = holds(b), st = b.status === "confirmed" ? '<span class="pill ok">Confirmed</span>' : b.status === "cancelled" ? '<span class="pill off">Cancelled</span>' :
       live ? '<span class="pill wait">Waiting for deposit</span>' : '<span class="pill off">Deposit not received, time released</span>';
-    var how = b.source === "studio" ? "Added by you" : b.payment === "online" ? "Online, PayFast" : "Online, WhatsApp";
+    var how = b.source === "studio" ? "Added by you" : b.payment === "online" ? "Online, Yoco" : "Online, WhatsApp";
     var phone = String(b.phone || "").replace(/\D/g, "").replace(/^0/, "27");
     var msg = "Hi " + b.name.split(" ")[0] + ", this is J Masocha Photography about your booking " + b.code + " on " + longDate(b.date) + " at " + b.time + ".";
     return '<article class="bk' + (b.status === "cancelled" ? " cancelled" : "") + '"><div class="t">' + esc(b.time) + "</div><div><div class=\"who\">" + esc(b.name) + '</div><div class="what">' + esc(b.session) + (b.pkg ? " &ndash; " + esc(b.pkg) : "") + (withDate ? " &middot; " + longDate(b.date) : "") + "</div></div>" +
@@ -1458,7 +1453,7 @@ h3.sub { font-size: 1.1rem; margin: 18px 0 8px; }
         function (x) { busy(d, false, btn, "Move booking"); $("#mv-err").textContent = x.message; });
   });
 
-  // Weekly hours, rules and PayFast
+  // Weekly hours, rules and Yoco
   function parseTimes(v) { return String(v).split(/[\s,;]+/).map(function (t) { var m = t.match(/^(\d{1,2})[:h.]?(\d{2})$/); return m && +m[1] < 24 && +m[2] < 60 ? String(+m[1]).padStart(2, "0") + ":" + m[2] : null; }).filter(Boolean); }
   $("#hours-open").addEventListener("click", function () {
     var s = bk.settings;
@@ -1467,7 +1462,9 @@ h3.sub { font-size: 1.1rem; margin: 18px 0 8px; }
       return '<div class="week-row"><label><input type="checkbox" data-wd="' + i + '"' + (t.length ? " checked" : "") + "> " + WEEKDAYS[i] + '</label><input type="text" data-wt="' + i + '" value="' + t.join(", ") + '" placeholder="Closed" aria-label="' + WEEKDAYS[i] + ' start times"' + (t.length ? "" : " disabled") + "></div>";
     }).join("");
     $("#hs-hold").value = s.holdHours; $("#hs-payhold").value = s.payHoldMinutes; $("#hs-notice").value = s.noticeHours; $("#hs-ahead").value = s.daysAhead; $("#hs-bank").value = s.bank || "";
-    $("#pf-id").value = s.payfast.merchantId || ""; $("#pf-key").value = s.payfast.merchantKey || ""; $("#pf-pass").value = s.payfast.passphrase || ""; $("#pf-sandbox").checked = !!s.payfast.sandbox;
+    var yc = s.yoco || {};
+    $("#yc-key").value = yc.secretKey || "";
+    $("#yc-mode").textContent = !yc.secretKey ? "" : !bk.payOnline ? "Saved, but not working yet. Save again to finish connecting to Yoco." : yc.test ? "Test mode: no real money is taken. Paste your live key when you\u2019re ready." : "Live: clients pay real deposits.";
     $("#hs-err").textContent = ""; openDlg($("#hours-dlg"));
   });
   $("#week").addEventListener("change", function (e) {
@@ -1491,12 +1488,12 @@ h3.sub { font-size: 1.1rem; margin: 18px 0 8px; }
       week[i] = list;
     });
     if (bad) { $("#hs-err").textContent = "Add start times for " + bad + " (like 09:00, 10:00), or untick it."; return; }
-    var pfId = $("#pf-id").value.trim(), pfKey = $("#pf-key").value.trim();
-    if (!!pfId !== !!pfKey) { $("#hs-err").textContent = "Add both the PayFast merchant ID and merchant key, or leave both empty."; return; }
+    var ycKey = $("#yc-key").value.trim();
+    if (ycKey && ycKey !== "********" && !/^sk_(test|live)_\w+$/.test(ycKey)) { $("#hs-err").textContent = ycKey.indexOf("pk_") === 0 ? "That\u2019s the public key. Paste the secret key (it starts with sk_)." : "That doesn\u2019t look like a Yoco secret key. It starts with sk_live_ (or sk_test_ for testing)."; return; }
     var d = $("#hours-dlg"), btn = $("#hs-go");
     busy(d, true, btn, "Saving\u2026");
     nl({ action: "bookingSettings", settings: { week: week, holdHours: $("#hs-hold").value, payHoldMinutes: $("#hs-payhold").value, noticeHours: $("#hs-notice").value, daysAhead: $("#hs-ahead").value, bank: $("#hs-bank").value,
-      payfast: { merchantId: pfId, merchantKey: pfKey, passphrase: $("#pf-pass").value, sandbox: $("#pf-sandbox").checked } } })
+      yoco: { secretKey: ycKey } } })
       .then(useBk).then(function () { busy(d, false, btn, "Save"); d.close(); status("ok", "Opening hours and payment settings saved."); },
         function (x) { busy(d, false, btn, "Save"); $("#hs-err").textContent = x.message; });
   });
