@@ -16,6 +16,16 @@ It is a static page (`index.html`) with its photos in `img/`, plus a private web
 
 Package enquiries, print orders and contact messages open WhatsApp or the visitor's email app with the details already filled in.
 
+## Gallery page
+
+The gallery has its own page, `gallery.html`. The menu's Gallery links, the "View the gallery" button and the photo circle all open it. `gallery.html` is generated from `index.html` (the same page, with only the gallery showing), so after changing `index.html` run:
+
+```
+python3 tools/make-gallery-page.py
+```
+
+Photos added in the website manager appear on both pages automatically, as they come from `gallery.js`.
+
 ## Website manager (owner login)
 
 Open **`/admin.html`** on the live site (`https://jmasochaphoto.co.za/admin.html`). It isn't linked from the website.

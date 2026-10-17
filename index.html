@@ -233,6 +233,10 @@ main { padding-top: var(--header-h, 147px); }
 .tone-head p { font-style: italic; opacity: .75; font-size: .92rem; }
 .tone-head p b { font-style: normal; font-weight: 400; padding: 3px 10px; margin-left: 8px; border-radius: 999px; background: rgba(127,127,127,.2); font-size: .8rem; }
 /* Justified rows: every photo keeps its own shape, so nothing is cropped */
+/* The gallery has its own page (gallery.html, a copy of this file with data-page="gallery") */
+html:not([data-page="gallery"]) #gallery { display: none; }
+html[data-page="gallery"] main > section:not(#gallery) { display: none !important; }
+html[data-page="gallery"] #gallery { min-height: calc(100svh - var(--header-h, 147px)); }
 .grid { display: flex; flex-wrap: wrap; gap: 8px; --rh: 260px; }
 .grid::after { content: ""; flex-grow: 1000000; }
 /* Gallery preview: one row per colour; photos that don't fit are left for "View all photos" */
@@ -888,7 +892,7 @@ footer h3 { color: var(--fg); }
     <div class="hero-text">
       <h1>Moments, beautifully kept.</h1>
       <p class="hero-quote">&ldquo;The moments that matter only happen once. We make sure they last forever.&rdquo;</p>
-      <a class="btn" href="#gallery" id="hero-all">View the gallery</a>
+      <a class="btn" href="gallery.html" id="hero-all">View the gallery</a>
     </div>
   </section>
 
@@ -1321,6 +1325,18 @@ footer h3 { color: var(--fg); }
   var WA = "27661322462", MAIL = "wanhloni@gmail.com";
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  // Two pages share this file: the home page, and gallery.html (data-page="gallery")
+  var GALLERY_PAGE = document.documentElement.dataset.page === "gallery";
+  // Links to the gallery go to its page; on the gallery page, links to other sections go back to the home page
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest('a[href^="#"]'); if (!a || a.dataset.contact !== undefined || a.dataset.tips || a.dataset.privacy !== undefined) return;
+    var h = a.getAttribute("href");
+    if (!GALLERY_PAGE) { if (h === "#gallery") { e.preventDefault(); e.stopImmediatePropagation(); location.href = "gallery.html"; } return; }
+    if (h === "#" || h === "#top" || h === "#gallery" || /^#(set-|photo=)/.test(h)) return;
+    var t = document.getElementById(h.slice(1));
+    if (!t || t.closest("dialog") || t.closest("#gallery") || t.closest("footer")) return;
+    e.preventDefault(); e.stopImmediatePropagation(); location.href = "index.html" + h;
+  }, true);
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
   var src = function (s, w) { return "img/" + s + "-" + (w || 700) + "." + (EXT[s] || "webp"); };
   var toast = function (m) { var t = $("#toast"); t.textContent = m; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(function () { t.classList.remove("show"); }, 2200); };
@@ -1407,7 +1423,8 @@ footer h3 { color: var(--fg); }
   // Dropdown menus
   var count = function (cat) { return TONES.reduce(function (n, t) { return n + t.photos.filter(function (p) { return cat === "all" || p[2].split(" ").indexOf(cat) > -1; }).length; }, 0); };
   $("#gallery-drop").innerHTML = CATS.map(function (c, i) {
-    return (i === 1 ? '<li class="sep" role="separator"></li>' : "") + '<li><a href="#gallery" data-cat="' + c[0] + '">' + (c[0] === "all" ? "All photos" : c[1]) + "</a></li>";
+    var href = GALLERY_PAGE ? "#gallery" : "gallery.html" + (c[0] === "all" ? "" : "?cat=" + c[0]);
+    return (i === 1 ? '<li class="sep" role="separator"></li>' : "") + '<li><a href="' + href + '"' + (GALLERY_PAGE ? ' data-cat="' + c[0] + '"' : "") + ">" + (c[0] === "all" ? "All photos" : c[1]) + "</a></li>";
   }).join("");
   $("#session-drop").innerHTML = '<li><a href="#tips" data-tips="wear">Tips: what to wear &amp; bring</a></li><li class="sep" role="separator"></li><li class="label">Sessions</li>' + SESSIONS.map(function (s) { return '<li><a href="#session-' + s[0] + '">' + s[1] + "</a></li>"; }).join("") + '<li class="sep" role="separator"></li><li><a href="#packages">Packages &amp; pricing</a></li>';
   var items = $$(".menu > li");
@@ -1432,7 +1449,7 @@ footer h3 { color: var(--fg); }
       closeAll(); header.classList.remove("menu-open"); menuBtn.setAttribute("aria-expanded", "false");
     });
   });
-  var apLink = $('#gallery-drop a[data-cat="all"]');
+  var apLink = GALLERY_PAGE && $('#gallery-drop a[data-cat="all"]');
   if (apLink) apLink.addEventListener("click", function (e) { e.preventDefault(); openAllPhotos(); });
 
   // Underline the menu item for the section in view
@@ -1443,7 +1460,8 @@ footer h3 { color: var(--fg); }
       $$("[data-sec]").forEach(function (el) { el.classList.toggle("active", el.dataset.sec === (map[id] || id)); });
     });
   }, { rootMargin: "-45% 0px -50% 0px" });
-  ["specials", "gallery", "tones", "sessions", "services", "packages", "prints", "about", "reviews", "contact"].forEach(function (id) { secIO.observe(document.getElementById(id)); });
+  if (GALLERY_PAGE) $$('[data-sec="gallery"]').forEach(function (el) { el.classList.add("active"); });
+  else ["specials", "sessions", "services", "packages", "prints", "about", "reviews", "contact"].forEach(function (id) { secIO.observe(document.getElementById(id)); });
 
   // Gallery: one section per backdrop colour, each laid out in justified rows
   var tonesEl = $("#tones"), current = "all", visible = [];
@@ -1461,7 +1479,6 @@ footer h3 { color: var(--fg); }
   $$("#filters button").forEach(function (b) { b.addEventListener("click", function () { setCat(b.dataset.cat); setPop(false); fBtn.focus(); }); });
   $("#g-clear").addEventListener("click", function () { setCat("all"); });
   $("#g-all").addEventListener("click", function () { apCat = current; apScroll = 0; openAllPhotos(true); });
-  $("#hero-all").addEventListener("click", function (e) { e.preventDefault(); openAllPhotos(); });
   var SWATCH = { dark: "#0d0d0e", grey: "#8f8f91", white: "#ffffff", colour: "#f3c9c1", outdoor: "#9db08f" };
 
   // Inside each backdrop colour, photos are grouped by what they are (babies, kids, maternity, ...).
@@ -1511,9 +1528,10 @@ footer h3 { color: var(--fg); }
       var list = t.photos.filter(function (p) { return current === "all" || p[2].split(" ").indexOf(current) > -1; });
       if (!list.length) return "";
       groups.push([t, list.length]);
-      var shown = preview(list);
+      var shown = preview(list), all = ordered(list), base = visible.length;
+      visible = visible.concat(all);   // the viewer can step through every photo, not only the ones shown here
       var figs = '<div class="grid">' + shown.map(function (p) {
-        var i = visible.push(p) - 1;
+        var i = base + all.indexOf(p);
         return '<figure class="shot" style="--ar:' + (p[3] / p[4]).toFixed(4) + '" tabindex="0" role="button" aria-label="Open photo: ' + p[1] + '" data-i="' + i + '"><img src="' + src(p[0]) + '" width="' + p[3] + '" height="' + p[4] + '" alt="' + p[1] + '" loading="lazy"><span class="zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span><figcaption>' + p[1] + "</figcaption></figure>";
       }).join("") + "</div>";
       return '<section class="tone tone-' + t.id + '" id="set-' + t.id + '" style="--sw:' + SWATCH[t.id] + '" aria-label="' + plain(t.name) + '"><div class="tone-head"><h3><i aria-hidden="true"></i>' + t.name + "</h3><p>" + t.note + '</p></div>' + figs + "</section>";
@@ -1625,9 +1643,9 @@ footer h3 { color: var(--fg); }
   (function () {
     var pick = [], i = 0, more = true;
     while (pick.length < 8 && more) { more = false; TONES.forEach(function (t) { if (t.photos[i] && pick.length < 8) { pick.push(t.photos[i]); more = true; } }); i++; }
-    $("#f-strip").innerHTML = pick.map(function (p) { return '<a href="#photo=' + p[0] + '" data-photo="' + p[0] + '" aria-label="Open photo" style="--ar:' + (p[3] / p[4]).toFixed(4) + '"><img src="' + src(p[0]) + '" alt="" loading="lazy"></a>'; }).join("");
+    $("#f-strip").innerHTML = pick.map(function (p) { return '<a href="' + (GALLERY_PAGE ? "" : "gallery.html") + "#photo=" + p[0] + '" data-photo="' + p[0] + '" aria-label="Open photo" style="--ar:' + (p[3] / p[4]).toFixed(4) + '"><img src="' + src(p[0]) + '" alt="" loading="lazy"></a>'; }).join("");
   })();
-  $$(".f-strip a").forEach(function (a) {
+  if (GALLERY_PAGE) $$(".f-strip a").forEach(function (a) {
     a.addEventListener("click", function (e) {
       e.preventDefault();
       if (current !== "all") setCat("all");
@@ -1635,7 +1653,10 @@ footer h3 { color: var(--fg); }
       if (k > -1) openLb(k);
     });
   });
-  var shared = (location.hash.match(/^#photo=([\w-]+)/) || [])[1];
+  // Arriving on the gallery page from a category link (gallery.html?cat=kids)
+  var askCat = GALLERY_PAGE && new URLSearchParams(location.search).get("cat");
+  if (askCat && CATS.some(function (c) { return c[0] === askCat; })) setCat(askCat);
+  var shared = GALLERY_PAGE && (location.hash.match(/^#photo=([\w-]+)/) || [])[1];
   if (shared) { var k = visible.findIndex(function (p) { return p[0] === shared; }); if (k > -1) openLb(k); }
 
   // All photos window: every photo, grouped by backdrop, with category chips
@@ -1963,7 +1984,7 @@ footer h3 { color: var(--fg); }
     var n = picks.length, angles = [], angle = 0, R = 0, paused = false, last = 0;
     var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     ring.innerHTML = picks.map(function (x) {
-      return '<a class="ring-card" href="#gallery" aria-label="View the gallery"><img src="img/story/' + x[0] + '.webp" alt="' + x[1] + '" draggable="false"></a>';
+      return '<a class="ring-card" href="gallery.html" aria-label="View the gallery"><img src="img/story/' + x[0] + '.webp" alt="' + x[1] + '" draggable="false"></a>';
     }).join("");
     stage.insertAdjacentHTML("beforeend", '<div class="ring-floor" aria-hidden="true"></div>');
     var cards = $$(".ring-card", ring);
@@ -2001,7 +2022,7 @@ footer h3 { color: var(--fg); }
     ring.addEventListener("click", function (e) {
       var a = e.target.closest(".ring-card"); if (!a) return;
       e.preventDefault();
-      document.getElementById("gallery").scrollIntoView({ behavior: reduce ? "auto" : "smooth" });
+      location.href = "gallery.html";
     });
     addEventListener("resize", size); size();
     if (!reduce) requestAnimationFrame(tick);
