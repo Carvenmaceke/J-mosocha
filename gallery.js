@@ -2,6 +2,7 @@
 // Each photo: id (its file name in img/ without -700/-1600), caption, categories, and the width and height of the 700px image.
 window.GALLERY = {
   "dark": [
+    {"id":"men-mvc6umtk0","caption":"Men","categories":["men"],"w":700,"h":1050},
     {"id":"birthday-burning-headline","caption":"Leveling up to 30","categories":["birthdays","women"],"w":700,"h":1050},
     {"id":"birthday-60th-cake","caption":"Happy 60th","categories":["birthdays","women"],"w":700,"h":1050},
     {"id":"graduation-directors-chair","caption":"Graduate in the director’s chair","categories":["graduation","women"],"w":700,"h":956},
