@@ -261,7 +261,17 @@ main { padding-top: var(--header-h, 147px); }
 /* The gallery has its own page (gallery.html, a copy of this file with data-page="gallery") */
 html:not([data-page="gallery"]) #gallery { display: none; }
 html[data-page="gallery"] main > section:not(#gallery) { display: none !important; }
-html[data-page="gallery"] #gallery { min-height: calc(100svh - var(--header-h, 147px)); }
+html[data-page="gallery"] #gallery { min-height: 100svh; }
+/* Gallery page shows the photos only: no site header, footer, intro or Tips button, and a Close button back to the website */
+html[data-page="gallery"] .header, html[data-page="gallery"] footer#contact, html[data-page="gallery"] .tip-fab, html[data-page="gallery"] .g-hero { display: none !important; }
+html[data-page="gallery"] main { padding-top: 0; }
+html[data-page="gallery"] .g-bar { top: 0 !important; }
+html[data-page="gallery"] .g-box { margin-bottom: 40px; }
+.g-close { display: none; }
+html[data-page="gallery"] .g-close { display: inline-flex; align-items: center; gap: 7px; height: 42px; padding: 0 16px 0 13px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); text-decoration: none; font-size: .92rem; font-weight: 400; transition: background .2s, color .2s; }
+html[data-page="gallery"] .g-close:hover { background: var(--fg); color: var(--bg); }
+html[data-page="gallery"] .g-close svg { width: 17px; height: 17px; }
+@media (max-width: 520px) { html[data-page="gallery"] .g-close span { display: none; } html[data-page="gallery"] .g-close { padding: 0; width: 42px; justify-content: center; } }
 .grid { display: flex; flex-wrap: wrap; gap: 8px; --rh: 260px; }
 .grid::after { content: ""; flex-grow: 1000000; }
 /* Gallery preview: one row per colour; photos that don't fit are left for "View all photos" */
@@ -989,6 +999,7 @@ footer h3 { color: var(--fg); }
             <h4>Show photos of</h4>
             <div class="filters" id="filters" role="group" aria-label="Filter by category"></div>
           </div>
+          <a class="g-close" href="index.html" id="g-close" aria-label="Close the gallery and go back to the website"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg><span>Close</span></a>
         </div>
       </div>
     </div>
@@ -1695,6 +1706,9 @@ footer h3 { color: var(--fg); }
     });
   });
   // Arriving on the gallery page from a category link (gallery.html?cat=kids)
+  if (GALLERY_PAGE) document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && !document.querySelector("dialog[open], .lb.open, .f-pop.open")) location.href = "index.html";
+  }, true);   // capture: check before the photo viewer or filter closes itself on the same key
   var askCat = GALLERY_PAGE && new URLSearchParams(location.search).get("cat");
   if (askCat && CATS.some(function (c) { return c[0] === askCat; })) setCat(askCat);
   var shared = GALLERY_PAGE && (location.hash.match(/^#photo=([\w-]+)/) || [])[1];
