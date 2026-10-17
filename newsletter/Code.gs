@@ -12,7 +12,7 @@
 
 var SHEET = "Subscribers";
 var FROM_NAME = "J Masocha Photography";
-var SITE_URL = "https://carvenmaceke.github.io/J-mosocha/";
+var SITE_URL = "https://jmasochaphoto.co.za/";
 
 /**
  * Run this once from the editor (select "setup", then Run). It creates the
