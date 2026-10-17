@@ -74,3 +74,9 @@ Every booking is a row in the **Bookings** sheet. Single-day changes are in the 
 - Every email has an **Unsubscribe** link. People who use it are marked "Unsubscribed" and won't get further emails.
 - If you change `Code.gs` later, use **Deploy → Manage deployments → Edit → New version**, so the web app URL stays the same.
 - If you've lost your admin key, open **Project Settings → Script properties** in Apps Script to see `ADMIN_KEY`.
+
+## Birthday emails
+
+People who subscribe can add their first name and birthday (day and month only). Every morning at about 8am the script emails anyone whose birthday it is: a happy-birthday message, an invitation to a birthday shoot, your birthday offer and a personal code (like `BDAY-7KQ2M`). You get an email listing who was sent one. The codes are saved in the **Subscribers** sheet, so you can check a code when someone books with it.
+
+Set the offer, how long codes are valid, or switch it off in the website manager: **Subscribers → Birthday emails**. Use **Send me a test** to see the email. The daily check is created when you run `setup` once in Apps Script (run it again after pasting a new version of the code).

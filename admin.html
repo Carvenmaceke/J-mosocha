@@ -367,10 +367,11 @@ h3.sub { font-size: 1.1rem; margin: 18px 0 8px; }
       <div id="subs-app" hidden>
         <div class="bar">
           <button class="btn solid" type="button" id="send-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>Send a promotion</button>
+          <button class="btn" type="button" id="bday-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 21h16M5 21v-7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v7M5 16c1.5 1 3 1 4.5 0s3-1 4.5 0 3 1 4.5 0M12 12V8M12 5.5c.8-.9.8-1.9 0-2.5-.8.6-.8 1.6 0 2.5z"/></svg>Birthday emails</button>
           <button class="btn" type="button" id="subs-csv">Download list</button>
           <button class="btn" type="button" id="subs-reload">Refresh</button>
         </div>
-        <div class="subs-tools"><input type="search" id="subs-q" placeholder="Search email" aria-label="Search subscribers"><span class="meta" id="subs-meta"></span></div>
+        <div class="subs-tools"><input type="search" id="subs-q" placeholder="Search email, name or birthday code" aria-label="Search subscribers"><span class="meta" id="subs-meta"></span></div>
         <div id="subs-list"></div>
       </div>
     </section>
@@ -425,6 +426,20 @@ h3.sub { font-size: 1.1rem; margin: 18px 0 8px; }
     <p class="hint" id="pr-mailoff" style="margin:14px 0 0">To email posts to your subscribers automatically, connect your subscriber list in Settings.</p>
     <p class="err" id="promo-err" role="alert"></p>
     <div class="panel-foot"><button class="btn" type="button" data-close>Cancel</button><button class="btn solid" type="submit" id="promo-go">Post special</button></div>
+  </form>
+</dialog>
+
+<!-- Birthday emails -->
+<dialog id="bday-dlg" aria-labelledby="bday-title">
+  <form class="panel" id="bday-form" method="dialog" novalidate>
+    <div class="panel-head"><h2 id="bday-title">Birthday emails</h2><button class="x" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <p class="hint" style="margin:0 0 14px">Subscribers can add their birthday when they sign up. On their birthday, at about 8am, they get an email wishing them a happy birthday, inviting them for a birthday shoot, with your birthday offer and a personal code. You get a list of who was sent one, and the codes are in the Subscribers sheet so you can check them when people book.</p>
+    <label class="check" style="margin:0 0 14px"><input type="checkbox" id="bd-on"> <span>Send birthday emails</span></label>
+    <div class="field"><label for="bd-offer">Birthday offer</label><input id="bd-offer" maxlength="120" placeholder="e.g. 15% off your birthday photoshoot"></div>
+    <div class="field"><label for="bd-days">Code valid for (days)</label><input id="bd-days" type="number" min="1" max="365"></div>
+    <p class="hint" id="bd-meta"></p>
+    <p class="err" id="bd-err" role="alert"></p>
+    <div class="panel-foot"><button class="btn" type="button" id="bd-test">Send me a test</button><button class="btn" type="button" data-close>Cancel</button><button class="btn solid" type="submit" id="bd-go">Save</button></div>
   </form>
 </dialog>
 
@@ -1142,17 +1157,44 @@ h3.sub { font-size: 1.1rem; margin: 18px 0 8px; }
   }
   function activeSubs() { return (subs || []).filter(function (s) { return s.status === "active"; }); }
   function drawSubs() {
-    var q = $("#subs-q").value.trim().toLowerCase(), list = (subs || []).filter(function (s) { return !q || s.email.indexOf(q) > -1; });
+    var q = $("#subs-q").value.trim().toLowerCase(), list = (subs || []).filter(function (s) { return !q || s.email.indexOf(q) > -1 || String(s.name || "").toLowerCase().indexOf(q) > -1 || String(s.bdayCode || "").toLowerCase().indexOf(q) > -1; });
     list.sort(function (a, b) { return (b.status === "active") - (a.status === "active") || String(b.since).localeCompare(String(a.since)); });
     var n = activeSubs().length;
     $("#subs-meta").textContent = n + " active subscriber" + (n === 1 ? "" : "s") + (quota !== null ? " \u00b7 Gmail can send " + quota + " more emails today" : "");
-    $("#subs-list").innerHTML = list.length ? '<table class="table"><thead><tr><th>Email</th><th>Subscribed</th><th>Status</th><th><span class="sr">Actions</span></th></tr></thead><tbody>' + list.map(function (s) {
+    $("#subs-list").innerHTML = list.length ? '<table class="table"><thead><tr><th>Email</th><th>Name</th><th>Birthday</th><th>Subscribed</th><th>Status</th><th><span class="sr">Actions</span></th></tr></thead><tbody>' + list.map(function (s) {
       var d = s.since ? new Date(s.since) : null;
-      return "<tr><td>" + esc(s.email) + "</td><td>" + (d && !isNaN(d) ? d.toLocaleDateString("en-ZA", { day: "numeric", month: "short", year: "numeric" }) : "") + '</td><td class="st"><span class="' + (s.status === "active" ? "active" : "") + '">' + (s.status === "active" ? "Subscribed" : s.status === "unsubscribed" ? "Unsubscribed" : "Removed") + "</span></td><td>" +
+      return "<tr><td>" + esc(s.email) + "</td><td>" + esc(s.name || "") + "</td><td>" + bdayText(s.birthday) + (s.bdayCode ? '<br><small title="Birthday email sent ' + esc(s.bdaySent) + '">' + esc(s.bdayCode) + " (" + esc(s.bdaySent) + ")</small>" : "") + "</td><td>" + (d && !isNaN(d) ? d.toLocaleDateString("en-ZA", { day: "numeric", month: "short", year: "numeric" }) : "") + '</td><td class="st"><span class="' + (s.status === "active" ? "active" : "") + '">' + (s.status === "active" ? "Subscribed" : s.status === "unsubscribed" ? "Unsubscribed" : "Removed") + "</span></td><td>" +
         (s.status === "active" ? '<button type="button" data-rm-sub="' + esc(s.email) + '">Remove</button>' : "") + "</td></tr>";
     }).join("") + "</tbody></table>" : '<p class="empty">' + (q ? "No matches." : "No subscribers yet. People who sign up on the website will appear here.") + "</p>";
   }
   $("#subs-q").addEventListener("input", drawSubs);
+  var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  function bdayText(b) { var m = /^(\d\d)-(\d\d)$/.exec(b || ""); return m ? +m[2] + " " + MONTHS[m[1] - 1] : ""; }
+
+  // Birthday emails
+  function bdayShow(j) {
+    $("#bd-on").checked = !!j.settings.on; $("#bd-offer").value = j.settings.offer || ""; $("#bd-days").value = j.settings.days;
+    $("#bd-meta").textContent = j.withBirthday ? j.withBirthday + " subscriber" + (j.withBirthday === 1 ? " has" : "s have") + " shared a birthday. Next one: " + bdayText(j.next) + "." : "No subscribers have shared a birthday yet.";
+  }
+  $("#bday-btn").addEventListener("click", function () {
+    var d = $("#bday-dlg"); $("#bd-err").textContent = ""; $("#bd-meta").textContent = "Loading\u2026"; openDlg(d);
+    nl({ action: "birthday" }).then(bdayShow, function (x) { $("#bd-meta").textContent = ""; $("#bd-err").textContent = x.message; });
+  });
+  $("#bday-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var d = $("#bday-dlg"), btn = $("#bd-go"), offer = $("#bd-offer").value.trim();
+    if ($("#bd-on").checked && !offer) { $("#bd-err").textContent = "Add your birthday offer, e.g. 15% off your birthday photoshoot."; return; }
+    busy(d, true, btn, "Saving\u2026");
+    nl({ action: "birthday", settings: { on: $("#bd-on").checked, offer: offer, days: $("#bd-days").value } })
+      .then(function () { busy(d, false, btn, "Save"); d.close(); status("ok", "Birthday emails " + ($("#bd-on").checked ? "are on." : "are off.")); },
+        function (x) { busy(d, false, btn, "Save"); $("#bd-err").textContent = x.message; });
+  });
+  $("#bd-test").addEventListener("click", function () {
+    var b = this; b.disabled = true; $("#bd-err").textContent = "";
+    nl({ action: "birthday", settings: { on: $("#bd-on").checked, offer: $("#bd-offer").value.trim(), days: $("#bd-days").value } })
+      .then(function () { return nl({ action: "birthdayTest" }); })
+      .then(function (j) { b.disabled = false; $("#bd-meta").textContent = "Test sent to " + j.to + ". Check your inbox."; }, function (x) { b.disabled = false; $("#bd-err").textContent = x.message; });
+  });
   $("#subs-reload").addEventListener("click", function () { loadSubs(); });
   $("#subs-list").addEventListener("click", function (e) {
     var b = e.target.closest("[data-rm-sub]"); if (!b) return;
@@ -1163,7 +1205,7 @@ h3.sub { font-size: 1.1rem; margin: 18px 0 8px; }
       .catch(function (x) { b.disabled = false; status("bad", x.message); });
   });
   $("#subs-csv").addEventListener("click", function () {
-    var rows = [["Email", "Subscribed", "Status"]].concat((subs || []).map(function (s) { return [s.email, s.since, s.status]; }));
+    var rows = [["Email", "Name", "Birthday", "Subscribed", "Status", "Birthday email sent", "Birthday code"]].concat((subs || []).map(function (s) { return [s.email, s.name || "", bdayText(s.birthday), s.since, s.status, s.bdaySent || "", s.bdayCode || ""]; }));
     var csv = rows.map(function (r) { return r.map(function (c) { return '"' + String(c).replace(/"/g, '""') + '"'; }).join(","); }).join("\r\n");
     var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" })); a.download = "subscribers.csv"; a.click();
   });

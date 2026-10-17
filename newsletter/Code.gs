@@ -20,7 +20,7 @@ var SITE_URL = "https://carvenmaceke.github.io/J-mosocha/";   // keeps working a
  * admin key if you don't have one yet. The key is shown in the log.
  */
 function setup() {
-  sheet_(); bookSheet_(); daysSheet_(); printRoot_();
+  sheet_(); bookSheet_(); daysSheet_(); printRoot_(); birthdayTrigger_();
   var props = PropertiesService.getScriptProperties();
   if (!props.getProperty("ADMIN_KEY")) props.setProperty("ADMIN_KEY", Utilities.getUuid().replace(/-/g, "") + Utilities.getUuid().replace(/-/g, "").slice(0, 8));
   MailApp.getRemainingDailyQuota();
@@ -32,7 +32,7 @@ function doPost(e) {
   var d = {};
   try { d = JSON.parse(e.postData.contents); } catch (x) { d = e.parameter || {}; }
   var action = d.action || "subscribe";
-  if (action === "subscribe") return json_(subscribe_(d.email));
+  if (action === "subscribe") return json_(subscribe_(d.email, d.name, d.birthday));
   if (action === "slots") return json_(publicSlots_());
   if (action === "book") return json_(book_(d));
   if (action === "booking") return json_(lookup_(d.code, d.paid));
@@ -44,6 +44,8 @@ function doPost(e) {
   if (action === "list") return json_({ ok: true, subscribers: list_(), quota: MailApp.getRemainingDailyQuota() });
   if (action === "remove") { setStatus_(d.email, "removed"); return json_({ ok: true }); }
   if (action === "send") return json_(send_(d));
+  if (action === "birthday") return json_(birthdaySettings_(d.settings));
+  if (action === "birthdayTest") return json_(birthdayTest_());
   if (action === "bookings") return json_(adminBookings_());
   if (action === "setDay") return json_(setDay_(d));
   if (action === "appointment") return json_(appointment_(d));
@@ -65,37 +67,52 @@ function doGet(e) {
   return page("Thanks for being part of J Masocha Photography.");
 }
 
+var SUB_COLS = ["Email", "Subscribed", "Status", "Name", "Birthday", "Birthday email sent", "Birthday code"];
 function sheet_() {
   var ss = SpreadsheetApp.getActive(), sh = ss.getSheetByName(SHEET);
-  if (!sh) { sh = ss.insertSheet(SHEET); sh.appendRow(["Email", "Subscribed", "Status"]); sh.setFrozenRows(1); }
+  if (!sh) { sh = ss.insertSheet(SHEET); sh.appendRow(SUB_COLS); sh.setFrozenRows(1); }
+  else if (String(sh.getRange(1, 4).getValue()) !== "Name") sh.getRange(1, 1, 1, SUB_COLS.length).setValues([SUB_COLS]);   // older sheets had 3 columns
+  sh.getRange(1, 5, sh.getMaxRows(), 1).setNumberFormat("@");   // keep birthdays like 03-14 as text
   return sh;
 }
 
 function rows_() {
   var sh = sheet_(), n = sh.getLastRow();
-  return n < 2 ? [] : sh.getRange(2, 1, n - 1, 3).getValues();
+  return n < 2 ? [] : sh.getRange(2, 1, n - 1, SUB_COLS.length).getValues();
+}
+// Birthdays are kept as "MM-DD" (no year)
+function bday_(v) {
+  if (v instanceof Date) return Utilities.formatDate(v, TZ, "MM-dd");
+  var m = String(v || "").trim().match(/^(\d{1,2})-(\d{1,2})$/);
+  if (!m) return "";
+  var mo = +m[1], d = +m[2], max = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][mo - 1];
+  return mo >= 1 && mo <= 12 && d >= 1 && d <= max ? ("0" + mo).slice(-2) + "-" + ("0" + d).slice(-2) : "";
 }
 
-function subscribe_(email) {
+function subscribe_(email, name, birthday) {
   email = String(email || "").trim().toLowerCase();
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 200) return { ok: false, error: "invalid-email" };
+  name = clean_(name, 60); birthday = bday_(birthday);
   var lock = LockService.getScriptLock(); lock.waitLock(10000);
   try {
     var sh = sheet_(), rows = rows_();
     for (var i = 0; i < rows.length; i++) {
       if (String(rows[i][0]).toLowerCase() === email) {
         if (rows[i][2] !== "active") sh.getRange(i + 2, 2, 1, 2).setValues([[new Date(), "active"]]);
+        if (name) sh.getRange(i + 2, 4).setValue(name);
+        if (birthday) sh.getRange(i + 2, 5).setValue(birthday);
         return { ok: true };
       }
     }
-    sh.appendRow([email, new Date(), "active"]);
+    sh.appendRow([email, new Date(), "active", name, birthday, "", ""]);
     return { ok: true };
   } finally { lock.releaseLock(); }
 }
 
 function list_() {
   return rows_().filter(function (r) { return r[0]; }).map(function (r) {
-    return { email: String(r[0]), since: r[1] instanceof Date ? r[1].toISOString() : String(r[1]), status: String(r[2] || "active") };
+    return { email: String(r[0]), since: r[1] instanceof Date ? r[1].toISOString() : String(r[1]), status: String(r[2] || "active"),
+      name: String(r[3] || ""), birthday: bday_(r[4]), bdaySent: String(r[5] || ""), bdayCode: String(r[6] || "") };
   });
 }
 
@@ -149,6 +166,91 @@ function send_(d) {
     sent++;
   });
   return { ok: true, sent: sent, quota: MailApp.getRemainingDailyQuota() };
+}
+
+/* =====================================================================
+ * Birthday emails
+ * Every morning birthdayRun() emails subscribers whose birthday it is: a
+ * birthday wish, then an invitation to a birthday shoot with a personal
+ * promo code. The owner sets the offer in the website manager.
+ * ===================================================================== */
+
+var BDAY_DEFAULTS = { on: true, offer: "15% off your birthday photoshoot", days: 30 };
+function bdaySettings_() {
+  var o = {}; try { o = JSON.parse(PropertiesService.getScriptProperties().getProperty("BIRTHDAY") || "{}"); } catch (x) {}
+  var s = JSON.parse(JSON.stringify(BDAY_DEFAULTS)); Object.keys(o).forEach(function (k) { s[k] = o[k]; });
+  return s;
+}
+function birthdaySettings_(n) {
+  var s = bdaySettings_(), err = "";
+  if (n) {
+    if (n.on !== undefined) s.on = !!n.on;
+    if (n.offer !== undefined) s.offer = clean_(n.offer, 120) || BDAY_DEFAULTS.offer;
+    if (n.days !== undefined && !isNaN(Number(n.days))) s.days = Math.max(1, Math.min(365, Math.round(Number(n.days))));
+    PropertiesService.getScriptProperties().setProperty("BIRTHDAY", JSON.stringify(s));
+    try { birthdayTrigger_(); } catch (x) { err = "Saved, but the daily birthday check isn’t switched on yet. In Apps Script, run “setup” once and allow the permissions."; }
+  }
+  var today = Utilities.formatDate(new Date(), TZ, "MM-dd"), subs = list_().filter(function (x) { return x.status === "active" && x.birthday; });
+  var upcoming = subs.map(function (x) { return x.birthday; }).sort(function (a, b) { return (a < today) - (b < today) || (a < b ? -1 : a > b ? 1 : 0); });
+  return { ok: !err, error: err || undefined, settings: s, withBirthday: subs.length, next: upcoming[0] || "" };
+}
+// One daily run at about 08:00, created by setup() (and again when the settings are saved)
+function birthdayTrigger_() {
+  var has = ScriptApp.getProjectTriggers().some(function (t) { return t.getHandlerFunction() === "birthdayRun"; });
+  if (!has) ScriptApp.newTrigger("birthdayRun").timeBased().everyDays(1).atHour(8).inTimezone(TZ).create();
+}
+function birthdayCode_() {
+  var abc = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789", c = "BDAY-";
+  for (var i = 0; i < 5; i++) c += abc.charAt(Math.floor(Math.random() * abc.length));
+  return c;
+}
+function birthdayMail_(sub, code, s, until) {
+  var hi = sub.name ? "Happy birthday, " + sub.name.split(" ")[0] + "!" : "Happy birthday!";
+  var book = SITE_URL + "booking.html?promo=" + encodeURIComponent(code);
+  var wa = "https://wa.me/27661322462?text=" + encodeURIComponent("Hi J Masocha Photography! I'd like to book my birthday shoot with my birthday code " + code + ".");
+  var unsub = ScriptApp.getService().getUrl() + "?unsubscribe=" + encodeURIComponent(sub.email) + "&t=" + token_(sub.email);
+  var html = '<div style="background:#f2f2f1;padding:30px 12px;font-family:Helvetica,Arial,sans-serif;color:#1d1d1f"><div style="max-width:560px;margin:0 auto;background:#fff;border-radius:16px;padding:32px 28px">' +
+    '<p style="margin:0 0 6px;letter-spacing:.2em;text-transform:uppercase;font-size:12px;color:#9a7a4a">J Masocha Photography</p>' +
+    '<h1 style="margin:0 0 14px;font-weight:400;font-size:28px;line-height:1.25">' + esc_(hi) + " &#127874;</h1>" +
+    '<p style="margin:0 0 22px;font-size:16px;line-height:1.65;color:#3a3a3a">Everyone at J Masocha Photography wishes you a wonderful day, and a year full of moments worth keeping.</p>' +
+    '<div style="border:1px dashed #9a7a4a;border-radius:14px;padding:20px 22px;margin:0 0 24px;background:#faf6ef">' +
+    '<p style="margin:0 0 6px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#9a7a4a">Our birthday gift to you</p>' +
+    '<p style="margin:0 0 12px;font-size:20px;line-height:1.35">' + esc_(s.offer) + "</p>" +
+    '<p style="margin:0 0 4px;font-size:15px;color:#3a3a3a">Celebrate with a birthday shoot at our studio. Use your code when you book:</p>' +
+    '<p style="margin:8px 0 6px;font-size:24px;letter-spacing:.12em;font-weight:bold">' + code + "</p>" +
+    '<p style="margin:0;font-size:13px;color:#8e8b86">Valid until ' + until + ". One use per person.</p></div>" +
+    '<a href="' + book + '" style="display:inline-block;background:#1d1d1f;color:#fff;text-decoration:none;padding:12px 24px;border-radius:999px;font-size:14px;margin:0 8px 8px 0">Book your birthday shoot</a>' +
+    '<a href="' + wa + '" style="display:inline-block;background:#25d366;color:#fff;text-decoration:none;padding:12px 24px;border-radius:999px;font-size:14px">Ask us on WhatsApp</a>' +
+    '<p style="margin:28px 0 0;font-size:13px;color:#8e8b86">235 Helen Joseph Street, Pretoria Central &middot; 066 132 2462</p></div>' +
+    '<p style="max-width:560px;margin:14px auto 0;text-align:center;font-size:12px;color:#8e8b86">You’re receiving this because you subscribed on our website and shared your birthday. <a href="' + unsub + '" style="color:#8e8b86">Unsubscribe</a></p></div>';
+  MailApp.sendEmail({ to: sub.email, subject: hi + " A birthday gift from J Masocha Photography", htmlBody: html, name: FROM_NAME,
+    body: hi + "\n\nEveryone at J Masocha Photography wishes you a wonderful day.\n\nOur birthday gift to you: " + s.offer + ".\nYour code: " + code + " (valid until " + until + ")\nBook: " + book + "\n\nUnsubscribe: " + unsub });
+}
+function birthdayRun() {
+  var s = bdaySettings_(); if (!s.on) return;
+  var now = new Date(), year = Utilities.formatDate(now, TZ, "yyyy"), today = Utilities.formatDate(now, TZ, "MM-dd");
+  var leap = new Date(Number(year), 1, 29).getMonth() === 1;
+  var until = Utilities.formatDate(new Date(now.getTime() + s.days * 86400000), TZ, "d MMMM yyyy");
+  var sh = sheet_(), rows = rows_(), sent = [];
+  for (var i = 0; i < rows.length && MailApp.getRemainingDailyQuota() > 1; i++) {
+    var r = rows[i], b = bday_(r[4]);
+    if (!r[0] || String(r[2] || "active") !== "active" || String(r[5]) === year) continue;
+    if (b !== today && !(b === "02-29" && today === "02-28" && !leap)) continue;   // 29 Feb birthdays get theirs on 28 Feb
+    var sub = { email: String(r[0]).toLowerCase(), name: String(r[3] || "") }, code = birthdayCode_();
+    try { birthdayMail_(sub, code, s, until); } catch (x) { continue; }
+    sh.getRange(i + 2, 6, 1, 2).setValues([[year, code]]);
+    sent.push((sub.name ? sub.name + " – " : "") + sub.email + ": " + code);
+  }
+  var owner = Session.getEffectiveUser().getEmail();
+  if (sent.length && owner) MailApp.sendEmail({ to: owner, name: "Website birthdays", subject: "Birthday emails sent today: " + sent.length,
+    body: "These subscribers got a birthday email with their code (" + s.offer + ", valid until " + until + "):\n\n" + sent.join("\n") + "\n\nThe codes are also in the Subscribers sheet." });
+}
+// Sends the birthday email to the owner, so they can see what subscribers get
+function birthdayTest_() {
+  var s = bdaySettings_(), owner = Session.getEffectiveUser().getEmail();
+  if (!owner) return { ok: false, error: "Couldn’t find your email address." };
+  birthdayMail_({ email: owner, name: "" }, "BDAY-TEST1", s, Utilities.formatDate(new Date(Date.now() + s.days * 86400000), TZ, "d MMMM yyyy"));
+  return { ok: true, to: owner };
 }
 
 function json_(o) { return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON); }

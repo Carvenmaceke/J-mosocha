@@ -734,6 +734,16 @@ footer h3 { color: #f2efea; font-size: .78rem; text-transform: uppercase; letter
 .f-news-row .btn:hover, .f-news-row .btn:focus-visible { background: #cfae7a; color: #111; }
 .f-consent { display: flex; gap: 10px; align-items: flex-start; margin-top: 14px; font-size: .88rem; color: #9c978f; cursor: pointer; }
 .f-consent input { margin-top: 4px; accent-color: #cfae7a; width: 16px; height: 16px; flex: none; }
+.f-news-extra { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 12px 0 0; padding: 0; border: 0; min-width: 0; }
+.f-news-extra legend { float: left; width: 100%; padding: 0; margin-bottom: 8px; font-size: .88rem; color: #cfae7a; }
+.f-news-extra legend span { color: #85807a; }
+.f-news-extra input, .f-news-extra select { font: inherit; font-size: .92rem; color: #f2efea; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.18); border-radius: 0; padding: 10px 12px; outline: none; min-width: 0; }
+.f-news-extra input { flex: 1 1 150px; }
+.f-news-extra select { flex: 0 1 auto; cursor: pointer; }
+.f-news-extra select option { color: #111; }
+.f-news-extra input::placeholder { color: #85807a; }
+.f-news-extra input:focus, .f-news-extra select:focus { border-color: #cfae7a; }
+.f-news-extra [aria-invalid="true"] { border-color: #e5484d; }
 .f-news-msg { margin-top: 10px; font-size: .9rem; min-height: 1.4em; }
 .f-news-msg.ok { color: #7dd8a0; }
 .f-news-msg.err { color: #ff8a8e; }
@@ -781,6 +791,14 @@ footer { background: var(--g2); color: var(--fg-2); }
 .f-news-row input::placeholder { color: var(--muted); }
 .f-news-row .btn.f-btn-light { background: var(--g4); color: var(--fg); border-color: var(--g4); }
 .f-news-row .btn.f-btn-light:hover, .f-news-row .btn.f-btn-light:focus-visible { background: var(--g5); color: var(--fg); }
+.f-news-extra legend { color: var(--accent); }
+.f-news-extra legend span { color: var(--muted); }
+.f-news-extra input, .f-news-extra select { color: var(--fg); background: var(--g1); border-color: var(--g4); }
+.f-news-extra select:invalid, .f-news-extra select option[value=""] { color: var(--muted); }
+.f-news-extra select option { color: var(--fg); background: var(--g1); }
+.f-news-extra input::placeholder { color: var(--muted); }
+.f-news-extra input:focus, .f-news-extra select:focus { border-color: var(--fg-2); }
+@media (max-width: 460px) { .f-news-extra input { flex-basis: 100%; } .f-news-extra select { flex: 1 1 0; } #news-day { flex: 0 0 84px; } }
 .f-consent { color: var(--fg-2); }
 .f-consent input { accent-color: var(--fg-2); }
 .f-news-msg.ok { color: #1e7d3c; }
@@ -1194,7 +1212,16 @@ footer h3 { color: var(--fg); }
         <input id="news-email" name="email" type="email" autocomplete="email" placeholder="Your email address" required>
         <button class="btn f-btn-light" type="submit">Subscribe</button>
       </div>
-      <label class="f-consent"><input type="checkbox" name="consent" required> <span>Yes, send me promos and news from J Masocha Photography. I can unsubscribe at any time. <button class="f-privacy" type="button" data-privacy>Privacy</button></span></label>
+      <fieldset class="f-news-extra">
+        <legend>Get a birthday treat <span>(optional)</span></legend>
+        <label class="sr" for="news-name">First name</label>
+        <input id="news-name" name="fname" type="text" autocomplete="given-name" maxlength="60" placeholder="First name">
+        <label class="sr" for="news-day">Birthday: day</label>
+        <select id="news-day" name="bday"><option value="">Day</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option><option>16</option><option>17</option><option>18</option><option>19</option><option>20</option><option>21</option><option>22</option><option>23</option><option>24</option><option>25</option><option>26</option><option>27</option><option>28</option><option>29</option><option>30</option><option>31</option></select>
+        <label class="sr" for="news-month">Birthday: month</label>
+        <select id="news-month" name="bmonth"><option value="">Birthday month</option><option value="1">January</option><option value="2">February</option><option value="3">March</option><option value="4">April</option><option value="5">May</option><option value="6">June</option><option value="7">July</option><option value="8">August</option><option value="9">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option></select>
+      </fieldset>
+      <label class="f-consent"><input type="checkbox" name="consent" required> <span>Yes, send me promos and news from J Masocha Photography, and a birthday treat if I added my birthday. I can unsubscribe at any time. <button class="f-privacy" type="button" data-privacy>Privacy</button></span></label>
       <p class="f-news-msg" id="news-msg" role="status" aria-live="polite"></p>
     </form>
   </div>
@@ -2025,15 +2052,22 @@ footer h3 { color: var(--fg); }
     news.email.setAttribute("aria-invalid", !ok);
     newsMsg.className = "f-news-msg";
     if (!ok) { newsMsg.textContent = "Please enter a valid email address."; newsMsg.classList.add("err"); news.email.focus(); return; }
+    var bd = news.bday.value, bm = news.bmonth.value, birthday = "";
+    news.bday.removeAttribute("aria-invalid"); news.bmonth.removeAttribute("aria-invalid");
+    if (!!bd !== !!bm) { var miss = bd ? news.bmonth : news.bday; miss.setAttribute("aria-invalid", "true"); newsMsg.textContent = "Please choose both the day and the month of your birthday, or leave both empty."; newsMsg.classList.add("err"); miss.focus(); return; }
+    if (bd) {
+      if (+bd > [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][bm - 1]) { news.bday.setAttribute("aria-invalid", "true"); newsMsg.textContent = "That date doesn\u2019t exist. Please check your birthday."; newsMsg.classList.add("err"); return; }
+      birthday = ("0" + bm).slice(-2) + "-" + ("0" + bd).slice(-2);
+    }
     if (!news.consent.checked) { newsMsg.textContent = "Please tick the box so we may send you promos."; newsMsg.classList.add("err"); return; }
-    function done() { newsMsg.textContent = "Thank you! You\u2019ll be the first to hear about our promos."; newsMsg.classList.add("ok"); news.reset(); }
+    function done() { newsMsg.textContent = "Thank you! You\u2019ll be the first to hear about our promos" + (birthday ? ", and we\u2019ll send you a treat on your birthday." : "."); newsMsg.classList.add("ok"); news.reset(); }
     if (NEWSLETTER_URL) {
-      fetch(NEWSLETTER_URL, { method: "POST", body: JSON.stringify({ action: "subscribe", email: email }), headers: { "Content-Type": "text/plain;charset=utf-8" } })
+      fetch(NEWSLETTER_URL, { method: "POST", body: JSON.stringify({ action: "subscribe", email: email, name: news.fname.value.trim(), birthday: birthday }), headers: { "Content-Type": "text/plain;charset=utf-8" } })
         .then(function (r) { return r.json(); })
         .then(function (j) { if (!j.ok) throw 0; done(); })
         .catch(function () { newsMsg.textContent = "Something went wrong. Please try again or WhatsApp us."; newsMsg.classList.add("err"); });
     } else {
-      location.href = "mailto:" + MAIL + "?subject=" + encodeURIComponent("Newsletter sign-up") + "&body=" + encodeURIComponent("Hi J Masocha Photography,\n\nPlease add me to your newsletter so I hear about promos first.\n\nEmail: " + email);
+      location.href = "mailto:" + MAIL + "?subject=" + encodeURIComponent("Newsletter sign-up") + "&body=" + encodeURIComponent("Hi J Masocha Photography,\n\nPlease add me to your newsletter so I hear about promos first.\n\nEmail: " + email + (news.fname.value.trim() ? "\nName: " + news.fname.value.trim() : "") + (birthday ? "\nBirthday: " + bd + " " + news.bmonth.options[news.bmonth.selectedIndex].text : ""));
       newsMsg.textContent = "Almost done \u2014 just press send in your email app.";
       newsMsg.classList.add("ok");
     }

@@ -41,8 +41,8 @@ window.TIPS = [
 // Privacy notice (POPIA). Shown on its own from the "Privacy (POPIA)" links.
 // [title, intro, [[heading, text HTML], ...]]
 window.PRIVACY = ["Privacy notice (POPIA)", "How we look after your personal information and your photos, in line with the Protection of Personal Information Act, 2013 (POPIA).", [
-    ["What we collect", "When you book, enquire, order prints or subscribe, we collect your name, phone number, email address and booking details (date, session, package, notes and payment status). We also keep the photos and videos we take of you during your session."],
-    ["Why we use it", "Only to plan and confirm your booking, take payments, deliver your photos and prints, contact you about your session, and, if you subscribed, send you our specials. We do not sell your information."],
+    ["What we collect", "When you book, enquire, order prints or subscribe, we collect your name, phone number, email address, your birthday (day and month only, if you choose to share it when subscribing) and booking details (date, session, package, notes and payment status). We also keep the photos and videos we take of you during your session."],
+    ["Why we use it", "Only to plan and confirm your booking, take payments, deliver your photos and prints, contact you about your session, and, if you subscribed, send you our specials and a birthday treat if you shared your birthday. We do not sell your information."],
     ["Who it's shared with", "Only the services we need to run your booking: Google (our booking sheet and email), Yoco if you pay online, and WhatsApp when you message us. Each of these protects your information under its own privacy terms."],
     ["Your photos on our website and social media", "We only share photos of you on our website, gallery or social media with your consent, and you can say no or change your mind at any time. Ask us and we'll remove a photo from our gallery and pages."],
     ["Photos of children", "We only share photos of children under 18 with the consent of a parent or legal guardian."],
