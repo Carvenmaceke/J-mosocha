@@ -1,5 +1,5 @@
 // Specials and newsletter settings. Managed from admin.html.
 window.SITE = {
-  "newsletter": "https://script.google.com/macros/s/AKfycbzRjaU1xn5KI6u4OEpKvjiaY2PQULm0-FBWzL35iETB7y380dMgwxb7YdNqIEelWi2H/exec",
+  "newsletter": "https://script.google.com/macros/s/AKfycbyPeUn0CUGM4STUdu31ogBLQxYcNIqNQZANlvUBTG7lawGsPbtPZPvdVPDMj8V8qIcx/exec",
   "promotions": []
 };
