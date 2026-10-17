@@ -113,6 +113,15 @@ em { font-style: italic; }
 :root[data-theme="dark"] .menu-band .social-btn:hover, :root[data-theme="dark"] .menu-band .social-btn[aria-expanded="true"] { background: rgba(255,255,255,.08); }
 .menu-band .social-menu { top: calc(100% + 8px); }
 @media (max-width: 1240px) and (min-width: 1101px) { .menu-band .menu { padding-right: 60px; } }
+/* When the menu would run into the social icons (e.g. with Specials showing), fitMenu() steps it left and smaller */
+@media (min-width: 1101px) {
+  .menu-band .menu.fit-1, .menu-band .menu.fit-2, .menu-band .menu.fit-3 { padding-right: calc(var(--social-w, 110px) + 20px); }
+  .menu.fit-2 > li > a, .menu.fit-2 > li > button { padding-inline: 6px; font-size: .86rem; }
+  .menu.fit-2 > li.menu-gallery, .menu.fit-3 > li.menu-gallery { padding: 0 6px; }
+  .menu.fit-2 > li.menu-gallery > a { padding-inline: 12px; }
+  .menu.fit-3 > li > a, .menu.fit-3 > li > button { padding-inline: 4px; font-size: .8rem; gap: 6px; }
+  .menu.fit-3 > li.menu-gallery > a { padding: 7px 10px; gap: 6px; }
+}
 .social { position: relative; }
 .social-btn[aria-expanded="true"] { background: var(--line); }
 /* Social button: Facebook, Instagram and TikTok marks together, each taking its brand colour on hover */
@@ -1515,6 +1524,20 @@ footer h3 { color: var(--fg); }
   if (GALLERY_PAGE) $$('[data-sec="gallery"]').forEach(function (el) { el.classList.add("active"); });
   else ["specials", "sessions", "services", "packages", "prints", "about", "reviews", "contact"].forEach(function (id) { secIO.observe(document.getElementById(id)); });
 
+  // Keep the menu clear of the social icons on the right of the band
+  function fitMenu() {
+    var menu = $("#menu"), soc = $(".menu-band > .social"), lvls = ["fit-1", "fit-2", "fit-3"];
+    lvls.forEach(function (c) { menu.classList.remove(c); });
+    if (!soc || innerWidth <= 1100) return;
+    menu.style.setProperty("--social-w", Math.ceil(soc.getBoundingClientRect().width) + "px");
+    function clashes() {
+      var r = 0; $$("#menu > li").forEach(function (li) { var b = li.getBoundingClientRect(); if (b.width) r = Math.max(r, b.right); });
+      return r > soc.getBoundingClientRect().left - 12;
+    }
+    for (var i = 0; i < lvls.length && clashes(); i++) { if (i) menu.classList.remove(lvls[i - 1]); menu.classList.add(lvls[i]); }
+  }
+  addEventListener("resize", fitMenu); document.fonts && document.fonts.ready.then(fitMenu);
+
   // Gallery: one section per backdrop colour, each laid out in justified rows
   var tonesEl = $("#tones"), current = "all", visible = [];
   $("#filters").innerHTML = CATS.map(function (c) { return '<button type="button" data-cat="' + c[0] + '" aria-pressed="' + (c[0] === "all") + '">' + c[1] + "</button>"; }).join("").replace(">All<", ">All photos<");
@@ -1797,6 +1820,7 @@ footer h3 { color: var(--fg); }
         '<a class="btn btn--solid" href="' + ask + '" target="_blank" rel="noopener">Book this special</a></div></article>';
     }).join("");
   })();
+  fitMenu();
 
   // Price list: edit prices and inclusions in packages.js
   var PACKAGES = (window.PRICES ? PRICES.packages : []).filter(function (k) { return k.session === "Adult Birthday"; }).map(function (k) { return [esc(k.name), k.price, k.features.map(esc), k.tag]; });
