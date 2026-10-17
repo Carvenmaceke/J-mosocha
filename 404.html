@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en-ZA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>J Masocha Photography</title>
+<script>
+  // Old links from the previous website (e.g. /contact-us, /gallery-2) land here: send visitors to the matching page on the new site
+  (function () {
+    var p = location.pathname.toLowerCase(), base = location.pathname.indexOf("/J-mosocha/") === 0 ? "/J-mosocha/" : "/";
+    var to = /galler|portfolio|photos/.test(p) ? "gallery.html" : /book|appoint/.test(p) ? "booking.html" : /contact/.test(p) ? "#contact" : /package|pric|rate/.test(p) ? "#packages" : /print|canvas|frame/.test(p) ? "#prints" : /about/.test(p) ? "#about" : /service|session/.test(p) ? "#services" : "";
+    location.replace(base + to);
+  })();
+</script>
+<style>body { margin: 0; display: grid; place-items: center; min-height: 100vh; font-family: Lato, Arial, sans-serif; background: #f2f2f1; color: #1d1d1f; text-align: center; } a { color: #9a7a4a; }</style>
+</head>
+<body>
+  <p>Taking you to the new J Masocha Photography website&hellip;<br><a href="/">Continue</a></p>
+</body>
+</html>
