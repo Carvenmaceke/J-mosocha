@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /soon.html
+Disallow: /newsletter/
+Disallow: /tools/
+
+Sitemap: https://jmasochaphoto.co.za/sitemap.xml

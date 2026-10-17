@@ -16,6 +16,10 @@ It is a static page (`index.html`) with its photos in `img/`, plus a private web
 
 Package enquiries, print orders and contact messages open WhatsApp or the visitor's email app with the details already filled in.
 
+## Search engines (SEO)
+
+Each page has its own title, description, canonical link, social-sharing preview and structured data (business details, and booking FAQs on `booking.html`). `sitemap.xml` lists the home, booking and gallery pages, and `robots.txt` keeps the website manager out of search results. After launch, add the site in Google Search Console and submit `https://jmasochaphoto.co.za/sitemap.xml`.
+
 ## Gallery page
 
 The gallery has its own page, `gallery.html`. The menu's Gallery links, the "View the gallery" button and the photo circle all open it. `gallery.html` is generated from `index.html` (the same page, with only the gallery showing), so after changing `index.html` run:
