@@ -56,7 +56,7 @@ Most settings are near the top of the `<script>` section in `index.html`.
 
 | What | Where to change it |
 | --- | --- |
-| Phone/WhatsApp number and email | `var WA = "27661322462", MAIL = "wanhloni@gmail.com";` |
+| Phone/WhatsApp number and email | `var WA = "27661322462", MAIL = "jmasochaphotostudio@gmail.com";` |
 | Facebook, TikTok and Instagram links | `var SOCIAL = { facebook: "", tiktok: "", instagram: "" };` (already filled in; an empty link shows "coming soon") |
 | Sessions, packages, prices and the deposit % | `packages.js` |
 | Tips & questions guide and the privacy (POPIA) notice | `tips.js` |

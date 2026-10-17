@@ -12,6 +12,7 @@
 
 var SHEET = "Subscribers";
 var FROM_NAME = "J Masocha Photography";
+var OWNER_EMAIL = "jmasochaphotostudio@gmail.com";   // booking, payment and birthday notices go here; client replies too
 var SITE_URL = "https://carvenmaceke.github.io/J-mosocha/";   // keeps working after the move to jmasochaphoto.co.za (GitHub forwards it)
 
 /**
@@ -160,7 +161,7 @@ function send_(d) {
       "</div>" +
       '<p style="max-width:560px;margin:14px auto 0;text-align:center;font-size:12px;color:#8e8b86">You’re receiving this because you subscribed on our website. <a href="' + unsub + '" style="color:#8e8b86">Unsubscribe</a></p>' +
       "</div>";
-    var mail = { to: s.email, subject: subject, htmlBody: html, body: (message ? message + "\n\n" : "") + link + "\n\nUnsubscribe: " + unsub, name: FROM_NAME };
+    var mail = { to: s.email, replyTo: OWNER_EMAIL, subject: subject, htmlBody: html, body: (message ? message + "\n\n" : "") + link + "\n\nUnsubscribe: " + unsub, name: FROM_NAME };
     if (poster) mail.inlineImages = { poster: poster };
     MailApp.sendEmail(mail);
     sent++;
@@ -223,7 +224,7 @@ function birthdayMail_(sub, code, s, until) {
     '<a href="' + wa + '" style="display:inline-block;background:#25d366;color:#fff;text-decoration:none;padding:12px 24px;border-radius:999px;font-size:14px">Ask us on WhatsApp</a>' +
     '<p style="margin:28px 0 0;font-size:13px;color:#8e8b86">235 Helen Joseph Street, Pretoria Central &middot; 066 132 2462</p></div>' +
     '<p style="max-width:560px;margin:14px auto 0;text-align:center;font-size:12px;color:#8e8b86">You’re receiving this because you subscribed on our website and shared your birthday. <a href="' + unsub + '" style="color:#8e8b86">Unsubscribe</a></p></div>';
-  MailApp.sendEmail({ to: sub.email, subject: hi + " A birthday gift from J Masocha Photography", htmlBody: html, name: FROM_NAME,
+  MailApp.sendEmail({ to: sub.email, replyTo: OWNER_EMAIL, subject: hi + " A birthday gift from J Masocha Photography", htmlBody: html, name: FROM_NAME,
     body: hi + "\n\nEveryone at J Masocha Photography wishes you a wonderful day.\n\nOur birthday gift to you: " + s.offer + ".\nYour code: " + code + " (valid until " + until + ")\nBook: " + book + "\n\nUnsubscribe: " + unsub });
 }
 function birthdayRun() {
@@ -241,13 +242,13 @@ function birthdayRun() {
     sh.getRange(i + 2, 6, 1, 2).setValues([[year, code]]);
     sent.push((sub.name ? sub.name + " – " : "") + sub.email + ": " + code);
   }
-  var owner = Session.getEffectiveUser().getEmail();
+  var owner = OWNER_EMAIL;
   if (sent.length && owner) MailApp.sendEmail({ to: owner, name: "Website birthdays", subject: "Birthday emails sent today: " + sent.length,
     body: "These subscribers got a birthday email with their code (" + s.offer + ", valid until " + until + "):\n\n" + sent.join("\n") + "\n\nThe codes are also in the Subscribers sheet." });
 }
 // Sends the birthday email to the owner, so they can see what subscribers get
 function birthdayTest_() {
-  var s = bdaySettings_(), owner = Session.getEffectiveUser().getEmail();
+  var s = bdaySettings_(), owner = OWNER_EMAIL;
   if (!owner) return { ok: false, error: "Couldn’t find your email address." };
   birthdayMail_({ email: owner, name: "" }, "BDAY-TEST1", s, Utilities.formatDate(new Date(Date.now() + s.days * 86400000), TZ, "d MMMM yyyy"));
   return { ok: true, to: owner };
@@ -534,7 +535,7 @@ function yocoHook_(s) {
 /* ---------- Emails ---------- */
 function niceDate_(d, t) { return Utilities.formatDate(at_(d, "12:00"), TZ, "EEEE d MMMM yyyy") + (t ? " at " + t : ""); }
 function mailBooking_(b, kind, s) {
-  var owner = Session.getEffectiveUser().getEmail(), when = niceDate_(b.date, b.time);
+  var owner = OWNER_EMAIL, when = niceDate_(b.date, b.time);
   var what = esc_(b.session) + (b.pkg ? " – " + esc_(b.pkg) : "");
   var rows = [["Booking code", "<b style=\"font-size:18px;letter-spacing:.08em\">" + b.code + "</b>"], ["Session", what], ["Date", when], ["Name", esc_(b.name)], ["Phone", esc_(b.phone)]];
   if (b.price) rows.push(["Package price", "R" + b.price]);
