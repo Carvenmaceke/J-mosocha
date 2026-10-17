@@ -36,6 +36,7 @@ function doPost(e) {
   if (action === "slots") return json_(publicSlots_());
   if (action === "book") return json_(book_(d));
   if (action === "booking") return json_(lookup_(d.code, d.paid));
+  if (action === "payAgain") return json_(payAgain_(d.code));
   if (action === "printUpload") return json_(printUpload_(d));
 
   var key = PropertiesService.getScriptProperties().getProperty("ADMIN_KEY");
@@ -291,8 +292,10 @@ function stamp_(ms) { return Utilities.formatDate(new Date(ms), TZ, "yyyy-MM-dd'
 // What a client may see about their own booking
 function publicBooking_(b, s) {
   return { code: b.code, date: b.date, time: b.time, session: b.session, pkg: b.pkg, price: b.price, deposit: b.deposit, name: b.name,
-    payment: b.payment, status: b.status, paid: b.paid, holdUntil: b.holdUntil, bank: b.status === "awaiting-payment" ? s.bank : "" };
+    payment: b.payment, status: b.status, paid: b.paid, holdUntil: b.holdUntil, bank: b.status === "awaiting-payment" ? s.bank : "", canPay: canPay_(b, s) };
 }
+// An online booking that is still holding its time can be paid (again) with Yoco
+function canPay_(b, s) { return b.payment === "online" && b.status === "awaiting-payment" && b.deposit > 0 && payReady_(s) && holds_(b, new Date()); }
 
 function book_(d) {
   var s = settings_();
@@ -332,6 +335,23 @@ function book_(d) {
   return out;
 }
 
+// "Pay now" on the booking page after a cancelled or declined payment
+function payAgain_(code) {
+  code = clean_(code, 12).toUpperCase();
+  var s = settings_(), lock = LockService.getScriptLock(), b; lock.waitLock(20000);
+  try {
+    b = bookings_().filter(function (x) { return x.code === code; })[0];
+    if (!b) return { ok: false, error: "not-found" };
+    if (!canPay_(b, s)) return { ok: false, error: "This booking can’t be paid online any more. Please message us on WhatsApp.", booking: publicBooking_(b, s) };
+    var ch = yocoCheckout_(b, s);
+    if (!ch) return { ok: false, error: "We couldn’t start the online payment just now. Please try again in a moment." };
+    var until = stamp_(Date.now() + s.payHoldMinutes * 60000);
+    b.ref = "Yoco checkout " + ch.id; if (until > b.holdUntil) b.holdUntil = until;
+    writeBooking_(b);
+  } finally { lock.releaseLock(); }
+  return { ok: true, booking: publicBooking_(b, s), pay: { url: ch.redirectUrl } };
+}
+
 function lookup_(code, paid) {
   code = clean_(code, 12).toUpperCase();
   var s = settings_(), b = bookings_().filter(function (x) { return x.code === code; })[0];
@@ -358,7 +378,7 @@ function yocoCheckout_(b, s) {
   var page = SITE_URL + "booking.html?code=" + encodeURIComponent(b.code);
   try {
     var r = yocoCall_(s, "post", "checkouts", { amount: Math.round(b.deposit * 100), currency: "ZAR",
-      successUrl: page + "&paid=1", cancelUrl: page + "&cancelled=1", failureUrl: page + "&cancelled=1",
+      successUrl: page + "&paid=1", cancelUrl: page + "&cancelled=1", failureUrl: page + "&failed=1",
       metadata: { bookingCode: b.code, session: b.session + (b.pkg ? " – " + b.pkg : ""), date: b.date + " " + b.time, name: b.name } });
     return r.code < 300 && r.body.id && r.body.redirectUrl ? r.body : null;
   } catch (x) { return null; }
@@ -379,7 +399,7 @@ function yocoNotice_(e) {
   var lock = LockService.getScriptLock(), b, done = false; lock.waitLock(20000);
   try {
     b = bookings_().filter(function (x) { return x.code === m.bookingCode; })[0];
-    if (b && b.ref === "Yoco checkout " + m.checkoutId) done = yocoPaid_(b, p.amount, "Yoco " + (p.id || m.checkoutId));
+    if (b && /^Yoco checkout /.test(b.ref)) done = yocoPaid_(b, p.amount, "Yoco " + (p.id || m.checkoutId));   // any of its checkouts: the client may have tried more than once
   } finally { lock.releaseLock(); }
   if (done) { try { mailBooking_(b, "paid", s); } catch (x) {} }
   return ContentService.createTextOutput("ok");

@@ -514,28 +514,44 @@ footer { padding: 40px 0 50px; text-align: center; color: var(--muted); font-siz
     o = o || {};
     $("#flow").hidden = true; $("#check-wrap").hidden = true; $("#lookup").hidden = true;
     var confirmed = bk.status === "confirmed", cancelled = bk.status === "cancelled";
-    var title, lede, icon = confirmed ? "ok" : "wait";
+    var title, lede, icon = confirmed ? "ok" : "wait", payNow = !confirmed && !cancelled && bk.canPay && !o.redirecting && !o.checking;
+    var heldTill = bk.holdUntil ? nice(bk.holdUntil.slice(0, 10), bk.holdUntil.slice(11, 16)) : "";
     if (o.redirecting) { title = "Taking you to secure payment…"; lede = "Your time is held while you pay your " + rand(bk.deposit) + " deposit with Yoco. Keep your booking code below."; }
     else if (confirmed) { title = "You&rsquo;re booked!"; lede = "Your booking is confirmed. We&rsquo;ve emailed your confirmation. See you at the studio!"; }
     else if (cancelled) { title = "This booking was cancelled"; lede = "Message us on WhatsApp if you&rsquo;d like to book again."; }
     else if (o.checking) { title = "Confirming your payment…"; lede = "This usually takes a few seconds. You&rsquo;ll also get a confirmation email."; }
-    else if (bk.payment === "online") { title = "Booking received"; lede = (o.cancelled ? "Your payment wasn&rsquo;t completed. " : "") + "Your time is held until " + nice(bk.holdUntil.slice(0, 10), bk.holdUntil.slice(11, 16)) + ". Pay your deposit on WhatsApp to confirm it."; }
+    else if (payNow) {
+      title = o.failed ? "Your payment didn&rsquo;t go through" : o.cancelled ? "Your payment wasn&rsquo;t completed" : "Booking received – deposit not paid yet";
+      lede = (o.failed ? "The card payment was declined or didn&rsquo;t finish, so nothing was taken. " : o.cancelled ? "You left the payment page before paying, so nothing was taken. " : "") +
+        "Your time is held until " + heldTill + ". Pay your " + rand(bk.deposit) + " deposit now to confirm your booking.";
+    }
+    else if (bk.payment === "online") { title = "Booking received"; lede = "Your time is held until " + heldTill + ". Pay your deposit on WhatsApp to confirm it."; }
     else { title = "Booking received"; lede = "Your time is held until " + nice(bk.holdUntil.slice(0, 10), bk.holdUntil.slice(11, 16)) + ". To confirm it, pay your " + (bk.deposit ? rand(bk.deposit) + " " : "") + "deposit and send the proof of payment on WhatsApp with your booking code."; }
     var rows = [["Session", bk.session + (bk.pkg ? " – " + bk.pkg : "")], ["Date", nice(bk.date, bk.time)], ["Name", bk.name]];
     if (bk.price) rows.push(["Price", rand(bk.price)]);
     if (bk.deposit) rows.push([confirmed ? "Deposit paid" : "Deposit due", rand(confirmed && bk.paid ? bk.paid : bk.deposit)]);
-    rows.push(["Status", confirmed ? "Confirmed" : cancelled ? "Cancelled" : "Waiting for deposit"]);
+    rows.push(["Status", confirmed ? "Confirmed – deposit paid" : cancelled ? "Cancelled" : o.failed ? "Payment declined – not paid yet" : o.cancelled ? "Payment cancelled – not paid yet" : "Waiting for deposit"]);
     var waText = confirmed ? waMsg(bk, "I have a question about my booking.") : waMsg(bk, bk.payment === "whatsapp" && o.fresh ? "I have a few questions before I pay the deposit." : "Here is my proof of payment for the deposit.");
     $("#done").innerHTML =
       '<div class="tick ' + icon + '">' + (confirmed ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg>' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>') + "</div>" +
       "<h2>" + title + '</h2><p class="lede">' + lede + "</p>" +
       '<div class="code"><span id="the-code">' + esc(bk.code) + '</span><button type="button" id="copy">Copy</button></div><p class="code-hint">Your booking code. Use it as your payment reference and whenever you contact us.</p>' +
       '<dl class="summary">' + rows.map(function (r) { return "<dt>" + r[0] + "</dt><dd>" + esc(r[1]) + "</dd>"; }).join("") + "</dl>" +
-      (!confirmed && !cancelled && !o.redirecting && bk.bank ? '<div class="bank"><b>Pay by EFT</b>' + esc(bk.bank) + "\nReference: " + esc(bk.code) + "</div>" : "") +
+      (!confirmed && !cancelled && !o.redirecting && !payNow && bk.bank ? '<div class="bank"><b>Pay by EFT</b>' + esc(bk.bank) + "\nReference: " + esc(bk.code) + "</div>" : "") +
       (o.redirecting || o.checking ? '<div class="loading" style="justify-content:center"><span class="spin"></span>Please wait&hellip;</div>' :
-        '<div class="actions"><a class="btn wa" target="_blank" rel="noopener" href="' + waLink(waText) + '">' + (confirmed ? "Message us on WhatsApp" : bk.payment === "whatsapp" && o.fresh ? "Continue on WhatsApp" : "Send proof of payment on WhatsApp") + "</a>" +
+        '<div class="actions">' + (payNow ? '<button type="button" class="btn solid" id="pay-now">Pay ' + rand(bk.deposit) + ' now</button><a class="btn" target="_blank" rel="noopener" href="' + waLink(waMsg(bk, "I have a question about paying my deposit.")) + '">Questions? WhatsApp us</a>' :
+        '<a class="btn wa" target="_blank" rel="noopener" href="' + waLink(waText) + '">' + (confirmed ? "Message us on WhatsApp" : bk.payment === "whatsapp" && o.fresh ? "Continue on WhatsApp" : "Send proof of payment on WhatsApp") + "</a>") +
         (cancelled ? "" : '<a class="btn" download="J-Masocha-booking-' + esc(bk.code) + '.ics" href="' + ics(bk) + '">Add to calendar</a>') + '<a class="btn" href="booking.html">Make another booking</a></div>');
     $("#done").hidden = false;
+    if (payNow) $("#pay-now").addEventListener("click", function () {
+      var b = this; b.disabled = true; b.textContent = "Opening payment…";
+      call({ action: "payAgain", code: bk.code }).then(function (j) {
+        if (j.ok && j.pay) { toPay(j.booking, j.pay); return; }
+        if (j.booking) done(j.booking);
+        alert(j.error && j.error.length < 200 && j.error !== "not-found" ? j.error : "We couldn’t start the payment just now. Please try again, or message us on WhatsApp.");
+      }).catch(function () { alert("We couldn’t start the payment just now. Please try again."); })
+        .then(function () { if (document.body.contains(b)) { b.disabled = false; b.textContent = "Pay " + rand(bk.deposit) + " now"; } });
+    });
     $("#copy").addEventListener("click", function () {
       var b = this; (navigator.clipboard ? navigator.clipboard.writeText(bk.code) : Promise.reject()).then(function () { b.textContent = "Copied"; }, function () { b.textContent = "Select and copy"; });
     });
@@ -551,12 +567,12 @@ footer { padding: 40px 0 50px; text-align: center; color: var(--muted); font-siz
       if (!j.ok) { $("#lookup").hidden = false; $("#check-wrap").hidden = false; err(""); alert("We couldn’t find booking " + code + ". Check the code, or message us on WhatsApp."); return; }
       var bk = j.booking;
       if (o.paid && bk.status === "awaiting-payment" && (o.tries || 0) < 15) { done(bk, { checking: true }); setTimeout(function () { check(code, { paid: true, tries: (o.tries || 0) + 1 }); }, 4000); return; }
-      done(bk, { cancelled: o.cancelled });
+      done(bk, { cancelled: o.cancelled, failed: o.failed });
     }).catch(function () { alert("We couldn’t check your booking just now. Please try again."); });
   }
   $("#check-open").addEventListener("click", function () { $("#lookup").hidden = false; $("#lk-code").focus(); });
   $("#lookup").addEventListener("submit", function (e) { e.preventDefault(); var c = $("#lk-code").value.trim().toUpperCase(); if (c) check(c.indexOf("JM-") === 0 ? c : "JM-" + c.replace(/^JM/, "")); });
-  if (url.get("code")) check(url.get("code").toUpperCase(), { paid: url.get("paid") === "1", cancelled: url.get("cancelled") === "1" });
+  if (url.get("code")) check(url.get("code").toUpperCase(), { paid: url.get("paid") === "1", cancelled: url.get("cancelled") === "1", failed: url.get("failed") === "1" });
 })();
 </script>
 </body>
