@@ -5,4 +5,4 @@ Disallow: /soon.html
 Disallow: /newsletter/
 Disallow: /tools/
 
-Sitemap: https://jmasochaphoto.co.za/sitemap.xml
+Sitemap: https://www.jmasochaphoto.co.za/sitemap.xml

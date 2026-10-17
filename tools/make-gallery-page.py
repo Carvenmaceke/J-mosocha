@@ -18,8 +18,8 @@ swaps = [
     ('content="%s"' % HOME_TITLE, 'content="Gallery | J Masocha Photography, Pretoria"'),
     ('<meta name="description" content="%s">' % HOME_DESC, '<meta name="description" content="%s">' % GALLERY_DESC),
     ('<meta property="og:description" content="%s">' % HOME_DESC, '<meta property="og:description" content="%s">' % GALLERY_DESC),
-    ('<link rel="canonical" href="https://jmasochaphoto.co.za/">', '<link rel="canonical" href="https://jmasochaphoto.co.za/gallery.html">'),
-    ('<meta property="og:url" content="https://jmasochaphoto.co.za/">', '<meta property="og:url" content="https://jmasochaphoto.co.za/gallery.html">'),
+    ('<link rel="canonical" href="https://www.jmasochaphoto.co.za/">', '<link rel="canonical" href="https://www.jmasochaphoto.co.za/gallery.html">'),
+    ('<meta property="og:url" content="https://www.jmasochaphoto.co.za/">', '<meta property="og:url" content="https://www.jmasochaphoto.co.za/gallery.html">'),
 ]
 for old, new in swaps:
     if html.count(old) == 0:

@@ -18,7 +18,7 @@ Package enquiries, print orders and contact messages open WhatsApp or the visito
 
 ## Search engines (SEO)
 
-Each page has its own title, description, canonical link, social-sharing preview and structured data (business details, and booking FAQs on `booking.html`). `sitemap.xml` lists the home, booking and gallery pages, and `robots.txt` keeps the website manager out of search results. After launch, add the site in Google Search Console and submit `https://jmasochaphoto.co.za/sitemap.xml`.
+Each page has its own title, description, canonical link, social-sharing preview and structured data (business details, and booking FAQs on `booking.html`). `sitemap.xml` lists the home, booking and gallery pages, and `robots.txt` keeps the website manager out of search results. After launch, add the site in Google Search Console and submit `https://www.jmasochaphoto.co.za/sitemap.xml`.
 
 ## Gallery page
 
@@ -32,7 +32,7 @@ Photos added in the website manager appear on both pages automatically, as they 
 
 ## Website manager (owner login)
 
-Open **`/admin.html`** on the live site (`https://jmasochaphoto.co.za/admin.html`). It isn't linked from the website.
+Open **`/admin.html`** on the live site (`https://www.jmasochaphoto.co.za/admin.html`). It isn't linked from the website.
 
 - **Gallery:** add photos (choose the backdrop and one or more categories), edit captions and categories, replace a picture with a new one, change the order (drag photos or use the arrows, then **Save order**), or delete photos. Photos are resized automatically.
 - **Bookings:** a calendar of your open days. Set your usual weekly hours, close a day or change its times, add appointments for walk-ins and phone bookings, confirm deposits, and move or cancel bookings. Set your Yoco key and banking details under **Opening hours & payments**.
@@ -71,4 +71,4 @@ While the site is being finished, `index.html` and `booking.html` send visitors 
 
 ## Publishing with GitHub Pages
 
-Settings → Pages → Deploy from a branch → `main` / root. The `CNAME` file connects it to `jmasochaphoto.co.za`. At the domain's DNS (Register Domain), `@` has A records for 185.199.108.153, 185.199.109.153, 185.199.110.153 and 185.199.111.153, and `www` is a CNAME to `carvenmaceke.github.io`. It was previously available at `https://carvenmaceke.github.io/J-mosocha/`, or at your own domain if you add one.
+Settings → Pages → Deploy from a branch → `main` / root. The `CNAME` file connects it to `www.jmasochaphoto.co.za` (GitHub sends `jmasochaphoto.co.za` there too). At the domain's DNS (Register Domain), `@` has A records for 185.199.108.153, 185.199.109.153, 185.199.110.153 and 185.199.111.153, and `www` is a CNAME to `carvenmaceke.github.io`. It was previously available at `https://carvenmaceke.github.io/J-mosocha/`, or at your own domain if you add one.
