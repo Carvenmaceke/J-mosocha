@@ -1554,13 +1554,23 @@ footer h3 { color: var(--fg); }
   function fitMenu() {
     var menu = $("#menu"), soc = $(".menu-band > .social"), lvls = ["fit-1", "fit-2", "fit-3"];
     lvls.forEach(function (c) { menu.classList.remove(c); });
-    if (!soc || innerWidth <= 1100) return;
+    if (!soc || innerWidth <= 1100) { logoOverGallery(); return; }
     menu.style.setProperty("--social-w", Math.ceil(soc.getBoundingClientRect().width) + "px");
     function clashes() {
       var r = 0; $$("#menu > li").forEach(function (li) { var b = li.getBoundingClientRect(); if (b.width) r = Math.max(r, b.right); });
       return r > soc.getBoundingClientRect().left - 12;
     }
     for (var i = 0; i < lvls.length && clashes(); i++) { if (i) menu.classList.remove(lvls[i - 1]); menu.classList.add(lvls[i]); }
+    logoOverGallery();
+  }
+  // On desktop the logo sits straight above the View Gallery button
+  function logoOverGallery() {
+    var logo = $(".brand-row > .brand"), pill = $("#menu > li.menu-gallery > a");
+    if (!logo) return;
+    logo.style.transform = "";
+    if (!pill || innerWidth <= 1100) return;
+    var l = logo.getBoundingClientRect(), p = pill.getBoundingClientRect();
+    if (p.width) logo.style.transform = "translateX(" + Math.round(p.left + p.width / 2 - (l.left + l.width / 2)) + "px)";
   }
   addEventListener("resize", fitMenu); document.fonts && document.fonts.ready.then(fitMenu);
 
