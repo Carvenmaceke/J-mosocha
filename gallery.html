@@ -996,7 +996,7 @@ footer h3 { color: var(--fg); }
           <a href="#sessions">Session information</a></article>
         <article class="service fade" id="video"><span>02</span><h3>Videography</h3><p>Cinematic films to sit alongside your photos.</p>
           <ul id="video-list"></ul>
-          <a href="#packages" data-plan="Videography">Request packages</a></article>
+          <a href="booking.html?session=Videography">Book this session</a></article>
         <article class="service fade"><span>03</span><h3>Printing</h3><p>Your photos printed in-house, ready to collect.</p>
           <ul><li>Canvases &amp; frames</li><li>Albums &amp; photo prints</li><li>Photo globes &amp; tumblers</li><li>Mugs, plates &amp; T-shirts</li></ul>
           <a href="#prints">Printed products</a></article>
@@ -1069,42 +1069,8 @@ footer h3 { color: var(--fg); }
       <div class="pk-more fade">
         <h3>Booking a different session?</h3>
         <p class="quote">&ldquo;Your moment, your way.&rdquo;</p>
+        <a class="btn btn--solid" href="booking.html" style="margin-top:18px">Choose your session &amp; book</a>
       </div>
-      <form class="planner fade" id="planner" novalidate style="margin-top:30px">
-        <input type="hidden" name="pkg" id="pkg"><div class="steps-dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div>
-        <fieldset class="p-step on"><legend class="sr">Step 1 of 4</legend><h3>Which session?</h3><div class="opts" id="occasions"></div></fieldset>
-        <fieldset class="p-step"><legend class="sr">Step 2 of 4</legend><h3>Who&rsquo;s in it?</h3><p>And would you like photos, video or both?</p>
-          <div class="opts" style="margin-bottom:18px">
-            <label class="opt"><input type="radio" name="coverage" value="Photos" checked><span>Photos</span></label>
-            <label class="opt"><input type="radio" name="coverage" value="Video"><span>Video</span></label>
-            <label class="opt"><input type="radio" name="coverage" value="Photos and video"><span>Photos &amp; video</span></label>
-          </div>
-          <div class="opts">
-            <label class="opt"><input type="radio" name="who" value="Just me" checked><span>Just me</span></label>
-            <label class="opt"><input type="radio" name="who" value="Couple"><span>Couple</span></label>
-            <label class="opt"><input type="radio" name="who" value="Kid(s)"><span>Kid(s)</span></label>
-            <label class="opt"><input type="radio" name="who" value="Family"><span>Family</span></label>
-            <label class="opt"><input type="radio" name="who" value="Group or team"><span>Group or team</span></label>
-            <label class="opt"><input type="radio" name="who" value="Products"><span>Products</span></label>
-          </div>
-        </fieldset>
-        <fieldset class="p-step"><legend class="sr">Step 3 of 4</legend><h3>Your details</h3>
-          <div class="fields">
-            <div class="f"><label for="pname">Name *</label><input id="pname" name="name" autocomplete="name" required></div>
-            <div class="f"><label for="pphone">Phone *</label><input id="pphone" name="phone" type="tel" autocomplete="tel" required></div>
-            <div class="f"><label for="pdate">Preferred date</label><input id="pdate" name="date" type="date"></div>
-            <div class="f"><label for="ptheme">Theme or colours</label><input id="ptheme" name="theme" placeholder="e.g. black & gold"></div>
-            <div class="f full"><label for="pnote">Anything else?</label><textarea id="pnote" name="note" rows="3"></textarea></div>
-          </div>
-        </fieldset>
-        <fieldset class="p-step"><legend class="sr">Step 4 of 4</legend><h3>Ready to send</h3><div class="summary" id="summary"></div></fieldset>
-        <div class="p-actions">
-          <button type="button" class="btn" id="back" hidden>Back</button><span class="grow"></span>
-          <button type="button" class="btn btn--solid" id="next">Next</button>
-          <a class="btn" id="send-mail" hidden>Email</a>
-          <a class="btn btn--solid" id="send-wa" hidden target="_blank" rel="noopener">Send on WhatsApp</a>
-        </div>
-      </form>
     </div>
   </section>
 
@@ -1808,7 +1774,7 @@ footer h3 { color: var(--fg); }
 
   // Sessions and videography
   $("#session-list").innerHTML = SESSIONS.map(function (s) {
-    return '<div class="session fade" id="session-' + s[0] + '"><h3>' + s[1] + "</h3><p>" + s[2] + '</p>' + (s[0] === "birthday" ? '<a href="#pk-birthday">View packages &amp; prices</a>' : '<a href="#packages" data-plan="' + plain(s[1]) + '">Request packages</a>') + "</div>";
+    return '<div class="session fade" id="session-' + s[0] + '"><h3>' + s[1] + "</h3><p>" + s[2] + '</p>' + (s[0] === "birthday" ? '<a href="#pk-birthday">View packages &amp; prices</a>' : '<a href="booking.html?session=' + encodeURIComponent(plain(s[1])) + '">Book this session</a>') + "</div>";
   }).join("");
   $("#video-list").innerHTML = VIDEO.map(function (v) { return "<li>" + v[0].replace(" Videography", "") + "</li>"; }).join("");
 
@@ -1838,46 +1804,6 @@ footer h3 { color: var(--fg); }
       k[2].map(function (f) { return "<li>" + tick + f + "</li>"; }).join("") + '<li class="extra">' + tick + "Add family &amp; friends for free</li></ul>" +
       '<a class="btn' + (k[3] ? "" : " btn--solid") + '" href="booking.html?session=' + encodeURIComponent("Adult Birthday") + "&amp;pkg=" + encodeURIComponent(plain(k[0])) + '">Book this package</a></article>';
   }).join("");
-
-  // Packages planner
-  var OCC = SESSIONS.map(function (s) { return plain(s[1]); }).concat(["Videography", "Printing", "Something else"]);
-  var form = $("#planner"), step = 0, steps = $$(".p-step", form), dots = $$(".steps-dots i", form);
-  $("#occasions").innerHTML = OCC.map(function (o, i) { return '<label class="opt"><input type="radio" name="occasion" value="' + esc(o) + '"' + (i ? "" : " checked") + "><span>" + esc(o) + "</span></label>"; }).join("");
-  function message() {
-    var d = new FormData(form);
-    return [d.get("pkg") ? "Hi J Masocha Photography! I'd like to book the " + d.get("pkg") + "." : "Hi J Masocha Photography! Please send me your packages and prices.", "",
-      "Session: " + d.get("occasion"), d.get("pkg") ? "Package: " + d.get("pkg") : null, "Coverage: " + d.get("coverage"), "Who: " + d.get("who"),
-      d.get("date") ? "Preferred date: " + new Date(d.get("date") + "T00:00").toLocaleDateString("en-ZA", { weekday: "short", day: "numeric", month: "long", year: "numeric" }) : null,
-      d.get("theme") ? "Theme: " + d.get("theme") : null, d.get("note") ? "Notes: " + d.get("note") : null, "",
-      "Name: " + d.get("name"), "Phone: " + d.get("phone")].filter(function (l) { return l !== null; }).join("\n");
-  }
-  function go(n) {
-    if (n > step && step === 2) {
-      var bad = $$("[required]", steps[2]).filter(function (f) { var ok = f.value.trim() !== ""; f.setAttribute("aria-invalid", !ok); return !ok; });
-      if (bad.length) { bad[0].focus(); toast("Please add your name and phone"); return; }
-    }
-    step = Math.max(0, Math.min(3, n));
-    steps.forEach(function (s, i) { s.classList.toggle("on", i === step); });
-    dots.forEach(function (d, i) { d.classList.toggle("on", i <= step); });
-    $("#back").hidden = step === 0; $("#next").hidden = step === 3; $("#send-wa").hidden = $("#send-mail").hidden = step !== 3;
-    if (step === 3) {
-      var m = message();
-      $("#summary").textContent = m;
-      $("#send-wa").href = "https://wa.me/" + WA + "?text=" + encodeURIComponent(m);
-      $("#send-mail").href = "mailto:" + MAIL + "?subject=" + encodeURIComponent("Packages: " + new FormData(form).get("occasion")) + "&body=" + encodeURIComponent(m);
-    }
-  }
-  // A package only applies to its own session
-  $("#occasions").addEventListener("change", function (e) { if (e.target.value !== "Adult Birthday") $("#pkg").value = ""; });
-  $("#next").addEventListener("click", function () { go(step + 1); });
-  $("#back").addEventListener("click", function () { go(step - 1); });
-  form.addEventListener("submit", function (e) { e.preventDefault(); go(step + 1); });
-  document.addEventListener("click", function (e) {
-    var a = e.target.closest("[data-plan]"); if (!a) return;
-    var r = $$('input[name="occasion"]', form).filter(function (x) { return x.value === a.dataset.plan; })[0];
-    if (r) { r.checked = true; go(0); toast((a.dataset.pkg || a.dataset.plan) + " selected"); }
-    $("#pkg").value = a.dataset.pkg || "";
-  });
 
   // Print examples: arrows, drag and a progress bar
   var ptrack = $("#ptrack"), pbar = $("#pbar");
