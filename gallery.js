@@ -62,7 +62,6 @@ window.GALLERY = {
     {"id":"baby-one-pastel-castle","caption":"Hello, ONE","categories":["babies","kids","birthdays"],"w":700,"h":494},
     {"id":"baby-piano-17-may","caption":"Birthday tunes","categories":["babies","kids","birthdays"],"w":700,"h":1050},
     {"id":"baby-pink-knit-swing","caption":"Little swing, big eyes","categories":["babies","kids"],"w":700,"h":1029},
-    {"id":"graduation-classroom-set","caption":"I graduated!","categories":["graduation","kids"],"w":700,"h":1050},
     {"id":"portrait-pinstripe-blazer","caption":"Pinstripe & boots","categories":["portraits","women"],"w":700,"h":1050},
     {"id":"maternity-couple-baby-vest","caption":"Couple with baby’s first vest","categories":["maternity","couples"],"w":700,"h":467},
     {"id":"maternity-mountain-sparkle","caption":"Sparkle gown against the mountains","categories":["maternity","women"],"w":700,"h":467},
