@@ -373,7 +373,12 @@ footer { padding: 40px 0 50px; text-align: center; color: var(--muted); font-siz
     if (promo && !$("#b-notes").value) $("#b-notes").value = "Birthday promo code: " + promo;
     var s = url.get("session"), k = url.get("pkg");
     var r = s && $$('#sessions input').filter(function (i) { return i.value === s; })[0];
-    if (r) { r.checked = true; st.session = s; st.pkg = k && P.packages.some(function (x) { return x.session === s && x.name === k; }) ? k : ""; drawPackages(); }
+    if (r) {
+      r.checked = true; st.session = s; st.pkg = k && P.packages.some(function (x) { return x.session === s && x.name === k; }) ? k : ""; drawPackages();
+      // Chosen from the website menu: skip straight to picking a date, unless a package still has to be chosen
+      if (st.pkg || !P.packages.some(function (x) { return x.session === s; })) setTimeout(function () { show(1); });
+      else setTimeout(function () { $("#pks").scrollIntoView({ behavior: "smooth", block: "center" }); });
+    }
   })();
 
   /* ---------- Step 2: calendar ---------- */

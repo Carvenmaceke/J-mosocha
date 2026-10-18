@@ -204,6 +204,14 @@ main { padding-top: var(--header-h, 147px); }
 .g-label svg { width: 20px; height: 20px; color: var(--accent); }
 .g-label small { color: var(--gw-mute); font-style: italic; font-weight: 300; font-size: .85rem; }
 .g-tools { margin-left: auto; display: flex; align-items: center; gap: 8px; position: relative; }
+.chips { display: flex; gap: 8px; flex: 1; min-width: 0; overflow-x: auto; scrollbar-width: none; padding: 2px; -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); padding-right: 28px; }
+.chips::-webkit-scrollbar { display: none; }
+.chips button { flex: none; border: 1px solid var(--g4); border-radius: 999px; background: transparent; color: inherit; font: inherit; font-size: .9rem; font-weight: 400; padding: 8px 16px; white-space: nowrap; cursor: pointer; transition: background .2s, color .2s, border-color .2s; }
+.chips button:hover { border-color: currentColor; }
+.chips button[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.chips button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.ap-chips { flex: none; padding: 12px 24px; border-bottom: 1px solid var(--g3); }
+@media (max-width: 600px) { .ap-chips { padding: 10px 14px; } .chips button { padding: 7px 13px; font-size: .85rem; } }
 .g-clear { border: 0; background: none; font: inherit; font-size: .85rem; color: var(--gw-mute); text-decoration: underline; text-underline-offset: 4px; cursor: pointer; padding: 6px; }
 .g-clear:hover { color: var(--gw-fg); }
 .g-clear[hidden] { display: none; }
@@ -277,6 +285,7 @@ html[data-page="gallery"] .g-bar { top: 0 !important; }
 html[data-page="gallery"] .g-box { margin-bottom: 40px; }
 .g-close { display: none; }
 html[data-page="gallery"] .g-close { display: inline-flex; align-items: center; gap: 7px; height: 42px; padding: 0 16px 0 13px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); text-decoration: none; font-size: .92rem; font-weight: 400; transition: background .2s, color .2s; }
+.g-close { flex: none; }
 html[data-page="gallery"] .g-close:hover { background: var(--fg); color: var(--bg); }
 html[data-page="gallery"] .g-close svg { width: 17px; height: 17px; }
 @media (max-width: 520px) { html[data-page="gallery"] .g-close span { display: none; } html[data-page="gallery"] .g-close { padding: 0; width: 42px; justify-content: center; } }
@@ -937,8 +946,9 @@ footer h3 { color: var(--fg); }
   <nav class="menu-band" aria-label="Main">
     <ul class="menu" id="menu">
       <li>
-        <button type="button" aria-expanded="false" aria-haspopup="true" data-sec="about">About J Masocha <span class="caret" aria-hidden="true"></span></button>
+        <button type="button" aria-expanded="false" aria-haspopup="true" data-sec="about">Home <span class="caret" aria-hidden="true"></span></button>
         <ul class="drop">
+          <li><a href="#top">Home</a></li>
           <li><a href="#about">Our story</a></li>
           <li><a href="#reviews">Client reviews</a></li>
           <li class="sep" role="separator"></li>
@@ -950,7 +960,7 @@ footer h3 { color: var(--fg); }
         <button type="button" aria-expanded="false" aria-haspopup="true" data-sec="sessions">Photo Session Information <span class="caret" aria-hidden="true"></span></button>
         <ul class="drop" id="session-drop"></ul>
       </li>
-      <li class="menu-gallery"><a href="gallery.html" data-sec="gallery"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="m21 15-4.5-4.5L6 21"/></svg>View Gallery</a></li>
+      <li class="menu-gallery"><a href="gallery.html" data-sec="gallery">View Gallery</a></li>
       <li id="menu-specials" hidden><a href="#specials" data-sec="specials">Specials</a></li>
       <li><a href="#packages" data-sec="packages">Packages &amp; Pricing</a></li>
       <li><a href="#prints" data-sec="prints">Printed Products</a></li>
@@ -1017,16 +1027,8 @@ footer h3 { color: var(--fg); }
     </header>
     <div class="g-bar" id="g-bar">
       <div class="wrap">
-        <p class="g-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.8"/><path d="m21 15-5-5L5 21"/></svg>Gallery <small id="g-now" aria-live="polite">All photos</small></p>
-        <div class="g-tools">
-          <button class="g-clear" type="button" id="g-clear" hidden>Clear</button>
-          <button class="f-btn" type="button" id="f-btn" aria-expanded="false" aria-controls="f-pop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 5h18M6 12h12M10 19h4"/></svg>Filter<span class="n" id="f-n" hidden>1</span></button>
-          <div class="f-pop" id="f-pop">
-            <h4>Show photos of</h4>
-            <div class="filters" id="filters" role="group" aria-label="Filter by category"></div>
-          </div>
-          <a class="g-close" href="index.html" id="g-close" aria-label="Close the gallery and go back to the website"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg><span>Close</span></a>
-        </div>
+        <div class="chips" id="filters" role="group" aria-label="Show photos of"></div>
+        <a class="g-close" href="index.html" id="g-close" aria-label="Close the gallery and go back to the website"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg><span>Close</span></a>
       </div>
     </div>
     <div class="wrap">
@@ -1307,16 +1309,9 @@ footer h3 { color: var(--fg); }
   <div class="ap-box">
     <div class="ap-head">
       <h3 id="ap-title">All photos <small id="ap-now">All photos</small></h3>
-      <div class="ap-tools">
-        <button class="g-clear" type="button" id="ap-clear" hidden>Clear</button>
-        <button class="f-btn" type="button" id="ap-fbtn" aria-expanded="false" aria-controls="ap-pop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 5h18M6 12h12M10 19h4"/></svg>Filter<span class="n" id="ap-n" hidden>1</span></button>
-        <div class="f-pop" id="ap-pop">
-          <h4>Show photos of</h4>
-          <div class="filters" id="ap-chips" role="group" aria-label="Filter photos"></div>
-        </div>
-      </div>
       <button class="icon-btn" type="button" id="ap-close" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
     </div>
+    <div class="chips ap-chips" id="ap-chips" role="group" aria-label="Show photos of"></div>
     <div class="ap-body" id="ap-body"></div>
   </div>
 </dialog>
@@ -1515,7 +1510,7 @@ footer h3 { color: var(--fg); }
 
   // Dropdown menus
   var count = function (cat) { return TONES.reduce(function (n, t) { return n + t.photos.filter(function (p) { return cat === "all" || p[2].split(" ").indexOf(cat) > -1; }).length; }, 0); };
-  $("#session-drop").innerHTML = '<li><a href="#tips" data-tips="wear">Tips: what to wear &amp; bring</a></li><li class="sep" role="separator"></li><li class="label">Sessions</li>' + SESSIONS.map(function (s) { return '<li><a href="#session-' + s[0] + '">' + s[1] + "</a></li>"; }).join("") + '<li class="sep" role="separator"></li><li><a href="#packages">Packages &amp; pricing</a></li>';
+  $("#session-drop").innerHTML = '<li><a href="#tips" data-tips="wear">Tips: what to wear &amp; bring</a></li><li class="sep" role="separator"></li><li class="label">Sessions</li>' + SESSIONS.map(function (s) { return '<li><a href="booking.html?session=' + encodeURIComponent(plain(s[1])) + '">' + s[1] + "</a></li>"; }).join("") + '<li class="sep" role="separator"></li><li><a href="#packages">Packages &amp; pricing</a></li>';
   var items = $$(".menu > li");
   function closeAll(except) { items.forEach(function (li) { if (li !== except) { li.classList.remove("open"); var b = $("button", li); if (b) b.setAttribute("aria-expanded", "false"); } }); }
   items.forEach(function (li) {
@@ -1577,18 +1572,7 @@ footer h3 { color: var(--fg); }
   // Gallery: one section per backdrop colour, each laid out in justified rows
   var tonesEl = $("#tones"), current = "all", visible = [];
   $("#filters").innerHTML = CATS.map(function (c) { return '<button type="button" data-cat="' + c[0] + '" aria-pressed="' + (c[0] === "all") + '">' + c[1] + "</button>"; }).join("").replace(">All<", ">All photos<");
-  var fBtn = $("#f-btn"), fPop = $("#f-pop");
-  function setPop(open) { fPop.classList.toggle("open", open); fBtn.setAttribute("aria-expanded", open); if (open) $("#filters [aria-pressed=true]").focus(); }
-  fBtn.addEventListener("click", function (e) { e.stopPropagation(); setPop(!fPop.classList.contains("open")); });
-  document.addEventListener("click", function (e) { if (!fPop.contains(e.target)) setPop(false); });
-  fPop.addEventListener("keydown", function (e) {
-    var bs = $$("#filters button"), i = bs.indexOf(document.activeElement);
-    if (e.key === "Escape") { setPop(false); fBtn.focus(); }
-    if (e.key === "ArrowDown") { e.preventDefault(); (bs[i + 1] || bs[0]).focus(); }
-    if (e.key === "ArrowUp") { e.preventDefault(); (bs[i - 1] || bs[bs.length - 1]).focus(); }
-  });
-  $$("#filters button").forEach(function (b) { b.addEventListener("click", function () { setCat(b.dataset.cat); setPop(false); fBtn.focus(); }); });
-  $("#g-clear").addEventListener("click", function () { setCat("all"); });
+  $$("#filters button").forEach(function (b) { b.addEventListener("click", function () { setCat(b.dataset.cat); b.scrollIntoView({ block: "nearest", inline: "nearest" }); }); });
   $("#g-all").addEventListener("click", function () { apCat = current; apScroll = 0; openAllPhotos(true); });
   var SWATCH = { dark: "#0d0d0e", grey: "#8f8f91", white: "#ffffff", colour: "#f3c9c1", outdoor: "#9db08f" };
 
@@ -1645,11 +1629,10 @@ footer h3 { color: var(--fg); }
         var i = base + all.indexOf(p);
         return '<figure class="shot" style="--ar:' + (p[3] / p[4]).toFixed(4) + '" tabindex="0" role="button" aria-label="Open photo: ' + p[1] + '" data-i="' + i + '"><img src="' + src(p[0]) + '" width="' + p[3] + '" height="' + p[4] + '" alt="' + p[1] + '" loading="lazy"><span class="zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span><figcaption>' + p[1] + "</figcaption></figure>";
       }).join("") + "</div>";
-      return '<section class="tone tone-' + t.id + '" id="set-' + t.id + '" style="--sw:' + SWATCH[t.id] + '" aria-label="' + plain(t.name) + '"><div class="tone-head"><h3><i aria-hidden="true"></i>' + t.name + "</h3><p>" + t.note + '</p></div>' + figs + "</section>";
+      return '<section class="tone tone-' + t.id + '" id="set-' + t.id + '" style="--sw:' + SWATCH[t.id] + '" aria-label="' + plain(t.name) + '">' + figs + "</section>";
     }).join("");
     fitRows();
     var catName = CATS.filter(function (c) { return c[0] === current; })[0][1];
-    $("#g-now").textContent = current === "all" ? "All photos" : catName;
     $("#g-jump").innerHTML = groups.map(function (g) { return '<li><a href="#set-' + g[0].id + '" data-set="' + g[0].id + '" title="' + plain(g[0].name) + '" style="--sw:' + SWATCH[g[0].id] + '"><i aria-hidden="true"></i><span>' + g[0].name + "</span></a></li>"; }).join("");
     spy();
   }
@@ -1659,7 +1642,6 @@ footer h3 { color: var(--fg); }
     var at = $("#gallery").offsetTop + $(".g-hero").offsetHeight - header.offsetHeight + 1;
     if (scrollY > at) scrollTo({ top: at, behavior: "auto" });
     $$("#filters button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.cat === cat); });
-    $("#f-n").hidden = $("#g-clear").hidden = cat === "all";
     render();
   }
   // Backdrop timeline: jump to a set, and light up the set currently in view
@@ -1766,7 +1748,7 @@ footer h3 { color: var(--fg); }
   });
   // Arriving on the gallery page from a category link (gallery.html?cat=kids)
   if (GALLERY_PAGE) document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && !document.querySelector("dialog[open], .lb.open, .f-pop.open")) location.href = "index.html";
+    if (e.key === "Escape" && !document.querySelector("dialog[open], .lb.open")) location.href = "index.html";
   }, true);   // capture: check before the photo viewer or filter closes itself on the same key
   var askCat = GALLERY_PAGE && new URLSearchParams(location.search).get("cat");
   if (askCat && CATS.some(function (c) { return c[0] === askCat; })) setCat(askCat);
@@ -1777,18 +1759,7 @@ footer h3 { color: var(--fg); }
   var ap = $("#all-photos"), apBody = $("#ap-body"), apCat = "all", reopenAll = false, apScroll = 0;
   var SW = { dark: "#0d0d0e", grey: "#8f8f91", white: "#ffffff", colour: "#f3c9c1", outdoor: "#9db08f" };
   $("#ap-chips").innerHTML = CATS.map(function (c) { return '<button type="button" data-cat="' + c[0] + '" aria-pressed="' + (c[0] === "all") + '">' + c[1] + "</button>"; }).join("").replace(">All<", ">All photos<");
-  var apBtn = $("#ap-fbtn"), apPop = $("#ap-pop");
-  function setApPop(open) { apPop.classList.toggle("open", open); apBtn.setAttribute("aria-expanded", open); if (open) $("#ap-chips [aria-pressed=true]").focus(); }
-  apBtn.addEventListener("click", function (e) { e.stopPropagation(); setApPop(!apPop.classList.contains("open")); });
-  ap.addEventListener("click", function (e) { if (!apPop.contains(e.target) && e.target !== apBtn) setApPop(false); });
-  apPop.addEventListener("keydown", function (e) {
-    var bs = $$("#ap-chips button"), i = bs.indexOf(document.activeElement);
-    if (e.key === "Escape") { e.preventDefault(); setApPop(false); apBtn.focus(); }
-    if (e.key === "ArrowDown") { e.preventDefault(); (bs[i + 1] || bs[0]).focus(); }
-    if (e.key === "ArrowUp") { e.preventDefault(); (bs[i - 1] || bs[bs.length - 1]).focus(); }
-  });
-  $$("#ap-chips button").forEach(function (b) { b.addEventListener("click", function () { apCat = b.dataset.cat; apScroll = 0; renderAll(); setApPop(false); apBtn.focus(); }); });
-  $("#ap-clear").addEventListener("click", function () { apCat = "all"; apScroll = 0; renderAll(); });
+  $$("#ap-chips button").forEach(function (b) { b.addEventListener("click", function () { apCat = b.dataset.cat; apScroll = 0; renderAll(); b.scrollIntoView({ block: "nearest", inline: "nearest" }); }); });
   function apJustify(row) {
     var items = $$("button", row), W = row.clientWidth, gap = 6, target = W < 500 ? 120 : 170, line = [], sum = 0;
     function place(list, h) { list.forEach(function (f) { f.style.width = Math.floor(f._ar * h) + "px"; f.style.height = Math.floor(h) + "px"; }); }
@@ -1812,7 +1783,6 @@ footer h3 { color: var(--fg); }
       }).join("") + "</section>";
     }).join("");
     $("#ap-now").textContent = apCat === "all" ? "" : CATS.filter(function (c) { return c[0] === apCat; })[0][1];
-    $("#ap-n").hidden = $("#ap-clear").hidden = apCat === "all";
     $$(".ap-rows", apBody).forEach(apJustify);
   }
   function openAllPhotos(keep) {
