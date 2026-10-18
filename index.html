@@ -664,6 +664,22 @@ footer { background: #0b0b0c; color: #b9b4ac; }
 .f-credit:hover { opacity: 1; text-decoration: underline; text-underline-offset: 3px; }
 .f-privacy { background: none; border: 0; padding: 0; color: inherit; font: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; opacity: .85; }
 .f-privacy:hover { opacity: 1; }
+/* Service information pop-up: the section itself is shown in it, then put back */
+.info-dlg { border: 0; padding: 0; margin: 0; width: 100%; height: 100%; max-width: 100vw; max-height: 100vh; background: transparent; }
+.info-dlg::backdrop { background: rgba(10,10,12,.55); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+.info-box { position: absolute; inset: clamp(0px, 3vw, 28px); max-width: 1240px; margin: 0 auto; background: var(--bg); border-radius: clamp(0px, 2vw, 22px); display: flex; flex-direction: column; overflow: hidden; box-shadow: var(--shadow); }
+.info-bar { flex: none; display: flex; align-items: center; padding: 12px clamp(14px, 3vw, 28px); border-bottom: 1px solid var(--g3); background: var(--bg); }
+.info-back { display: inline-flex; align-items: center; gap: 10px; }
+.info-back svg { width: 16px; height: 16px; }
+.info-body { flex: 1; overflow-y: auto; overscroll-behavior: contain; }
+.info-body > .sec { padding-top: clamp(30px, 5vw, 60px); }
+.info-body .fade { opacity: 1; transform: none; }
+.v-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 36px 0 0; padding: 0; list-style: none; text-align: left; }
+.v-list li { background: var(--bg-2); border: 1px solid var(--g3); border-radius: 18px; padding: 22px; }
+.v-list h3 { font-size: 1.25rem; margin-bottom: 6px; }
+.v-list p { color: var(--fg-2); }
+.v-cta { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 30px; }
+@media (max-width: 600px) { .info-box { inset: 0; border-radius: 0; } }
 .cm { border: 0; padding: 0; background: transparent; max-width: 100vw; max-height: 100vh; width: 100%; height: 100%; margin: 0; }
 .cm::backdrop { background: rgba(8,8,9,.7); backdrop-filter: blur(4px); }
 .cm[open] { display: grid; place-items: center; }
@@ -992,13 +1008,13 @@ footer h3 { color: var(--fg); }
       <div class="services">
         <article class="service fade"><span>01</span><h3>Photography</h3><p>Styled studio and outdoor sessions for every milestone.</p>
           <ul><li>Birthdays &amp; cake smash</li><li>Maternity</li><li>Graduation</li><li>Couples &amp; family</li><li>Corporate &amp; product</li></ul>
-          <a href="#sessions">Session information</a></article>
+          <a href="#sessions" data-info="sessions">Session information</a></article>
         <article class="service fade" id="video"><span>02</span><h3>Videography</h3><p>Cinematic films to sit alongside your photos.</p>
           <ul id="video-list"></ul>
-          <a href="#contact" data-contact="Hi J Masocha Photography! I'd like more information about your videography services.">Videography information</a></article>
+          <a href="#video" data-info="video">Videography information</a></article>
         <article class="service fade"><span>03</span><h3>Printing</h3><p>Your photos printed in-house, ready to collect.</p>
           <ul><li>Canvases &amp; frames</li><li>Albums &amp; photo prints</li><li>Photo globes &amp; tumblers</li><li>Mugs, plates &amp; T-shirts</li></ul>
-          <a href="#prints">Printed products</a></article>
+          <a href="#prints" data-info="prints">Printed products</a></article>
       </div>
     </div>
   </section>
@@ -1269,6 +1285,15 @@ footer h3 { color: var(--fg); }
       <p class="cm-sub" style="margin-bottom:0">Protection of Personal Information Act (POPIA)</p>
     </div>
     <div class="tip-body" id="pv-body"></div>
+  </div>
+</dialog>
+<dialog class="info-dlg" id="info-dlg" aria-labelledby="info-title">
+  <div class="info-box">
+    <div class="info-bar">
+      <button class="btn info-back" type="button" data-info-close><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Back to website</button>
+      <h2 class="sr" id="info-title"></h2>
+    </div>
+    <div class="info-body" id="info-body"></div>
   </div>
 </dialog>
 <dialog class="ap" id="all-photos" aria-labelledby="ap-title">
@@ -1803,6 +1828,42 @@ footer h3 { color: var(--fg); }
       k[2].map(function (f) { return "<li>" + tick + f + "</li>"; }).join("") + '<li class="extra">' + tick + "Add family &amp; friends for free</li></ul>" +
       '<a class="btn' + (k[3] ? "" : " btn--solid") + '" href="booking.html?session=' + encodeURIComponent("Adult Birthday") + "&amp;pkg=" + encodeURIComponent(plain(k[0])) + '">Book this package</a></article>';
   }).join("");
+
+  // Service cards: show the section's information in a pop-up instead of scrolling down to it
+  var infoDlg = $("#info-dlg"), infoBody = $("#info-body"), infoHome = null, infoNode = null;
+  function videoInfo() {
+    var sec = document.createElement("section"); sec.className = "sec center";
+    sec.innerHTML = '<div class="wrap"><p class="eyebrow">Our services</p><h2 class="title">Videography</h2><p class="lede">Cinematic films to sit alongside your photos, filmed by the J Masocha team.</p>' +
+      '<ul class="v-list">' + VIDEO.map(function (v) { return "<li><h3>" + v[0] + "</h3><p>" + v[1] + "</p></li>"; }).join("") + "</ul>" +
+      '<div class="v-cta"><a class="btn btn--solid" target="_blank" rel="noopener" href="https://wa.me/' + WA + "?text=" + encodeURIComponent("Hi J Masocha Photography! I'd like more information about your videography services.") + '">Ask about videography on WhatsApp</a><a class="btn" href="booking.html?session=Videography">Book videography</a></div></div>';
+    return sec;
+  }
+  function openInfo(which) {
+    if (which === "video") { infoNode = videoInfo(); infoHome = null; }
+    else {
+      infoNode = document.getElementById(which); if (!infoNode) return;
+      infoHome = document.createComment("info"); infoNode.parentNode.insertBefore(infoHome, infoNode);   // where to put it back
+    }
+    $("#info-title").textContent = { sessions: "Photo session information", video: "Videography", prints: "Printed products" }[which] || "";
+    infoBody.appendChild(infoNode); infoBody.scrollTop = 0;
+    if (infoDlg.showModal) infoDlg.showModal(); else infoDlg.setAttribute("open", "");
+    document.body.style.overflow = "hidden";
+    if (which === "prints") pProgress();
+  }
+  function closeInfo() { if (infoDlg.close) infoDlg.close(); else { infoDlg.removeAttribute("open"); infoDlg.dispatchEvent(new Event("close")); } }
+  infoDlg.addEventListener("close", function () {
+    if (infoNode && infoHome) { infoHome.parentNode.insertBefore(infoNode, infoHome); infoHome.remove(); }
+    else if (infoNode) infoNode.remove();
+    infoNode = infoHome = null; document.body.style.overflow = "";
+  });
+  $$("[data-info-close]", infoDlg).forEach(function (b) { b.addEventListener("click", closeInfo); });
+  infoDlg.addEventListener("click", function (e) {
+    if (e.target === infoDlg) return closeInfo();
+    var a = e.target.closest('a[href^="#"]'); if (!a) return;   // a link to another part of the page: close, then go there
+    e.preventDefault(); var to = a.getAttribute("href"); closeInfo();
+    setTimeout(function () { var t = document.querySelector(to); if (t) t.scrollIntoView({ behavior: "smooth" }); }, 30);
+  });
+  $$("[data-info]").forEach(function (a) { a.addEventListener("click", function (e) { e.preventDefault(); openInfo(a.dataset.info); }); });
 
   // Print examples: arrows, drag and a progress bar
   var ptrack = $("#ptrack"), pbar = $("#pbar");
