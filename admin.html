@@ -1139,7 +1139,7 @@ h3.sub { font-size: 1.1rem; margin: 18px 0 8px; }
         if (!j.ok) {
           var m = { "not-allowed": "The admin key doesn\u2019t match your Google script. Check it in Settings.", "no-subscribers": "There are no subscribers yet.",
             "over-quota": "Gmail can send " + j.quota + " more emails today, but you have " + j.count + " subscribers. Try again tomorrow." }[j.error];
-          if (j.error === "unknown-action") m = "Your Google script needs updating for bookings. Paste the latest newsletter/Code.gs into Apps Script and deploy a new version (see newsletter/README.md).";
+          if (j.error === "unknown-action") m = "Your Google script is out of date, so this feature isn\u2019t switched on yet. In Apps Script, paste the latest newsletter/Code.gs, run \u201csetup\u201d once, then Deploy \u2192 Manage deployments \u2192 Edit \u2192 New version \u2192 Deploy.";
           throw new Error(m || (/\s/.test(j.error) ? j.error : "The Google script said: " + j.error));
         }
         return j;
