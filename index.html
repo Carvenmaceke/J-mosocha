@@ -995,7 +995,7 @@ footer h3 { color: var(--fg); }
           <a href="#sessions">Session information</a></article>
         <article class="service fade" id="video"><span>02</span><h3>Videography</h3><p>Cinematic films to sit alongside your photos.</p>
           <ul id="video-list"></ul>
-          <a href="booking.html?session=Videography">Book this session</a></article>
+          <a href="#contact" data-contact="Hi J Masocha Photography! I'd like more information about your videography services.">Videography information</a></article>
         <article class="service fade"><span>03</span><h3>Printing</h3><p>Your photos printed in-house, ready to collect.</p>
           <ul><li>Canvases &amp; frames</li><li>Albums &amp; photo prints</li><li>Photo globes &amp; tumblers</li><li>Mugs, plates &amp; T-shirts</li></ul>
           <a href="#prints">Printed products</a></article>
@@ -1995,7 +1995,7 @@ footer h3 { color: var(--fg); }
   cm.addEventListener("click", function (e) { if (e.target === cm) closeContact(); });
   $$("[data-cm-close]", cm).forEach(function (b) { b.addEventListener("click", closeContact); });
   $$("[data-cm-back]", cm).forEach(function (b) { b.addEventListener("click", function () { cmStep("choose"); }); });
-  $$("[data-contact]").forEach(function (b) { b.addEventListener("click", function (e) { e.preventDefault(); openContact(); }); });
+  $$("[data-contact]").forEach(function (b) { b.addEventListener("click", function (e) { e.preventDefault(); openContact(); if (b.dataset.contact) $("#cm-query").value = b.dataset.contact; }); });
   $$(".cm-opt", cm).forEach(function (o) {
     o.addEventListener("click", function (e) {
       way = o.dataset.way;
