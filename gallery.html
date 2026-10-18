@@ -1778,7 +1778,7 @@ footer h3 { color: var(--fg); }
       var list = t.photos.filter(function (p) { return apCat === "all" || p[2].split(" ").indexOf(apCat) > -1; });
       if (!list.length) return "";
       total += list.length;
-      return '<section class="ap-group" style="--sw:' + SW[t.id] + '"><h4>' + t.name + "</h4>" + [ordered(list)].map(function (g) {
+      return '<section class="ap-group" style="--sw:' + SW[t.id] + '" aria-label="' + plain(t.name) + '">' + [ordered(list)].map(function (g) {
         return '<div class="ap-rows">' +
           g.map(function (p) { return '<button type="button" data-slug="' + p[0] + '" data-w="' + p[3] + '" data-h="' + p[4] + '" aria-label="View ' + p[1] + '"><img src="' + src(p[0]) + '" alt="' + p[1] + '" loading="lazy"></button>'; }).join("") + "</div>";
       }).join("") + "</section>";
