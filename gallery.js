@@ -52,6 +52,8 @@ window.GALLERY = {
     {"id":"kids-tulle-dress","caption":"Tulle & twirls","categories":["kids"],"w":700,"h":1050}
   ],
   "colour": [
+    {"id":"a2-mvfqz8b71","caption":"a2","categories":["portraits","family"],"w":700,"h":1050},
+    {"id":"a1-mvfqz8mp0","caption":"a1","categories":["portraits","family"],"w":700,"h":1050},
     {"id":"my-love-mom-to-be-mvfph1g82","caption":"My Love MoM to be....","categories":["maternity"],"w":700,"h":1068},
     {"id":"to-be-a-mom-soon-mvfp42tu0","caption":"To be  a MoM soon","categories":["maternity"],"w":700,"h":1003},
     {"id":"about-to-pop-to-mom-mvfp42pp3","caption":"About to PoP to MoM","categories":["maternity"],"w":700,"h":1050},
