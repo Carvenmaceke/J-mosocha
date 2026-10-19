@@ -35,7 +35,6 @@ window.GALLERY = {
     {"id":"family-upside-down-smiles","caption":"Upside-down smiles","categories":["family"],"w":700,"h":467},
     {"id":"family-sisters-in-pink","caption":"Sisters in pink","categories":["family","women"],"w":700,"h":1050},
     {"id":"family-stacked-smiles","caption":"Stacked smiles","categories":["family"],"w":700,"h":980},
-    {"id":"baby-brothers-beige","caption":"Brothers in beige","categories":["babies","kids","family"],"w":700,"h":1050},
     {"id":"baby-blue-cap-chair","caption":"Little gentleman in blue","categories":["babies","kids"],"w":700,"h":1050},
     {"id":"birthday-may-calendar","caption":"Breaking through May","categories":["birthdays","women"],"w":700,"h":1050},
     {"id":"birthday-slaying-white","caption":"Slaying in white","categories":["birthdays","women"],"w":700,"h":1025},
