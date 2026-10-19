@@ -19,7 +19,6 @@ window.GALLERY = {
     {"id":"maternity-golden-crown","caption":"Golden crown maternity","categories":["maternity","women"],"w":628,"h":768}
   ],
   "grey": [
-    {"id":"my-love-mom-to-be-mvfph1g82","caption":"My Love MoM to be....","categories":["maternity"],"w":700,"h":1068},
     {"id":"classic-blow-mvfph1700","caption":"Classic blow","categories":["maternity"],"w":700,"h":954},
     {"id":"birthday-25-red-stool","caption":"25 & blooming","categories":["birthdays","women"],"w":700,"h":1049},
     {"id":"birthday-30-wine-glass","caption":"A toast to 30","categories":["birthdays","women"],"w":700,"h":1050},
@@ -53,6 +52,7 @@ window.GALLERY = {
     {"id":"kids-tulle-dress","caption":"Tulle & twirls","categories":["kids"],"w":700,"h":1050}
   ],
   "colour": [
+    {"id":"my-love-mom-to-be-mvfph1g82","caption":"My Love MoM to be....","categories":["maternity"],"w":700,"h":1068},
     {"id":"to-be-a-mom-soon-mvfp42tu0","caption":"To be  a MoM soon","categories":["maternity"],"w":700,"h":1003},
     {"id":"about-to-pop-to-mom-mvfp42pp3","caption":"About to PoP to MoM","categories":["maternity"],"w":700,"h":1050},
     {"id":"family-stacked-smiles","caption":"Stacked smiles","categories":["family"],"w":700,"h":980},
