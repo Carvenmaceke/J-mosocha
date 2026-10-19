@@ -2,6 +2,7 @@
 // Each photo: id (its file name in img/ without -700/-1600), caption, categories, and the width and height of the 700px image.
 window.GALLERY = {
   "dark": [
+    {"id":"mom-tummy-glow-mvfph16x3","caption":"MoM tummy Glow","categories":["maternity"],"w":700,"h":1025},
     {"id":"its-our-bundle-mvfp42pq1","caption":"Its our bundle","categories":["maternity"],"w":700,"h":1050},
     {"id":"men-mvc6umtk0","caption":"Men","categories":["men"],"w":700,"h":1050},
     {"id":"birthday-burning-headline","caption":"Leveling up to 30","categories":["birthdays","women"],"w":700,"h":1050},
@@ -15,7 +16,6 @@ window.GALLERY = {
     {"id":"maternity-golden-crown","caption":"Golden crown maternity","categories":["maternity","women"],"w":628,"h":768}
   ],
   "grey": [
-    {"id":"mom-tummy-glow-mvfph16x3","caption":"MoM tummy Glow","categories":["maternity"],"w":700,"h":1025},
     {"id":"my-love-mom-to-be-mvfph1g82","caption":"My Love MoM to be....","categories":["maternity"],"w":700,"h":1068},
     {"id":"over-the-moom-mom-mvfph1711","caption":"Over the moom MoM","categories":["maternity"],"w":700,"h":504},
     {"id":"classic-blow-mvfph1700","caption":"Classic blow","categories":["maternity"],"w":700,"h":954},
