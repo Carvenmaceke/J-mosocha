@@ -2,6 +2,7 @@
 // Each photo: id (its file name in img/ without -700/-1600), caption, categories, and the width and height of the 700px image.
 window.GALLERY = {
   "dark": [
+    {"id":"its-our-bundle-mvfp42pq1","caption":"Its our bundle","categories":["maternity"],"w":700,"h":1050},
     {"id":"men-mvc6umtk0","caption":"Men","categories":["men"],"w":700,"h":1050},
     {"id":"birthday-burning-headline","caption":"Leveling up to 30","categories":["birthdays","women"],"w":700,"h":1050},
     {"id":"birthday-60th-cake","caption":"Happy 60th","categories":["birthdays","women"],"w":700,"h":1050},
@@ -16,7 +17,6 @@ window.GALLERY = {
   "grey": [
     {"id":"about-to-pop-to-mom-mvfp42pp3","caption":"About to PoP to MoM","categories":["maternity"],"w":700,"h":1050},
     {"id":"long-journey-uphill-motherhood-mvfp431s2","caption":"Long journey Uphill< Motherhood","categories":["maternity"],"w":700,"h":1050},
-    {"id":"its-our-bundle-mvfp42pq1","caption":"Its our bundle","categories":["maternity"],"w":700,"h":1050},
     {"id":"to-be-a-mom-soon-mvfp42tu0","caption":"To be  a MoM soon","categories":["maternity"],"w":700,"h":1003},
     {"id":"birthday-25-red-stool","caption":"25 & blooming","categories":["birthdays","women"],"w":700,"h":1049},
     {"id":"birthday-30-wine-glass","caption":"A toast to 30","categories":["birthdays","women"],"w":700,"h":1050},
