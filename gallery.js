@@ -24,7 +24,7 @@ window.GALLERY = {
     {"id":"graduation-family","caption":"Graduate & grandmother","categories":["men","graduation","family"],"w":700,"h":1050},
     {"id":"couple-red-gown-navy-suit","caption":"Red gown & navy suit","categories":["couples"],"w":700,"h":1065},
     {"id":"couple-mom-dad-caps","caption":"Mom & Dad to be","categories":["couples","family"],"w":700,"h":467},
-    {"id":"maternity-red-gown","caption":"Maternity in red","categories":["maternity","women"],"w":700,"h":977},
+    {"id":"maternity-red-gown","caption":"Maternity in red","categories":["women","maternity"],"w":700,"h":977},
     {"id":"birthday-25th","caption":"25th birthday","categories":["women","birthdays"],"w":700,"h":913},
     {"id":"birthday-clock","caption":"Time to celebrate","categories":["women","birthdays"],"w":700,"h":1049}
   ],
