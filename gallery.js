@@ -34,7 +34,6 @@ window.GALLERY = {
     {"id":"birthday-clock","caption":"Time to celebrate","categories":["women","birthdays"],"w":700,"h":1049}
   ],
   "white": [
-    {"id":"kids-cake-smash-bluey","caption":"Bluey cake smash","categories":["kids","birthdays"],"w":700,"h":1050},
     {"id":"happy-dude-mvfrpve61","caption":"happy dude","categories":["kids"],"w":700,"h":467},
     {"id":"hola-6-mvfrpve70","caption":"hola 6","categories":["kids"],"w":700,"h":467},
     {"id":"baby-blue-cap-chair","caption":"Little gentleman in blue","categories":["babies","kids"],"w":700,"h":1050},
