@@ -31,7 +31,6 @@ window.GALLERY = {
     {"id":"birthday-clock","caption":"Time to celebrate","categories":["women","birthdays"],"w":700,"h":1049}
   ],
   "white": [
-    {"id":"over-the-moom-mom-mvfph1711","caption":"Over the moom MoM","categories":["maternity"],"w":700,"h":504},
     {"id":"baby-denim-clap","caption":"Clap, clap!","categories":["babies","kids"],"w":700,"h":508},
     {"id":"family-50th-birthday-crew","caption":"The 50th birthday crew","categories":["family","birthdays"],"w":700,"h":1050},
     {"id":"family-upside-down-smiles","caption":"Upside-down smiles","categories":["family"],"w":700,"h":467},
@@ -59,6 +58,7 @@ window.GALLERY = {
     {"id":"kids-tulle-dress","caption":"Tulle & twirls","categories":["kids"],"w":700,"h":1050}
   ],
   "colour": [
+    {"id":"over-the-moom-mom-mvfph1711","caption":"Over the moom MoM","categories":["maternity"],"w":700,"h":504},
     {"id":"milk-bath-mvfoiaa33","caption":"Milk bath, i can swim","categories":["babies"],"w":700,"h":467},
     {"id":"cake-smash-mvfoia6y2","caption":"Smash & Smear, .see what im doing???","categories":["babies"],"w":700,"h":1050},
     {"id":"vintage-mvfoia541","caption":"Vintage","categories":["babies"],"w":700,"h":986},
