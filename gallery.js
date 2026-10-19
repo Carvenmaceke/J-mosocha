@@ -34,6 +34,7 @@ window.GALLERY = {
     {"id":"birthday-clock","caption":"Time to celebrate","categories":["women","birthdays"],"w":700,"h":1049}
   ],
   "white": [
+    {"id":"baby-piano-17-may","caption":"Birthday tunes","categories":["babies","kids","birthdays"],"w":700,"h":1050},
     {"id":"baby-denim-clap","caption":"Clap, clap!","categories":["babies","kids"],"w":700,"h":508},
     {"id":"playing-is-learning-mvfrpvik2","caption":"Playing is learning","categories":["kids"],"w":700,"h":467},
     {"id":"happy-dude-mvfrpve61","caption":"happy dude","categories":["kids"],"w":700,"h":467},
@@ -82,7 +83,6 @@ window.GALLERY = {
     {"id":"baby-piano-one-unicorn","caption":"ONE & a little tune","categories":["babies","kids","birthdays"],"w":700,"h":481},
     {"id":"baby-unicorn-cake-castle","caption":"Not sure about this cake","categories":["babies","kids","birthdays"],"w":700,"h":964},
     {"id":"baby-one-pastel-castle","caption":"Hello, ONE","categories":["babies","kids","birthdays"],"w":700,"h":494},
-    {"id":"baby-piano-17-may","caption":"Birthday tunes","categories":["babies","kids","birthdays"],"w":700,"h":1050},
     {"id":"baby-pink-knit-swing","caption":"Little swing, big eyes","categories":["babies","kids"],"w":700,"h":1029},
     {"id":"portrait-pinstripe-blazer","caption":"Pinstripe & boots","categories":["portraits","women"],"w":700,"h":1050},
     {"id":"maternity-couple-baby-vest","caption":"Couple with baby’s first vest","categories":["maternity","couples"],"w":700,"h":467},
