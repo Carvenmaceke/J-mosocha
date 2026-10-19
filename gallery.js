@@ -58,7 +58,6 @@ window.GALLERY = {
     {"id":"kids-tulle-dress","caption":"Tulle & twirls","categories":["kids"],"w":700,"h":1050}
   ],
   "colour": [
-    {"id":"over-the-moom-mom-mvfph1711","caption":"Over the moom MoM","categories":["maternity"],"w":700,"h":504},
     {"id":"milk-bath-mvfoiaa33","caption":"Milk bath, i can swim","categories":["babies"],"w":700,"h":467},
     {"id":"cake-smash-mvfoia6y2","caption":"Smash & Smear, .see what im doing???","categories":["babies"],"w":700,"h":1050},
     {"id":"vintage-mvfoia541","caption":"Vintage","categories":["babies"],"w":700,"h":986},
@@ -77,6 +76,7 @@ window.GALLERY = {
     {"id":"kids-cake-smash-bluey","caption":"Bluey cake smash","categories":["kids","birthdays"],"w":700,"h":1050},
     {"id":"birthday-pink-cake","caption":"Pretty in pink","categories":["women","birthdays"],"w":700,"h":1050},
     {"id":"maternity-green-drape","caption":"Mint maternity","categories":["maternity","women"],"w":700,"h":1049},
+    {"id":"over-the-moom-mom-mvfph1711","caption":"Over the moom MoM","categories":["maternity"],"w":700,"h":504},
     {"id":"graduation-portrait","caption":"Graduation close-up","categories":["women","graduation"],"w":700,"h":1050}
   ],
   "outdoor": [
