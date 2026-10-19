@@ -37,7 +37,6 @@ window.GALLERY = {
     {"id":"family-sisters-in-pink","caption":"Sisters in pink","categories":["family","women"],"w":700,"h":1050},
     {"id":"family-50th-birthday-crew","caption":"The 50th birthday crew","categories":["family","birthdays"],"w":700,"h":1050},
     {"id":"family-upside-down-smiles","caption":"Upside-down smiles","categories":["family"],"w":700,"h":467},
-    {"id":"family-stacked-smiles","caption":"Stacked smiles","categories":["family"],"w":700,"h":980},
     {"id":"baby-blue-cap-chair","caption":"Little gentleman in blue","categories":["babies","kids"],"w":700,"h":1050},
     {"id":"birthday-may-calendar","caption":"Breaking through May","categories":["birthdays","women"],"w":700,"h":1050},
     {"id":"birthday-slaying-white","caption":"Slaying in white","categories":["birthdays","women"],"w":700,"h":1025},
@@ -57,6 +56,7 @@ window.GALLERY = {
     {"id":"kids-tulle-dress","caption":"Tulle & twirls","categories":["kids"],"w":700,"h":1050}
   ],
   "colour": [
+    {"id":"family-stacked-smiles","caption":"Stacked smiles","categories":["family"],"w":700,"h":980},
     {"id":"friends-white-tees","caption":"Friends in white","categories":["family"],"w":700,"h":467},
     {"id":"famil-love-mvfqg5j06","caption":"Famil Love","categories":["family"],"w":700,"h":1008},
     {"id":"yaaa-all-mvfqg5iz7","caption":"Yaaa all","categories":["family"],"w":700,"h":489},
