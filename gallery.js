@@ -55,6 +55,7 @@ window.GALLERY = {
     {"id":"kids-tulle-dress","caption":"Tulle & twirls","categories":["kids"],"w":700,"h":1050}
   ],
   "colour": [
+    {"id":"lp-mvfq8j7n0","caption":"LP","categories":["family"],"w":700,"h":467},
     {"id":"milk-bath-mvfoiaa33","caption":"Milk bath, i can swim","categories":["babies"],"w":700,"h":467},
     {"id":"cake-smash-mvfoia6y2","caption":"Smash & Smear, .see what im doing???","categories":["babies"],"w":700,"h":1050},
     {"id":"vintage-mvfoia541","caption":"Vintage","categories":["babies"],"w":700,"h":986},
