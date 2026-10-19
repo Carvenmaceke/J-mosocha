@@ -2,6 +2,7 @@
 // Each photo: id (its file name in img/ without -700/-1600), caption, categories, and the width and height of the 700px image.
 window.GALLERY = {
   "dark": [
+    {"id":"dark-room-mvfqg5iy0","caption":"Dark room","categories":["family"],"w":700,"h":474},
     {"id":"mom-tummy-glow-mvfph16x3","caption":"MoM tummy Glow","categories":["maternity"],"w":700,"h":1025},
     {"id":"its-our-bundle-mvfp42pq1","caption":"Its our bundle","categories":["maternity"],"w":700,"h":1050},
     {"id":"men-mvc6umtk0","caption":"Men","categories":["men"],"w":700,"h":1050},
@@ -64,7 +65,6 @@ window.GALLERY = {
     {"id":"we-are-family-mvfqg5iz3","caption":"We are family","categories":["family"],"w":700,"h":1050},
     {"id":"one-love-mvfqg5iz2","caption":"one love","categories":["family"],"w":700,"h":1050},
     {"id":"up-up-mvfqg5ix1","caption":"up up","categories":["family"],"w":700,"h":467},
-    {"id":"dark-room-mvfqg5iy0","caption":"Dark room","categories":["family"],"w":700,"h":474},
     {"id":"lp-mvfq8j7n0","caption":"LP","categories":["family"],"w":700,"h":467},
     {"id":"milk-bath-mvfoiaa33","caption":"Milk bath, i can swim","categories":["babies"],"w":700,"h":467},
     {"id":"cake-smash-mvfoia6y2","caption":"Smash & Smear, .see what im doing???","categories":["babies"],"w":700,"h":1050},
