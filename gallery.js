@@ -66,7 +66,6 @@ window.GALLERY = {
     {"id":"happy-bath-mvfs66cu0","caption":"Happy bath","categories":["kids"],"w":700,"h":467},
     {"id":"playing-is-learning-mvfrpvik2","caption":"Playing is learning","categories":["kids"],"w":700,"h":467},
     {"id":"baby-denim-clap","caption":"Clap, clap!","categories":["babies","kids"],"w":700,"h":508},
-    {"id":"kids-tulle-dress","caption":"Tulle & twirls","categories":["kids"],"w":700,"h":1050},
     {"id":"a2-mvfqz8b71","caption":"a2","categories":["portraits","family"],"w":700,"h":1050},
     {"id":"a1-mvfqz8mp0","caption":"a1","categories":["portraits","family"],"w":700,"h":1050},
     {"id":"my-love-mom-to-be-mvfph1g82","caption":"My Love MoM to be....","categories":["maternity"],"w":700,"h":1068},
