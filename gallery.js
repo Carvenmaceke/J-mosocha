@@ -55,7 +55,7 @@ window.GALLERY = {
   ],
   "colour": [
     {"id":"milk-bath-mvfoiaa33","caption":"Milk bath, i can swim","categories":["babies"],"w":700,"h":467},
-    {"id":"cake-smash-mvfoia6y2","caption":"Cake smash","categories":["babies"],"w":700,"h":1050},
+    {"id":"cake-smash-mvfoia6y2","caption":"Smash & Smear, .see what im doing???","categories":["babies"],"w":700,"h":1050},
     {"id":"vintage-mvfoia541","caption":"Vintage","categories":["babies"],"w":700,"h":986},
     {"id":"my-special-one-mvfoia520","caption":"My special one","categories":["babies"],"w":700,"h":1050},
     {"id":"baby-piano-one-unicorn","caption":"ONE & a little tune","categories":["babies","kids","birthdays"],"w":700,"h":481},
