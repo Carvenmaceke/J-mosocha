@@ -17,7 +17,6 @@ window.GALLERY = {
   ],
   "grey": [
     {"id":"my-love-mom-to-be-mvfph1g82","caption":"My Love MoM to be....","categories":["maternity"],"w":700,"h":1068},
-    {"id":"over-the-moom-mom-mvfph1711","caption":"Over the moom MoM","categories":["maternity"],"w":700,"h":504},
     {"id":"classic-blow-mvfph1700","caption":"Classic blow","categories":["maternity"],"w":700,"h":954},
     {"id":"about-to-pop-to-mom-mvfp42pp3","caption":"About to PoP to MoM","categories":["maternity"],"w":700,"h":1050},
     {"id":"to-be-a-mom-soon-mvfp42tu0","caption":"To be  a MoM soon","categories":["maternity"],"w":700,"h":1003},
@@ -32,6 +31,7 @@ window.GALLERY = {
     {"id":"birthday-clock","caption":"Time to celebrate","categories":["women","birthdays"],"w":700,"h":1049}
   ],
   "white": [
+    {"id":"over-the-moom-mom-mvfph1711","caption":"Over the moom MoM","categories":["maternity"],"w":700,"h":504},
     {"id":"baby-denim-clap","caption":"Clap, clap!","categories":["babies","kids"],"w":700,"h":508},
     {"id":"family-50th-birthday-crew","caption":"The 50th birthday crew","categories":["family","birthdays"],"w":700,"h":1050},
     {"id":"family-upside-down-smiles","caption":"Upside-down smiles","categories":["family"],"w":700,"h":467},
