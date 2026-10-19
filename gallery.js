@@ -15,7 +15,6 @@ window.GALLERY = {
     {"id":"maternity-couple-red","caption":"Expecting couple","categories":["maternity","couples"],"w":700,"h":1023}
   ],
   "grey": [
-    {"id":"birthday-14th-spotlight","caption":"Sweet 14 in the spotlight","categories":["birthdays","kids"],"w":700,"h":1032},
     {"id":"birthday-25-red-stool","caption":"25 & blooming","categories":["birthdays","women"],"w":700,"h":1049},
     {"id":"birthday-30-wine-glass","caption":"A toast to 30","categories":["birthdays","women"],"w":700,"h":1050},
     {"id":"portrait-spotlight-navy","caption":"Spotlight portrait","categories":["portraits","women"],"w":700,"h":1050},
