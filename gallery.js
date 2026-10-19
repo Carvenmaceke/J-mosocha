@@ -26,7 +26,6 @@ window.GALLERY = {
     {"id":"vintage-mvfr2pbz4","caption":"Vintage","categories":["portraits"],"w":700,"h":1050},
     {"id":"nj-mvfr2pbw3","caption":"nj","categories":["portraits"],"w":700,"h":818},
     {"id":"man-mvfr2pgi2","caption":"Man","categories":["portraits"],"w":700,"h":1049},
-    {"id":"d-1-mvfr2pll1","caption":"D 1","categories":["portraits"],"w":700,"h":1049},
     {"id":"bb2-mvfr2pc00","caption":"bb2","categories":["portraits"],"w":700,"h":1049},
     {"id":"birthday-25-red-stool","caption":"25 & blooming","categories":["birthdays","women"],"w":700,"h":1049},
     {"id":"birthday-30-wine-glass","caption":"A toast to 30","categories":["birthdays","women"],"w":700,"h":1050},
