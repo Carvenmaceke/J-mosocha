@@ -40,7 +40,6 @@ window.GALLERY = {
     {"id":"birthday-may-calendar","caption":"Breaking through May","categories":["birthdays","women"],"w":700,"h":1050},
     {"id":"birthday-slaying-white","caption":"Slaying in white","categories":["birthdays","women"],"w":700,"h":1025},
     {"id":"birthday-hello-30-cake","caption":"Hello 30","categories":["birthdays","women"],"w":700,"h":467},
-    {"id":"graduation-mom-kiss","caption":"A kiss from Mom","categories":["graduation","family"],"w":700,"h":1050},
     {"id":"class-of-2025-mvfnzeg40","caption":"Class of 2025","categories":["women","graduation"],"w":700,"h":1050},
     {"id":"couple-red-roses","caption":"Roses & forehead touch","categories":["couples"],"w":700,"h":1050},
     {"id":"portrait-timberland-step","caption":"Fresh steps","categories":["portraits","men"],"w":700,"h":1050},
