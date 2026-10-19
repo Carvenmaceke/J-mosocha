@@ -34,12 +34,12 @@ window.GALLERY = {
     {"id":"birthday-clock","caption":"Time to celebrate","categories":["women","birthdays"],"w":700,"h":1049}
   ],
   "white": [
-    {"id":"his-majesty-mvfs66fy5","caption":"His Majesty","categories":["kids"],"w":700,"h":1050},
     {"id":"kids-cake-smash-bluey","caption":"Bluey cake smash","categories":["kids","birthdays"],"w":700,"h":1050},
     {"id":"happy-dude-mvfrpve61","caption":"happy dude","categories":["kids"],"w":700,"h":467},
     {"id":"hola-6-mvfrpve70","caption":"hola 6","categories":["kids"],"w":700,"h":467},
     {"id":"baby-blue-cap-chair","caption":"Little gentleman in blue","categories":["babies","kids"],"w":700,"h":1050},
     {"id":"gettle-broer-mvfrpve73","caption":"Gettle broer","categories":["kids"],"w":700,"h":1048},
+    {"id":"his-majesty-mvfs66fy5","caption":"His Majesty","categories":["kids"],"w":700,"h":1050},
     {"id":"baby-piano-17-may","caption":"Birthday tunes","categories":["babies","kids","birthdays"],"w":700,"h":1050},
     {"id":"family-sisters-in-pink","caption":"Sisters in pink","categories":["family","women"],"w":700,"h":1050},
     {"id":"family-50th-birthday-crew","caption":"The 50th birthday crew","categories":["family","birthdays"],"w":700,"h":1050},
