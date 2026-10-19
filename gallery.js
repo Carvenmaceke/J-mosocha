@@ -34,6 +34,7 @@ window.GALLERY = {
     {"id":"birthday-clock","caption":"Time to celebrate","categories":["women","birthdays"],"w":700,"h":1049}
   ],
   "white": [
+    {"id":"his-majesty-mvfs66fy5","caption":"His Majesty","categories":["kids"],"w":700,"h":1050},
     {"id":"kids-cake-smash-bluey","caption":"Bluey cake smash","categories":["kids","birthdays"],"w":700,"h":1050},
     {"id":"happy-dude-mvfrpve61","caption":"happy dude","categories":["kids"],"w":700,"h":467},
     {"id":"hola-6-mvfrpve70","caption":"hola 6","categories":["kids"],"w":700,"h":467},
@@ -59,7 +60,6 @@ window.GALLERY = {
     {"id":"graduation-woman-balloons","caption":"Class of 2026","categories":["women","graduation"],"w":700,"h":1050}
   ],
   "colour": [
-    {"id":"his-majesty-mvfs66fy5","caption":"His Majesty","categories":["kids"],"w":700,"h":1050},
     {"id":"yes-love-my-cake-mvfs66ct4","caption":"Yes love my cake","categories":["kids"],"w":700,"h":451},
     {"id":"hey-mom-mvfs66ct3","caption":"hey mom","categories":["kids"],"w":700,"h":467},
     {"id":"boooooooo-swim-mvfs66cu2","caption":"boooooooo swim","categories":["kids"],"w":700,"h":467},
