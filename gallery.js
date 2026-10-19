@@ -87,7 +87,6 @@ window.GALLERY = {
     {"id":"portrait-pinstripe-blazer","caption":"Pinstripe & boots","categories":["portraits","women"],"w":700,"h":1050},
     {"id":"maternity-couple-baby-vest","caption":"Couple with baby’s first vest","categories":["maternity","couples"],"w":700,"h":467},
     {"id":"maternity-mountain-sparkle","caption":"Sparkle gown against the mountains","categories":["maternity","women"],"w":700,"h":467},
-    {"id":"kids-rainbow-castle","caption":"Rainbow cake smash","categories":["kids","birthdays"],"w":700,"h":963},
     {"id":"kids-princess-throne","caption":"Little princess","categories":["kids","birthdays"],"w":700,"h":1050},
     {"id":"kids-second-birthday","caption":"Butterfly second birthday","categories":["kids","birthdays"],"w":700,"h":535},
     {"id":"kids-cake-smash-bluey","caption":"Bluey cake smash","categories":["kids","birthdays"],"w":700,"h":1050},
