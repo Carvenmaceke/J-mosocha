@@ -28,7 +28,6 @@ window.GALLERY = {
   ],
   "white": [
     {"id":"baby-denim-clap","caption":"Clap, clap!","categories":["babies","kids"],"w":700,"h":508},
-    {"id":"family-red-and-navy","caption":"Red & navy family","categories":["family","kids"],"w":700,"h":1100},
     {"id":"family-50th-birthday-crew","caption":"The 50th birthday crew","categories":["family","birthdays"],"w":700,"h":1050},
     {"id":"family-upside-down-smiles","caption":"Upside-down smiles","categories":["family"],"w":700,"h":467},
     {"id":"family-sisters-in-pink","caption":"Sisters in pink","categories":["family","women"],"w":700,"h":1050},
