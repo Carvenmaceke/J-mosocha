@@ -34,6 +34,7 @@ window.GALLERY = {
     {"id":"birthday-clock","caption":"Time to celebrate","categories":["women","birthdays"],"w":700,"h":1049}
   ],
   "white": [
+    {"id":"kids-cake-smash-bluey","caption":"Bluey cake smash","categories":["kids","birthdays"],"w":700,"h":1050},
     {"id":"baby-piano-17-may","caption":"Birthday tunes","categories":["babies","kids","birthdays"],"w":700,"h":1050},
     {"id":"baby-denim-clap","caption":"Clap, clap!","categories":["babies","kids"],"w":700,"h":508},
     {"id":"playing-is-learning-mvfrpvik2","caption":"Playing is learning","categories":["kids"],"w":700,"h":467},
@@ -89,7 +90,6 @@ window.GALLERY = {
     {"id":"maternity-mountain-sparkle","caption":"Sparkle gown against the mountains","categories":["maternity","women"],"w":700,"h":467},
     {"id":"kids-princess-throne","caption":"Little princess","categories":["kids","birthdays"],"w":700,"h":1050},
     {"id":"kids-second-birthday","caption":"Butterfly second birthday","categories":["kids","birthdays"],"w":700,"h":535},
-    {"id":"kids-cake-smash-bluey","caption":"Bluey cake smash","categories":["kids","birthdays"],"w":700,"h":1050},
     {"id":"birthday-pink-cake","caption":"Pretty in pink","categories":["women","birthdays"],"w":700,"h":1050},
     {"id":"over-the-moom-mom-mvfph1711","caption":"Over the moom MoM","categories":["maternity"],"w":700,"h":504},
     {"id":"maternity-green-drape","caption":"Mint maternity","categories":["maternity","women"],"w":700,"h":1049},
