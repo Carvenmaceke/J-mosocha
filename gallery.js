@@ -2,6 +2,7 @@
 // Each photo: id (its file name in img/ without -700/-1600), caption, categories, and the width and height of the 700px image.
 window.GALLERY = {
   "dark": [
+    {"id":"maternity-red-gown","caption":"Maternity in red","categories":["women","maternity"],"w":700,"h":977},
     {"id":"classic-blow-mvfph1700","caption":"Classic blow","categories":["maternity"],"w":700,"h":954},
     {"id":"one-love-mvfqg5iz2","caption":"one love","categories":["family"],"w":700,"h":1050},
     {"id":"up-up-mvfqg5ix1","caption":"up up","categories":["family"],"w":700,"h":467},
@@ -25,7 +26,6 @@ window.GALLERY = {
     {"id":"portrait-spotlight-navy","caption":"Spotlight portrait","categories":["portraits","women"],"w":700,"h":1050},
     {"id":"couple-red-gown-navy-suit","caption":"Red gown & navy suit","categories":["couples"],"w":700,"h":1065},
     {"id":"couple-mom-dad-caps","caption":"Mom & Dad to be","categories":["couples","family"],"w":700,"h":467},
-    {"id":"maternity-red-gown","caption":"Maternity in red","categories":["women","maternity"],"w":700,"h":977},
     {"id":"birthday-25th","caption":"25th birthday","categories":["women","birthdays"],"w":700,"h":913},
     {"id":"birthday-clock","caption":"Time to celebrate","categories":["women","birthdays"],"w":700,"h":1049}
   ],
