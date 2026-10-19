@@ -29,7 +29,6 @@ window.GALLERY = {
     {"id":"bb2-mvfr2pc00","caption":"bb2","categories":["portraits"],"w":700,"h":1049},
     {"id":"birthday-25-red-stool","caption":"25 & blooming","categories":["birthdays","women"],"w":700,"h":1049},
     {"id":"birthday-30-wine-glass","caption":"A toast to 30","categories":["birthdays","women"],"w":700,"h":1050},
-    {"id":"portrait-spotlight-navy","caption":"Spotlight portrait","categories":["portraits","women"],"w":700,"h":1050},
     {"id":"couple-red-gown-navy-suit","caption":"Red gown & navy suit","categories":["couples"],"w":700,"h":1065},
     {"id":"couple-mom-dad-caps","caption":"Mom & Dad to be","categories":["couples","family"],"w":700,"h":467},
     {"id":"birthday-25th","caption":"25th birthday","categories":["women","birthdays"],"w":700,"h":913},
