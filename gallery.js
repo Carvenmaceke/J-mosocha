@@ -47,7 +47,6 @@ window.GALLERY = {
     {"id":"portrait-timberland-step","caption":"Fresh steps","categories":["portraits","men"],"w":700,"h":1050},
     {"id":"portrait-beret-chair","caption":"Beret & folding chair","categories":["portraits","men"],"w":700,"h":1050},
     {"id":"portrait-leather-jacket","caption":"Leather & shades","categories":["portraits","men"],"w":700,"h":1050},
-    {"id":"friends-white-tees","caption":"Friends in white","categories":["family"],"w":700,"h":467},
     {"id":"women-black-gown","caption":"Studio portrait","categories":["women"],"w":700,"h":1050},
     {"id":"women-burgundy-suit","caption":"Burgundy editorial","categories":["women"],"w":700,"h":1050},
     {"id":"women-flower-wreath","caption":"Flower wreath","categories":["women"],"w":700,"h":1050},
@@ -58,6 +57,7 @@ window.GALLERY = {
     {"id":"kids-tulle-dress","caption":"Tulle & twirls","categories":["kids"],"w":700,"h":1050}
   ],
   "colour": [
+    {"id":"friends-white-tees","caption":"Friends in white","categories":["family"],"w":700,"h":467},
     {"id":"famil-love-mvfqg5j06","caption":"Famil Love","categories":["family"],"w":700,"h":1008},
     {"id":"yaaa-all-mvfqg5iz7","caption":"Yaaa all","categories":["family"],"w":700,"h":489},
     {"id":"1st-class-mvfqg5u14","caption":"1st Class","categories":["family"],"w":700,"h":1100},
