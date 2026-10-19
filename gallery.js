@@ -34,6 +34,10 @@ window.GALLERY = {
     {"id":"birthday-clock","caption":"Time to celebrate","categories":["women","birthdays"],"w":700,"h":1049}
   ],
   "white": [
+    {"id":"gettle-broer-mvfrpve73","caption":"Gettle broer","categories":["kids"],"w":700,"h":1048},
+    {"id":"playing-is-learning-mvfrpvik2","caption":"Playing is learning","categories":["kids"],"w":700,"h":467},
+    {"id":"happy-dude-mvfrpve61","caption":"happy dude","categories":["kids"],"w":700,"h":467},
+    {"id":"hola-6-mvfrpve70","caption":"hola 6","categories":["kids"],"w":700,"h":467},
     {"id":"baby-denim-clap","caption":"Clap, clap!","categories":["babies","kids"],"w":700,"h":508},
     {"id":"family-sisters-in-pink","caption":"Sisters in pink","categories":["family","women"],"w":700,"h":1050},
     {"id":"family-50th-birthday-crew","caption":"The 50th birthday crew","categories":["family","birthdays"],"w":700,"h":1050},
