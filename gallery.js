@@ -11,8 +11,7 @@ window.GALLERY = {
     {"id":"maternity-white-tulle-train","caption":"White tulle maternity","categories":["maternity","women"],"w":700,"h":1033},
     {"id":"graduation-man-portrait","caption":"Graduation portrait","categories":["men","graduation"],"w":700,"h":1047},
     {"id":"birthday-roses-black-gown","caption":"Roses & black gown","categories":["women","birthdays"],"w":700,"h":1050},
-    {"id":"maternity-golden-crown","caption":"Golden crown maternity","categories":["maternity","women"],"w":628,"h":768},
-    {"id":"maternity-couple-red","caption":"Expecting couple","categories":["maternity","couples"],"w":700,"h":1023}
+    {"id":"maternity-golden-crown","caption":"Golden crown maternity","categories":["maternity","women"],"w":628,"h":768}
   ],
   "grey": [
     {"id":"about-to-pop-to-mom-mvfp42pp3","caption":"About to PoP to MoM","categories":["maternity"],"w":700,"h":1050},
