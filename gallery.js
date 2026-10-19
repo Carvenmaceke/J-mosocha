@@ -59,6 +59,12 @@ window.GALLERY = {
     {"id":"graduation-woman-balloons","caption":"Class of 2026","categories":["women","graduation"],"w":700,"h":1050}
   ],
   "colour": [
+    {"id":"his-majesty-mvfs66fy5","caption":"His Majesty","categories":["kids"],"w":700,"h":1050},
+    {"id":"yes-love-my-cake-mvfs66ct4","caption":"Yes love my cake","categories":["kids"],"w":700,"h":451},
+    {"id":"hey-mom-mvfs66ct3","caption":"hey mom","categories":["kids"],"w":700,"h":467},
+    {"id":"boooooooo-swim-mvfs66cu2","caption":"boooooooo swim","categories":["kids"],"w":700,"h":467},
+    {"id":"queen-1-mvfs66o21","caption":"queen 1","categories":["kids"],"w":700,"h":1050},
+    {"id":"happy-bath-mvfs66cu0","caption":"Happy bath","categories":["kids"],"w":700,"h":467},
     {"id":"playing-is-learning-mvfrpvik2","caption":"Playing is learning","categories":["kids"],"w":700,"h":467},
     {"id":"baby-denim-clap","caption":"Clap, clap!","categories":["babies","kids"],"w":700,"h":508},
     {"id":"kids-tulle-dress","caption":"Tulle & twirls","categories":["kids"],"w":700,"h":1050},
