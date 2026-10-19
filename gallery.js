@@ -34,14 +34,14 @@ window.GALLERY = {
     {"id":"birthday-clock","caption":"Time to celebrate","categories":["women","birthdays"],"w":700,"h":1049}
   ],
   "white": [
-    {"id":"gettle-broer-mvfrpve73","caption":"Gettle broer","categories":["kids"],"w":700,"h":1048},
+    {"id":"baby-denim-clap","caption":"Clap, clap!","categories":["babies","kids"],"w":700,"h":508},
     {"id":"playing-is-learning-mvfrpvik2","caption":"Playing is learning","categories":["kids"],"w":700,"h":467},
+    {"id":"baby-blue-cap-chair","caption":"Little gentleman in blue","categories":["babies","kids"],"w":700,"h":1050},
     {"id":"happy-dude-mvfrpve61","caption":"happy dude","categories":["kids"],"w":700,"h":467},
     {"id":"hola-6-mvfrpve70","caption":"hola 6","categories":["kids"],"w":700,"h":467},
-    {"id":"baby-denim-clap","caption":"Clap, clap!","categories":["babies","kids"],"w":700,"h":508},
+    {"id":"gettle-broer-mvfrpve73","caption":"Gettle broer","categories":["kids"],"w":700,"h":1048},
     {"id":"family-sisters-in-pink","caption":"Sisters in pink","categories":["family","women"],"w":700,"h":1050},
     {"id":"family-50th-birthday-crew","caption":"The 50th birthday crew","categories":["family","birthdays"],"w":700,"h":1050},
-    {"id":"baby-blue-cap-chair","caption":"Little gentleman in blue","categories":["babies","kids"],"w":700,"h":1050},
     {"id":"birthday-may-calendar","caption":"Breaking through May","categories":["birthdays","women"],"w":700,"h":1050},
     {"id":"birthday-slaying-white","caption":"Slaying in white","categories":["birthdays","women"],"w":700,"h":1025},
     {"id":"birthday-hello-30-cake","caption":"Hello 30","categories":["birthdays","women"],"w":700,"h":467},
