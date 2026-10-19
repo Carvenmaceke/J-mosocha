@@ -46,7 +46,6 @@ window.GALLERY = {
     {"id":"portrait-beret-chair","caption":"Beret & folding chair","categories":["portraits","men"],"w":700,"h":1050},
     {"id":"portrait-leather-jacket","caption":"Leather & shades","categories":["portraits","men"],"w":700,"h":1050},
     {"id":"friends-white-tees","caption":"Friends in white","categories":["family"],"w":700,"h":467},
-    {"id":"maternity-golden-halo","caption":"Golden halo maternity","categories":["maternity","women"],"w":700,"h":467},
     {"id":"women-black-gown","caption":"Studio portrait","categories":["women"],"w":700,"h":1050},
     {"id":"women-burgundy-suit","caption":"Burgundy editorial","categories":["women"],"w":700,"h":1050},
     {"id":"women-flower-wreath","caption":"Flower wreath","categories":["women"],"w":700,"h":1050},
