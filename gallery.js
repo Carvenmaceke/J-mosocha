@@ -2,6 +2,7 @@
 // Each photo: id (its file name in img/ without -700/-1600), caption, categories, and the width and height of the 700px image.
 window.GALLERY = {
   "dark": [
+    {"id":"classic-blow-mvfph1700","caption":"Classic blow","categories":["maternity"],"w":700,"h":954},
     {"id":"one-love-mvfqg5iz2","caption":"one love","categories":["family"],"w":700,"h":1050},
     {"id":"up-up-mvfqg5ix1","caption":"up up","categories":["family"],"w":700,"h":467},
     {"id":"dark-room-mvfqg5iy0","caption":"Dark room","categories":["family"],"w":700,"h":474},
@@ -19,7 +20,6 @@ window.GALLERY = {
     {"id":"maternity-golden-crown","caption":"Golden crown maternity","categories":["maternity","women"],"w":628,"h":768}
   ],
   "grey": [
-    {"id":"classic-blow-mvfph1700","caption":"Classic blow","categories":["maternity"],"w":700,"h":954},
     {"id":"birthday-25-red-stool","caption":"25 & blooming","categories":["birthdays","women"],"w":700,"h":1049},
     {"id":"birthday-30-wine-glass","caption":"A toast to 30","categories":["birthdays","women"],"w":700,"h":1050},
     {"id":"portrait-spotlight-navy","caption":"Spotlight portrait","categories":["portraits","women"],"w":700,"h":1050},
