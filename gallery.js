@@ -58,10 +58,10 @@ window.GALLERY = {
     {"id":"birthday-30th","caption":"30th birthday","categories":["women","birthdays"],"w":700,"h":1050},
     {"id":"birthday-21st","caption":"21st birthday","categories":["women","birthdays"],"w":700,"h":1050},
     {"id":"birthday-crown-roses","caption":"Queen for the day","categories":["women","birthdays"],"w":700,"h":1050},
-    {"id":"graduation-woman-balloons","caption":"Class of 2026","categories":["women","graduation"],"w":700,"h":1050},
-    {"id":"kids-tulle-dress","caption":"Tulle & twirls","categories":["kids"],"w":700,"h":1050}
+    {"id":"graduation-woman-balloons","caption":"Class of 2026","categories":["women","graduation"],"w":700,"h":1050}
   ],
   "colour": [
+    {"id":"kids-tulle-dress","caption":"Tulle & twirls","categories":["kids"],"w":700,"h":1050},
     {"id":"a2-mvfqz8b71","caption":"a2","categories":["portraits","family"],"w":700,"h":1050},
     {"id":"a1-mvfqz8mp0","caption":"a1","categories":["portraits","family"],"w":700,"h":1050},
     {"id":"my-love-mom-to-be-mvfph1g82","caption":"My Love MoM to be....","categories":["maternity"],"w":700,"h":1068},
