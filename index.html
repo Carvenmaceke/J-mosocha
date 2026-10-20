@@ -1647,19 +1647,24 @@ footer h3 { color: var(--fg); }
 
   // Dropdown menus
   var count = function (cat) { return TONES.reduce(function (n, t) { return n + t.photos.filter(function (p) { return cat === "all" || p[2].split(" ").indexOf(cat) > -1; }).length; }, 0); };
-  $("#session-drop").innerHTML = '<li><a href="sessions.html"><b>All sessions</b></a></li><li><a href="#tips" data-tips="wear">Tips: what to wear &amp; bring</a></li><li class="sep" role="separator"></li><li class="label">Sessions</li>' + SESSIONS.map(function (s) { return '<li><a href="booking.html?session=' + encodeURIComponent(plain(s[1])) + '">' + s[1] + "</a></li>"; }).join("") + '<li class="sep" role="separator"></li><li><a href="#packages">Packages &amp; pricing</a></li>';
+  $("#session-drop").innerHTML = '<li><a href="sessions.html"><b>All sessions</b></a></li><li><a href="#tips" data-tips="wear">Tips: what to wear &amp; bring</a></li><li class="sep" role="separator"></li><li class="label">Sessions</li>' + SESSIONS.map(function (s, i) { return "<li" + (i >= 5 ? ' class="g-more" hidden' : "") + '><a href="booking.html?session=' + encodeURIComponent(plain(s[1])) + '">' + s[1] + "</a></li>"; }).join("") +
+    (SESSIONS.length > 5 ? '<li><button type="button" class="g-more-btn" data-more="sessions" aria-expanded="false"><span class="dots" aria-hidden="true">&bull;&bull;&bull;</span>More sessions</button></li>' : "") +
+    '<li class="sep" role="separator"></li><li><a href="#packages">Packages &amp; pricing</a></li>';
   // The first few categories, then "More" (three dots) for the rest
   var GSHOW = 5, gcats = CATS.filter(function (c) { return c[0] !== "all" && count(c[0]); });
   $("#gallery-drop").innerHTML = '<li><a href="gallery.html">All photos</a></li><li class="sep" role="separator"></li><li class="label">By category</li>' +
     gcats.map(function (c, i) { return "<li" + (i >= GSHOW ? ' class="g-more" hidden' : "") + '><a href="gallery.html?cat=' + c[0] + '" data-gcat="' + c[0] + '">' + c[1] + "</a></li>"; }).join("") +
-    (gcats.length > GSHOW ? '<li><button type="button" class="g-more-btn" aria-expanded="false"><span class="dots" aria-hidden="true">&bull;&bull;&bull;</span>More categories</button></li>' : "");
-  var gMore = $("#gallery-drop .g-more-btn");
-  if (gMore) gMore.addEventListener("click", function (e) {
-    e.stopPropagation();
-    var open = gMore.getAttribute("aria-expanded") !== "true";
-    $$("#gallery-drop .g-more").forEach(function (li) { li.hidden = !open; });
-    gMore.setAttribute("aria-expanded", open); gMore.lastChild.textContent = open ? "Fewer categories" : "More categories";
-    if (open) $("#gallery-drop .g-more a").focus();
+    (gcats.length > GSHOW ? '<li><button type="button" class="g-more-btn" data-more="categories" aria-expanded="false"><span class="dots" aria-hidden="true">&bull;&bull;&bull;</span>More categories</button></li>' : "");
+  // "More" buttons in the dropdowns show the rest of the list
+  $$(".drop .g-more-btn").forEach(function (btn) {
+    var drop = btn.closest(".drop"), what = btn.dataset.more;
+    btn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      var open = btn.getAttribute("aria-expanded") !== "true";
+      $$(".g-more", drop).forEach(function (li) { li.hidden = !open; });
+      btn.setAttribute("aria-expanded", open); btn.lastChild.textContent = (open ? "Fewer " : "More ") + what;
+      if (open) $(".g-more a", drop).focus();
+    });
   });
   var items = $$(".menu > li");
   function closeAll(except) { items.forEach(function (li) { if (li !== except) { li.classList.remove("open"); var b = $("button", li); if (b) b.setAttribute("aria-expanded", "false"); } }); }
