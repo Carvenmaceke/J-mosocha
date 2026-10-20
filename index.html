@@ -194,6 +194,47 @@ main { padding-top: var(--header-h, 147px); }
 .hero-text h1 { font-size: clamp(2.3rem, 5.4vw, 4.4rem); margin: 0 0 16px; }
 .hero-quote { max-width: 560px; margin: 0 auto 24px; font-style: italic; font-size: clamp(1rem, 1.6vw, 1.15rem); line-height: 1.6; opacity: .85; }
 .hero-text .btn { color: #fff; }
+.hero-kicker { font-size: .78rem; letter-spacing: .22em; text-transform: uppercase; color: #cfae7a; margin: 0 0 14px; }
+.hero-ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.hero-text .btn.hero-book { background: #cfae7a; border-color: #cfae7a; color: #111; }
+.hero-text .btn.hero-book:hover { background: #fff; border-color: #fff; color: #111; }
+.hero-text .btn svg { width: 16px; height: 16px; }
+.hero-rating { display: inline-flex; align-items: center; gap: 8px; margin-top: 22px; color: rgba(255,255,255,.75); font-size: .9rem; text-decoration: none; }
+.hero-rating b { color: #fff; }
+.hero-rating:hover { color: #fff; }
+.hero-stars { display: inline-flex; gap: 2px; color: #f4b400; }
+.hero-stars svg { width: 15px; height: 15px; }
+@media (max-width: 600px) {
+  .hero-kicker { font-size: .7rem; letter-spacing: .16em; }
+  .hero-text .m-hide { display: none; }
+  .hero-ctas .btn { width: min(100%, 300px); justify-content: center; }
+}
+/* Home: tiles to every page */
+.explore { background: var(--bg); }
+.ex-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 46px; }
+.ex-tile { display: flex; flex-direction: column; background: var(--bg-2); border: 1px solid var(--g3); border-radius: 22px; overflow: hidden; text-decoration: none; color: var(--fg); transition: transform .35s ease, box-shadow .35s ease; }
+.ex-tile:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+.ex-ph { display: block; aspect-ratio: 4 / 3; background: var(--g3) center 22% / cover no-repeat; transition: transform .6s ease; }
+.ex-tile:hover .ex-ph { transform: scale(1.04); }
+.ex-body { position: relative; display: flex; flex-direction: column; gap: 4px; padding: 20px 64px 22px 22px; background: var(--bg-2); }
+.ex-body small { font-style: italic; color: var(--accent); }
+.ex-body b { font-weight: 400; font-size: 1.35rem; }
+.ex-body span { color: var(--fg-2); font-size: .95rem; }
+.ex-body i { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--g4); transition: background .25s, color .25s, border-color .25s; }
+.ex-body i svg { width: 17px; height: 17px; }
+.ex-tile:hover .ex-body i { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.ex-tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+@media (max-width: 900px) { .ex-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; } }
+@media (max-width: 560px) { .ex-grid { grid-template-columns: 1fr; } .ex-ph { aspect-ratio: 16 / 9; } }
+/* Home: how booking works */
+.how { background: var(--bg-2); }
+.how-steps { list-style: none; margin: 46px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; counter-reset: none; }
+.how-steps li { background: var(--bg); border: 1px solid var(--g3); border-radius: 22px; padding: 28px 26px; }
+.how-steps span { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--fg); color: var(--bg); font-size: 1.1rem; margin-bottom: 16px; }
+.how-steps b { display: block; font-weight: 400; font-size: 1.3rem; margin-bottom: 6px; }
+.how-steps p { color: var(--fg-2); }
+.how-ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 34px; }
+@media (max-width: 800px) { .how-steps { grid-template-columns: 1fr; } }
 .hero-text .btn:hover { background: #fff; color: #111; }
 @media (max-width: 700px) { .hero { padding: 20px 0 36px; } .ring-stage { perspective: 1100px; } }
 
@@ -1024,9 +1065,50 @@ footer h3 { color: var(--fg); }
       <div class="ring" id="ring"></div>
     </div>
     <div class="hero-text">
+      <p class="hero-kicker">Photography &middot; Videography &middot; Printing<span class="m-hide"> &middot; Pretoria Central since 2010</span></p>
       <h1>Moments, beautifully kept.</h1>
       <p class="hero-quote">&ldquo;The moments that matter only happen once. We make sure they last forever.&rdquo;</p>
-      <a class="btn" href="gallery.html" id="hero-all">View the gallery</a>
+      <div class="hero-ctas">
+        <a class="btn hero-book" href="booking.html">Book a session <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="btn" href="gallery.html" id="hero-all">View the gallery</a>
+      </div>
+      <a class="hero-rating" href="#reviews"><span class="hero-stars"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg></span><b>4.5</b> on Google<span class="m-hide"> &middot; loved by Pretoria families</span></a>
+    </div>
+  </section>
+
+  <section class="sec explore" id="explore" aria-labelledby="ex-title">
+    <div class="wrap">
+      <div class="center fade">
+        <p class="eyebrow">Explore the studio</p>
+        <h2 class="title" id="ex-title">Everything in one place</h2>
+        <p class="lede quote">Find your session, see our prices, or browse the work.</p>
+      </div>
+      <div class="ex-grid" id="ex-grid">
+        <a class="ex-tile fade" href="sessions.html" data-ex="birthdays"><span class="ex-ph"></span><span class="ex-body"><small>01</small><b>Photo sessions</b><span>Birthdays, cake smash, maternity, graduation &amp; more</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></span></a>
+        <a class="ex-tile fade" href="packages.html" data-ex="women"><span class="ex-ph"></span><span class="ex-body"><small>02</small><b>Packages &amp; pricing</b><span>Clear prices, from R750 a session</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></span></a>
+        <a class="ex-tile fade" href="gallery.html" data-ex="family"><span class="ex-ph"></span><span class="ex-body"><small>03</small><b>Gallery</b><span>Our latest shoots, by category</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></span></a>
+        <a class="ex-tile fade" href="prints.html" data-ex="graduation"><span class="ex-ph"></span><span class="ex-body"><small>04</small><b>Printed products</b><span>Canvases, frames, albums &amp; photo gifts</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></span></a>
+        <a class="ex-tile fade" href="services.html" data-ex="babies"><span class="ex-ph"></span><span class="ex-body"><small>05</small><b>Our services</b><span>Photography, videography &amp; printing</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></span></a>
+        <a class="ex-tile fade" href="about.html" data-ex="about"><span class="ex-ph"></span><span class="ex-body"><small>06</small><b>About us</b><span>Capturing Pretoria&rsquo;s milestones since 2010</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec how" id="how" aria-labelledby="how-title">
+    <div class="wrap">
+      <div class="center fade">
+        <p class="eyebrow">Booking is easy</p>
+        <h2 class="title" id="how-title">Your shoot in three steps</h2>
+      </div>
+      <ol class="how-steps">
+        <li class="fade"><span>1</span><b>Choose your session</b><p>Pick the shoot you want, and a package if there is one.</p></li>
+        <li class="fade"><span>2</span><b>Pick a date &amp; time</b><p>Only open times are shown, so what you see is what you can book.</p></li>
+        <li class="fade"><span>3</span><b>Pay your deposit</b><p>Pay 50% online by card and your booking is confirmed straight away.</p></li>
+      </ol>
+      <div class="how-ctas fade">
+        <a class="btn btn--solid" href="booking.html">Book your session</a>
+        <a class="btn" href="https://wa.me/27661322462?text=Hi%20J%20Masocha%20Photography!%20I%20have%20a%20question%20about%20booking%20a%20shoot." target="_blank" rel="noopener">Ask us on WhatsApp</a>
+      </div>
     </div>
   </section>
 
@@ -1860,6 +1942,21 @@ footer h3 { color: var(--fg); }
       k[2].map(function (f) { return "<li>" + tick + f + "</li>"; }).join("") + '<li class="extra">' + tick + "Add family &amp; friends for free</li></ul>" +
       '<a class="btn' + (k[3] ? "" : " btn--solid") + '" href="booking.html?session=' + encodeURIComponent("Adult Birthday") + "&amp;pkg=" + encodeURIComponent(plain(k[0])) + '">Book this package</a></article>';
   }).join("");
+
+  // Home tiles: a photo from the gallery for each (the about tile uses the about photo)
+  (function () {
+    var used = {}, all = TONES.reduce(function (l, t) { return l.concat(t.photos); }, []);
+    $$("#ex-grid [data-ex]").forEach(function (a) {
+      var cat = a.dataset.ex, url = "";
+      if (cat === "about") { var im = $("#about img"); url = im ? im.getAttribute("src") : ""; }
+      else {
+        var p = all.filter(function (x) { return !used[x[0]] && x[2].split(" ").indexOf(cat) > -1; }).sort(function (x, y) { return (y[3] > y[4]) - (x[3] > x[4]); })[0]   // landscape photos suit the wide tiles best
+          || all.filter(function (x) { return !used[x[0]]; })[0];
+        if (p) { used[p[0]] = true; url = src(p[0]); }
+      }
+      if (url) $(".ex-ph", a).style.backgroundImage = 'url("' + url + '")';
+    });
+  })();
 
   // Service cards: show the section's information in a pop-up instead of scrolling down to it
   var infoDlg = $("#info-dlg"), infoBody = $("#info-body"), infoHome = null, infoNode = null;
