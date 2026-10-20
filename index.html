@@ -177,6 +177,18 @@ em { font-style: italic; }
   .menu > li.menu-gallery > :is(a, button) { justify-content: center; padding: 14px 20px !important; font-size: 1.02rem; }
 }
 
+/* Home: a link with its own small dropdown button */
+.menu > li.split > a { padding-right: 4px; }
+.menu > li.split > .split-btn { padding: 15px 14px 15px 6px; }
+.menu > li.split > .split-btn::before, .menu > li.split > .split-btn::after { display: none; }
+.menu > li.split .drop { min-width: 180px; }
+@media (max-width: 1100px) {
+  .menu > li.split { flex-direction: row; flex-wrap: wrap; }
+  .menu > li.split > a { flex: 1; }
+  .menu > li.split > .split-btn { padding: 16px 18px !important; justify-content: center; }
+  .menu > li.split .drop { flex-basis: 100%; }
+}
+
 /* ---------- Hero ---------- */
 main { padding-top: var(--header-h, 147px); }
 .hero { position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100svh - var(--header-h, 147px)); padding: 30px 0 46px; background: radial-gradient(1100px 520px at 50% 42%, #2a2a2d 0%, #121214 62%, #0b0b0c 100%); color: #fff; }
@@ -1069,14 +1081,10 @@ footer h3 { color: var(--fg); }
   </div>
   <nav class="menu-band" aria-label="Main">
     <ul class="menu" id="menu">
-      <li>
-        <button type="button" aria-expanded="false" aria-haspopup="true" data-sec="home">Home <span class="caret" aria-hidden="true"></span></button>
+      <li class="split">
+        <a href="index.html" data-sec="home">Home</a><button type="button" class="split-btn" aria-expanded="false" aria-haspopup="true" aria-label="More under Home"><span class="caret" aria-hidden="true"></span></button>
         <ul class="drop">
-          <li><a href="#top">Home</a></li>
-          <li><a href="#about">Our story</a></li>
-          <li><a href="#reviews">Client reviews</a></li>
-          <li class="sep" role="separator"></li>
-          <li><a href="#contact">Visit the studio</a></li>
+          <li><a href="about.html">About us</a></li>
         </ul>
       </li>
       <li><a href="services.html" data-sec="services">Our Services</a></li>
@@ -1091,7 +1099,6 @@ footer h3 { color: var(--fg); }
       <li id="menu-specials" hidden><a href="#specials" data-sec="specials">Specials</a></li>
       <li><a href="packages.html" data-sec="packages">Packages &amp; Pricing</a></li>
       <li><a href="prints.html" data-sec="prints">Printed Products</a></li>
-      <li><a href="about.html" data-sec="about">About Us</a></li>
       <li><a href="contact.html" data-sec="contact">Contact</a></li>
       <li class="menu-book"><a href="booking.html"><b>Book a session</b></a></li>
     </ul>
@@ -1682,7 +1689,7 @@ footer h3 { color: var(--fg); }
       $$("[data-sec]").forEach(function (el) { el.classList.toggle("active", el.dataset.sec === (map[id] || id)); });
     });
   }, { rootMargin: "-45% 0px -50% 0px" });
-  if (PAGE !== "home") $$('[data-sec="' + PAGE + '"]').forEach(function (el) { el.classList.add("active"); });
+  if (PAGE !== "home") $$('[data-sec="' + (PAGE === "about" ? "home" : PAGE) + '"]').forEach(function (el) { el.classList.add("active"); });   // About us sits under Home
   else ["specials", "sessions", "services", "packages", "prints", "about", "reviews", "contact"].forEach(function (id) { secIO.observe(document.getElementById(id)); });
 
   // Keep the menu clear of the social icons on the right of the band
