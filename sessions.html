@@ -212,21 +212,24 @@ main { padding-top: var(--header-h, 147px); }
 }
 /* Home: tiles to every page */
 .explore { background: var(--bg); }
-.ex-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 46px; }
-.ex-tile { display: flex; flex-direction: column; background: var(--bg-2); border: 1px solid var(--g3); border-radius: 22px; overflow: hidden; text-decoration: none; color: var(--fg); transition: transform .35s ease, box-shadow .35s ease; }
-.ex-tile:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
-.ex-ph { display: block; aspect-ratio: 4 / 3; background: var(--g3) center 22% / cover no-repeat; transition: transform .6s ease; }
-.ex-tile:hover .ex-ph { transform: scale(1.04); }
-.ex-body { position: relative; display: flex; flex-direction: column; gap: 4px; padding: 20px 64px 22px 22px; background: var(--bg-2); }
+.ex-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 46px; }
+.ex-tile { position: relative; display: flex; flex-direction: column; gap: 22px; min-height: 230px; padding: 30px 28px 28px; background: var(--bg-2); border: 1px solid var(--g3); border-radius: 22px; text-decoration: none; color: var(--fg); transition: background .35s ease, color .35s ease, border-color .35s ease, transform .35s ease; }
+.ex-ic { display: grid; place-items: center; width: 54px; height: 54px; border-radius: 50%; background: var(--bg); border: 1px solid var(--g4); color: var(--accent); transition: background .35s, border-color .35s, color .35s; }
+.ex-ic svg { width: 24px; height: 24px; }
+.ex-body { display: flex; flex-direction: column; gap: 6px; margin-top: auto; padding-right: 54px; }
 .ex-body small { font-style: italic; color: var(--accent); }
-.ex-body b { font-weight: 400; font-size: 1.35rem; }
-.ex-body span { color: var(--fg-2); font-size: .95rem; }
-.ex-body i { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--g4); transition: background .25s, color .25s, border-color .25s; }
+.ex-body b { font-weight: 400; font-size: 1.45rem; line-height: 1.2; }
+.ex-body span { color: var(--fg-2); font-size: .95rem; transition: color .35s; }
+.ex-body i { position: absolute; right: 26px; bottom: 28px; width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--g4); transition: background .35s, color .35s, border-color .35s, transform .35s; }
 .ex-body i svg { width: 17px; height: 17px; }
-.ex-tile:hover .ex-body i { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.ex-tile:hover, .ex-tile:focus-visible { background: #161618; color: #fff; border-color: #161618; transform: translateY(-4px); }
+.ex-tile:hover .ex-ic, .ex-tile:focus-visible .ex-ic { background: rgba(207,174,122,.14); border-color: rgba(207,174,122,.4); color: #cfae7a; }
+.ex-tile:hover .ex-body span, .ex-tile:focus-visible .ex-body span { color: rgba(255,255,255,.72); }
+.ex-tile:hover .ex-body small, .ex-tile:focus-visible .ex-body small { color: #cfae7a; }
+.ex-tile:hover .ex-body i, .ex-tile:focus-visible .ex-body i { background: #cfae7a; border-color: #cfae7a; color: #111; transform: translateX(3px); }
 .ex-tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-@media (max-width: 900px) { .ex-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; } }
-@media (max-width: 560px) { .ex-grid { grid-template-columns: 1fr; } .ex-ph { aspect-ratio: 16 / 9; } }
+@media (max-width: 900px) { .ex-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; } }
+@media (max-width: 560px) { .ex-grid { grid-template-columns: 1fr; } .ex-tile { min-height: 0; flex-direction: row; align-items: center; gap: 16px; padding: 20px 18px; } .ex-body { margin-top: 0; padding-right: 48px; } .ex-body small { display: none; } .ex-body b { font-size: 1.2rem; } .ex-body i { right: 16px; bottom: auto; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; } .ex-tile:hover .ex-body i { transform: translateY(-50%); } .ex-ic { flex: none; width: 46px; height: 46px; } }
 /* Home: how booking works */
 .how { background: var(--bg-2); }
 .how-steps { list-style: none; margin: 46px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; counter-reset: none; }
@@ -1085,12 +1088,12 @@ footer h3 { color: var(--fg); }
         <p class="lede quote">Find your session, see our prices, or browse the work.</p>
       </div>
       <div class="ex-grid" id="ex-grid">
-        <a class="ex-tile fade" href="sessions.html" data-ex="birthdays"><span class="ex-ph"></span><span class="ex-body"><small>01</small><b>Photo sessions</b><span>Birthdays, cake smash, maternity, graduation &amp; more</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></span></a>
-        <a class="ex-tile fade" href="packages.html" data-ex="women"><span class="ex-ph"></span><span class="ex-body"><small>02</small><b>Packages &amp; pricing</b><span>Clear prices, from R750 a session</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></span></a>
-        <a class="ex-tile fade" href="gallery.html" data-ex="family"><span class="ex-ph"></span><span class="ex-body"><small>03</small><b>Gallery</b><span>Our latest shoots, by category</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></span></a>
-        <a class="ex-tile fade" href="prints.html" data-ex="graduation"><span class="ex-ph"></span><span class="ex-body"><small>04</small><b>Printed products</b><span>Canvases, frames, albums &amp; photo gifts</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></span></a>
-        <a class="ex-tile fade" href="services.html" data-ex="babies"><span class="ex-ph"></span><span class="ex-body"><small>05</small><b>Our services</b><span>Photography, videography &amp; printing</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></span></a>
-        <a class="ex-tile fade" href="about.html" data-ex="about"><span class="ex-ph"></span><span class="ex-body"><small>06</small><b>About us</b><span>Capturing Pretoria&rsquo;s milestones since 2010</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></span></a>
+        <a class="ex-tile fade" href="sessions.html"><span class="ex-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5A2.5 2.5 0 0 1 5.5 6h1.8l1.4-2h6.6l1.4 2h1.8A2.5 2.5 0 0 1 21 8.5v9a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"/><circle cx="12" cy="13" r="3.6"/></svg></span><span class="ex-body"><small>01</small><b>Photo sessions</b><span>Birthdays, cake smash, maternity, graduation &amp; more</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></span></a>
+        <a class="ex-tile fade" href="packages.html"><span class="ex-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8z"/><circle cx="7" cy="7" r="1.6"/></svg></span><span class="ex-body"><small>02</small><b>Packages &amp; pricing</b><span>Clear prices, from R750 a session</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></span></a>
+        <a class="ex-tile fade" href="gallery.html"><span class="ex-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="m21 15-4.5-4.5L6 21"/></svg></span><span class="ex-body"><small>03</small><b>Gallery</b><span>Our latest shoots, by category</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></span></a>
+        <a class="ex-tile fade" href="prints.html"><span class="ex-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><rect x="7" y="7" width="10" height="10"/><path d="M3 3l4 4M21 3l-4 4M3 21l4-4M21 21l-4-4"/></svg></span><span class="ex-body"><small>04</small><b>Printed products</b><span>Canvases, frames, albums &amp; photo gifts</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></span></a>
+        <a class="ex-tile fade" href="services.html"><span class="ex-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/></svg></span><span class="ex-body"><small>05</small><b>Our services</b><span>Photography, videography &amp; printing</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></span></a>
+        <a class="ex-tile fade" href="about.html"><span class="ex-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-9.2-8.6C1.3 8.5 3 5 6.4 5c2 0 3.6 1.1 5.6 3.2C14 6.1 15.6 5 17.6 5 21 5 22.7 8.5 21.2 11.4 19 15.6 12 20 12 20z"/></svg></span><span class="ex-body"><small>06</small><b>About us</b><span>Capturing Pretoria&rsquo;s milestones since 2010</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></span></a>
       </div>
     </div>
   </section>
@@ -1106,10 +1109,6 @@ footer h3 { color: var(--fg); }
         <li class="fade"><span>2</span><b>Pick a date &amp; time</b><p>Only open times are shown, so what you see is what you can book.</p></li>
         <li class="fade"><span>3</span><b>Pay your deposit</b><p>Pay 50% online by card and your booking is confirmed straight away.</p></li>
       </ol>
-      <div class="how-ctas fade">
-        <a class="btn btn--solid" href="booking.html">Book your session</a>
-        <a class="btn" href="https://wa.me/27661322462?text=Hi%20J%20Masocha%20Photography!%20I%20have%20a%20question%20about%20booking%20a%20shoot." target="_blank" rel="noopener">Ask us on WhatsApp</a>
-      </div>
     </div>
   </section>
 
@@ -1943,21 +1942,6 @@ footer h3 { color: var(--fg); }
       k[2].map(function (f) { return "<li>" + tick + f + "</li>"; }).join("") + '<li class="extra">' + tick + "Add family &amp; friends for free</li></ul>" +
       '<a class="btn' + (k[3] ? "" : " btn--solid") + '" href="booking.html?session=' + encodeURIComponent("Adult Birthday") + "&amp;pkg=" + encodeURIComponent(plain(k[0])) + '">Book this package</a></article>';
   }).join("");
-
-  // Home tiles: a photo from the gallery for each (the about tile uses the about photo)
-  (function () {
-    var used = {}, all = TONES.reduce(function (l, t) { return l.concat(t.photos); }, []);
-    $$("#ex-grid [data-ex]").forEach(function (a) {
-      var cat = a.dataset.ex, url = "";
-      if (cat === "about") { var im = $("#about img"); url = im ? im.getAttribute("src") : ""; }
-      else {
-        var p = all.filter(function (x) { return !used[x[0]] && x[2].split(" ").indexOf(cat) > -1; }).sort(function (x, y) { return (y[3] > y[4]) - (x[3] > x[4]); })[0]   // landscape photos suit the wide tiles best
-          || all.filter(function (x) { return !used[x[0]]; })[0];
-        if (p) { used[p[0]] = true; url = src(p[0]); }
-      }
-      if (url) $(".ex-ph", a).style.backgroundImage = 'url("' + url + '")';
-    });
-  })();
 
   // Service cards: show the section's information in a pop-up instead of scrolling down to it
   var infoDlg = $("#info-dlg"), infoBody = $("#info-body"), infoHome = null, infoNode = null;
