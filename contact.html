@@ -290,6 +290,9 @@ html:not([data-page="contact"]) .f-cta { display: none; }
 html:not([data-page="sessions"]) main > #sessions { display: none !important; }
 html[data-page="sessions"] main > section:not(#sessions) { display: none !important; }
 html[data-page="sessions"] #sessions { min-height: calc(100svh - var(--header-h, 160px)); }
+html:not([data-page="packages"]) main > #packages { display: none !important; }
+html[data-page="packages"] main > section:not(#packages) { display: none !important; }
+html[data-page="packages"] #packages { min-height: calc(100svh - var(--header-h, 160px)); }
 html:not([data-page="prints"]) main > #prints { display: none !important; }
 html[data-page="prints"] main > section:not(#prints) { display: none !important; }
 html[data-page="prints"] #prints { min-height: calc(100svh - var(--header-h, 160px)); }
@@ -1004,7 +1007,7 @@ footer h3 { color: var(--fg); }
         <ul class="drop" id="gallery-drop"></ul>
       </li>
       <li id="menu-specials" hidden><a href="#specials" data-sec="specials">Specials</a></li>
-      <li><a href="#packages" data-sec="packages">Packages &amp; Pricing</a></li>
+      <li><a href="packages.html" data-sec="packages">Packages &amp; Pricing</a></li>
       <li><a href="prints.html" data-sec="prints">Printed Products</a></li>
       <li><a href="contact.html" data-sec="contact">Contact</a></li>
       <li class="menu-book"><a href="booking.html"><b>Book a session</b></a></li>
@@ -1250,7 +1253,7 @@ footer h3 { color: var(--fg); }
     </div>
     <nav class="f-col" aria-label="Explore">
       <h3>Explore</h3>
-      <a href="#about">About us</a><a href="#gallery">Gallery</a><a href="services.html">Our services</a><a href="#packages">Packages &amp; pricing</a><a href="prints.html">Printed products</a><a href="#reviews">Reviews</a>
+      <a href="#about">About us</a><a href="#gallery">Gallery</a><a href="services.html">Our services</a><a href="packages.html">Packages &amp; pricing</a><a href="prints.html">Printed products</a><a href="#reviews">Reviews</a>
     </nav>
     <nav class="f-col" aria-label="Sessions">
       <h3>Sessions</h3>
@@ -1413,14 +1416,16 @@ footer h3 { color: var(--fg); }
   var WA = "27661322462", MAIL = "jmasochaphotostudio@gmail.com";
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
-  // Six pages share this file: the home page, gallery.html, services.html, sessions.html, prints.html and contact.html (data-page="gallery" / "services" / "sessions" / "prints" / "contact")
+  // Seven pages share this file: the home page and gallery, services, sessions, packages, prints and contact (.html, each with its own data-page)
   var PAGE = document.documentElement.dataset.page || "home", GALLERY_PAGE = PAGE === "gallery";
-  var OWN_PAGE = { "#gallery": "gallery.html", "#services": "services.html", "#prints": "prints.html", "#sessions": "sessions.html" };
+  var OWN_PAGE = { "#gallery": "gallery.html", "#services": "services.html", "#prints": "prints.html", "#sessions": "sessions.html", "#packages": "packages.html" };
   // Links to the gallery or services go to their own page; on those pages, links to other sections go back to the home page
   document.addEventListener("click", function (e) {
     var a = e.target.closest('a[href^="#"]'); if (!a || a.dataset.contact !== undefined || a.dataset.tips || a.dataset.privacy !== undefined || a.dataset.info !== undefined) return;
     var h = a.getAttribute("href"), go = function (url) { e.preventDefault(); e.stopImmediatePropagation(); location.href = url; };
     if (OWN_PAGE[h] && h !== "#" + PAGE) return go(OWN_PAGE[h]);
+    var inner = h.length > 1 && document.getElementById(h.slice(1)), sec = inner && !inner.closest("dialog") && inner.closest("main > section[id]");
+    if (sec && OWN_PAGE["#" + sec.id] && sec.id !== PAGE) return go(OWN_PAGE["#" + sec.id] + h);
     if (PAGE === "home") return;
     if (h === "#" || h === "#top" || h === "#" + PAGE || /^#(set-|photo=)/.test(h)) return;
     var t = document.getElementById(h.slice(1));
