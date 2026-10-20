@@ -286,8 +286,10 @@ main { padding-top: var(--header-h, 147px); }
 html:not([data-page="gallery"]) #gallery { display: none; }
 html:not([data-page="services"]) #services { display: none; }
 html:not([data-page="contact"]) .f-cta { display: none; }
-/* The session list is only shown in the "Session information" pop-up on the services page */
-main > #sessions { display: none !important; }
+/* The session list has its own page (sessions.html), and shows in the "Session information" pop-up on the services page */
+html:not([data-page="sessions"]) main > #sessions { display: none !important; }
+html[data-page="sessions"] main > section:not(#sessions) { display: none !important; }
+html[data-page="sessions"] #sessions { min-height: calc(100svh - var(--header-h, 160px)); }
 html:not([data-page="prints"]) main > #prints { display: none !important; }
 html[data-page="prints"] main > section:not(#prints) { display: none !important; }
 html[data-page="prints"] #prints { min-height: calc(100svh - var(--header-h, 160px)); }
@@ -1411,9 +1413,9 @@ footer h3 { color: var(--fg); }
   var WA = "27661322462", MAIL = "jmasochaphotostudio@gmail.com";
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
-  // Five pages share this file: the home page, gallery.html, services.html, prints.html and contact.html (data-page="gallery" / "services" / "prints" / "contact")
+  // Six pages share this file: the home page, gallery.html, services.html, sessions.html, prints.html and contact.html (data-page="gallery" / "services" / "sessions" / "prints" / "contact")
   var PAGE = document.documentElement.dataset.page || "home", GALLERY_PAGE = PAGE === "gallery";
-  var OWN_PAGE = { "#gallery": "gallery.html", "#services": "services.html", "#prints": "prints.html" };
+  var OWN_PAGE = { "#gallery": "gallery.html", "#services": "services.html", "#prints": "prints.html", "#sessions": "sessions.html" };
   // Links to the gallery or services go to their own page; on those pages, links to other sections go back to the home page
   document.addEventListener("click", function (e) {
     var a = e.target.closest('a[href^="#"]'); if (!a || a.dataset.contact !== undefined || a.dataset.tips || a.dataset.privacy !== undefined || a.dataset.info !== undefined) return;
@@ -1510,7 +1512,7 @@ footer h3 { color: var(--fg); }
 
   // Dropdown menus
   var count = function (cat) { return TONES.reduce(function (n, t) { return n + t.photos.filter(function (p) { return cat === "all" || p[2].split(" ").indexOf(cat) > -1; }).length; }, 0); };
-  $("#session-drop").innerHTML = '<li><a href="#tips" data-tips="wear">Tips: what to wear &amp; bring</a></li><li class="sep" role="separator"></li><li class="label">Sessions</li>' + SESSIONS.map(function (s) { return '<li><a href="booking.html?session=' + encodeURIComponent(plain(s[1])) + '">' + s[1] + "</a></li>"; }).join("") + '<li class="sep" role="separator"></li><li><a href="#packages">Packages &amp; pricing</a></li>';
+  $("#session-drop").innerHTML = '<li><a href="sessions.html"><b>All sessions</b></a></li><li><a href="#tips" data-tips="wear">Tips: what to wear &amp; bring</a></li><li class="sep" role="separator"></li><li class="label">Sessions</li>' + SESSIONS.map(function (s) { return '<li><a href="booking.html?session=' + encodeURIComponent(plain(s[1])) + '">' + s[1] + "</a></li>"; }).join("") + '<li class="sep" role="separator"></li><li><a href="#packages">Packages &amp; pricing</a></li>';
   // The first few categories, then "More" (three dots) for the rest
   var GSHOW = 5, gcats = CATS.filter(function (c) { return c[0] !== "all" && count(c[0]); });
   $("#gallery-drop").innerHTML = '<li><a href="gallery.html">All photos</a></li><li class="sep" role="separator"></li><li class="label">By category</li>' +
