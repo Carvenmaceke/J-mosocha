@@ -1,7 +1,7 @@
-"""Rebuild the gallery, services, sessions, packages, prints and contact pages from index.html.
+"""Rebuild the gallery, services, sessions, packages, prints, about and contact pages from index.html.
 
 Both pages are the same file as the home page with data-page="gallery", "services", "sessions", "packages",
-"prints" or "contact" on <html>, which shows only that section. Run this after
+"prints", "about" or "contact" on <html>, which shows only that section. Run this after
 every change to index.html:
 
     python3 tools/make-gallery-page.py
@@ -20,6 +20,8 @@ PAGES = {
                  "Photoshoot packages and prices at J Masocha Photography, Pretoria Central: adult birthday packages from R750, with edited images, props, video and online gallery. Book online with a 50% deposit."),
     "prints": ("Printed Products | Canvas, Frames & Photo Gifts in Pretoria | J Masocha Photography",
                "Order canvas prints, framed photos, albums, photo globes, tumblers, mugs, plates and T-shirts, printed in-house at J Masocha Photography in Pretoria Central."),
+    "about": ("About Us | J Masocha Photography, Pretoria Central since 2010",
+              "J Masocha Photography is a photography, videography and printing studio in Pretoria Central, capturing life's milestones since 2010. Our mission, our goal and our story."),
     "contact": ("Contact Us | J Masocha Photography, Pretoria Central",
                 "Contact J Masocha Photography at 235 Helen Joseph Street, Pretoria Central. Email, WhatsApp or call 066 132 2462 to book a photoshoot or ask a question."),
     "services": ("Our Services | Photography, Videography & Printing in Pretoria | J Masocha Photography",
