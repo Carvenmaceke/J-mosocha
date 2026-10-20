@@ -409,7 +409,11 @@ html[data-page="gallery"] .g-close { display: inline-flex; align-items: center; 
 .g-close { flex: none; }
 html[data-page="gallery"] .g-close:hover { background: var(--fg); color: var(--bg); }
 html[data-page="gallery"] .g-close svg { width: 17px; height: 17px; }
-@media (max-width: 520px) { html[data-page="gallery"] .g-close span { display: none; } html[data-page="gallery"] .g-close { padding: 0; width: 42px; justify-content: center; } }
+@media (max-width: 520px) { html[data-page="gallery"] .g-close { padding: 0 12px 0 10px; font-size: .84rem; } }
+.ap-back { flex: none; display: inline-flex; align-items: center; gap: 7px; height: 40px; padding: 0 15px 0 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); text-decoration: none; font-size: .9rem; white-space: nowrap; transition: background .2s, color .2s; }
+.ap-back:hover { background: var(--fg); color: var(--bg); }
+.ap-back svg { width: 16px; height: 16px; }
+@media (max-width: 600px) { .ap-back { height: 36px; padding: 0 11px 0 9px; font-size: .8rem; } }
 .grid { display: flex; flex-wrap: wrap; gap: 8px; --rh: 260px; }
 .grid::after { content: ""; flex-grow: 1000000; }
 /* Gallery preview: one row per colour; photos that don't fit are left for "View all photos" */
@@ -989,6 +993,7 @@ footer h3 { color: var(--fg); }
 .f-socials .fs-fb:hover { background: #1877f2; }
 .f-socials .fs-ig:hover { background: linear-gradient(45deg,#f09433,#dc2743,#bc1888); }
 .f-socials .fs-tt:hover { background: #111; }
+
 .f-brand .brand svg { height: 84px; }
 .f-brand .brand svg text:first-of-type { fill: var(--g2) !important; }
 .f-brand p { margin: 16px auto 0; max-width: 300px; font-size: .97rem; line-height: 1.7; }
@@ -998,6 +1003,28 @@ footer h3 { color: var(--fg); }
 .f-rating a b { font-weight: 700; color: var(--fg); }
 .f-rating a .g { width: 14px; height: 14px; }
 .f-rating a:hover { color: var(--fg); }
+
+/* Compact footer */
+.f-main { gap: 26px 32px; padding-top: 30px; padding-bottom: 24px; align-items: start; }
+.f-brand { padding: 16px 18px; border-radius: 16px; }
+.f-brand .brand svg { height: 46px; }
+.f-brand p { margin: 8px auto 0; font-size: .86rem; line-height: 1.5; }
+.f-rating { margin-top: 10px; padding-top: 10px; gap: 4px; }
+.f-rating .stars svg { width: 12px; height: 12px; }
+.f-rating a { font-size: .8rem; }
+.f-socials { margin-top: 10px; gap: 8px; }
+.f-socials a { width: 34px; height: 34px; }
+.f-socials svg { width: 16px; height: 16px; }
+footer h3 { margin-bottom: 10px; font-size: .72rem; }
+.f-col { gap: 4px; font-size: .9rem; line-height: 1.45; }
+.f-visit { gap: 6px; font-size: .9rem; }
+.f-line { gap: 10px; align-items: center; line-height: 1.35; }
+.f-line i { width: 28px; height: 28px; }
+.f-line i svg { width: 14px; height: 14px; }
+.f-line span { padding-top: 0; }
+.f-dir { margin-top: 2px; }
+.legal { padding-top: 12px; padding-bottom: 14px; }
+@media (max-width: 560px) { .f-main { gap: 20px 16px; padding-top: 22px; } .f-brand p { display: none; } }
 
 /* All photos window */
 .ap { border: 0; padding: 0; background: transparent; width: 100%; height: 100%; max-width: 100vw; max-height: 100vh; margin: 0; }
@@ -1203,7 +1230,7 @@ footer h3 { color: var(--fg); }
     <div class="g-bar" id="g-bar">
       <div class="wrap">
         <div class="chips" id="filters" role="group" aria-label="Show photos of"></div>
-        <a class="g-close" href="index.html" id="g-close" aria-label="Close the gallery and go back to the website"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg><span>Close</span></a>
+        <a class="g-close" href="index.html" id="g-close" aria-label="Back to website"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back to website</span></a>
       </div>
     </div>
     <div class="wrap">
@@ -1441,7 +1468,7 @@ footer h3 { color: var(--fg); }
   <div class="ap-box">
     <div class="ap-head">
       <h3 id="ap-title">All photos <small id="ap-now">All photos</small></h3>
-      <button class="icon-btn" type="button" id="ap-close" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      <a class="ap-back" href="index.html" id="ap-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back to website</span></a>
     </div>
     <div class="chips ap-chips" id="ap-chips" role="group" aria-label="Show photos of"></div>
     <div class="ap-body" id="ap-body"></div>
