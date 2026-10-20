@@ -283,6 +283,9 @@ main { padding-top: var(--header-h, 147px); }
 /* Justified rows: every photo keeps its own shape, so nothing is cropped */
 /* The gallery has its own page (gallery.html, a copy of this file with data-page="gallery") */
 html:not([data-page="gallery"]) #gallery { display: none; }
+html:not([data-page="services"]) #services { display: none; }
+html[data-page="services"] main > section:not(#services) { display: none !important; }
+html[data-page="services"] #services { min-height: calc(100svh - var(--header-h, 160px) - 120px); }
 html[data-page="gallery"] main > section:not(#gallery) { display: none !important; }
 html[data-page="gallery"] #gallery { min-height: 100svh; }
 /* Gallery page shows the photos only: no site header, footer, intro or Tips button, and a Close button back to the website */
@@ -980,7 +983,7 @@ footer h3 { color: var(--fg); }
           <li><a href="#contact">Visit the studio</a></li>
         </ul>
       </li>
-      <li><a href="#services" data-sec="services">Our Services</a></li>
+      <li><a href="services.html" data-sec="services">Our Services</a></li>
       <li>
         <button type="button" aria-expanded="false" aria-haspopup="true" data-sec="sessions">Photo Session Information <span class="caret" aria-hidden="true"></span></button>
         <ul class="drop" id="session-drop"></ul>
@@ -1236,7 +1239,7 @@ footer h3 { color: var(--fg); }
     </div>
     <nav class="f-col" aria-label="Explore">
       <h3>Explore</h3>
-      <a href="#about">About us</a><a href="#gallery">Gallery</a><a href="#services">Our services</a><a href="#packages">Packages &amp; pricing</a><a href="#prints">Printed products</a><a href="#reviews">Reviews</a>
+      <a href="#about">About us</a><a href="#gallery">Gallery</a><a href="services.html">Our services</a><a href="#packages">Packages &amp; pricing</a><a href="#prints">Printed products</a><a href="#reviews">Reviews</a>
     </nav>
     <nav class="f-col" aria-label="Sessions">
       <h3>Sessions</h3>
@@ -1417,17 +1420,19 @@ footer h3 { color: var(--fg); }
   var WA = "27661322462", MAIL = "jmasochaphotostudio@gmail.com";
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
-  // Two pages share this file: the home page, and gallery.html (data-page="gallery")
-  var GALLERY_PAGE = document.documentElement.dataset.page === "gallery";
-  // Links to the gallery go to its page; on the gallery page, links to other sections go back to the home page
+  // Three pages share this file: the home page, gallery.html (data-page="gallery") and services.html (data-page="services")
+  var PAGE = document.documentElement.dataset.page || "home", GALLERY_PAGE = PAGE === "gallery";
+  var OWN_PAGE = { "#gallery": "gallery.html", "#services": "services.html" };
+  // Links to the gallery or services go to their own page; on those pages, links to other sections go back to the home page
   document.addEventListener("click", function (e) {
-    var a = e.target.closest('a[href^="#"]'); if (!a || a.dataset.contact !== undefined || a.dataset.tips || a.dataset.privacy !== undefined) return;
-    var h = a.getAttribute("href");
-    if (!GALLERY_PAGE) { if (h === "#gallery") { e.preventDefault(); e.stopImmediatePropagation(); location.href = "gallery.html"; } return; }
-    if (h === "#" || h === "#top" || h === "#gallery" || /^#(set-|photo=)/.test(h)) return;
+    var a = e.target.closest('a[href^="#"]'); if (!a || a.dataset.contact !== undefined || a.dataset.tips || a.dataset.privacy !== undefined || a.dataset.info !== undefined) return;
+    var h = a.getAttribute("href"), go = function (url) { e.preventDefault(); e.stopImmediatePropagation(); location.href = url; };
+    if (OWN_PAGE[h] && h !== "#" + PAGE) return go(OWN_PAGE[h]);
+    if (PAGE === "home") return;
+    if (h === "#" || h === "#top" || h === "#" + PAGE || /^#(set-|photo=)/.test(h)) return;
     var t = document.getElementById(h.slice(1));
-    if (!t || t.closest("dialog") || t.closest("#gallery") || t.closest("footer")) return;
-    e.preventDefault(); e.stopImmediatePropagation(); location.href = "index.html" + h;
+    if (!t || t.closest("dialog") || t.closest("#" + PAGE) || t.closest("footer")) return;
+    go("index.html" + h);
   }, true);
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
   var src = function (s, w) { return "img/" + s + "-" + (w || 700) + "." + (EXT[s] || "webp"); };
@@ -1559,7 +1564,7 @@ footer h3 { color: var(--fg); }
       $$("[data-sec]").forEach(function (el) { el.classList.toggle("active", el.dataset.sec === (map[id] || id)); });
     });
   }, { rootMargin: "-45% 0px -50% 0px" });
-  if (GALLERY_PAGE) $$('[data-sec="gallery"]').forEach(function (el) { el.classList.add("active"); });
+  if (PAGE !== "home") $$('[data-sec="' + PAGE + '"]').forEach(function (el) { el.classList.add("active"); });
   else ["specials", "sessions", "services", "packages", "prints", "about", "reviews", "contact"].forEach(function (id) { secIO.observe(document.getElementById(id)); });
 
   // Keep the menu clear of the social icons on the right of the band
