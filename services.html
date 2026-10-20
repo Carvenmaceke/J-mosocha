@@ -285,6 +285,9 @@ main { padding-top: var(--header-h, 147px); }
 /* The gallery has its own page (gallery.html, a copy of this file with data-page="gallery") */
 html:not([data-page="gallery"]) #gallery { display: none; }
 html:not([data-page="services"]) #services { display: none; }
+html:not([data-page="contact"]) .f-cta { display: none; }
+html[data-page="contact"] main > section { display: none !important; }
+html[data-page="contact"] .f-cta { min-height: calc(100svh - var(--header-h, 160px)); display: grid; align-content: center; }
 html[data-page="services"] main > section:not(#services) { display: none !important; }
 html[data-page="services"] #services { min-height: calc(100svh - var(--header-h, 160px) - 120px); }
 html[data-page="gallery"] main > section:not(#gallery) { display: none !important; }
@@ -996,7 +999,7 @@ footer h3 { color: var(--fg); }
       <li id="menu-specials" hidden><a href="#specials" data-sec="specials">Specials</a></li>
       <li><a href="#packages" data-sec="packages">Packages &amp; Pricing</a></li>
       <li><a href="#prints" data-sec="prints">Printed Products</a></li>
-      <li><a href="#contact" data-sec="contact" data-contact>Contact</a></li>
+      <li><a href="contact.html" data-sec="contact">Contact</a></li>
       <li class="menu-book"><a href="booking.html"><b>Book a session</b></a></li>
     </ul>
   </nav>
@@ -1421,7 +1424,7 @@ footer h3 { color: var(--fg); }
   var WA = "27661322462", MAIL = "jmasochaphotostudio@gmail.com";
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
-  // Three pages share this file: the home page, gallery.html (data-page="gallery") and services.html (data-page="services")
+  // Four pages share this file: the home page, gallery.html, services.html and contact.html (data-page="gallery" / "services" / "contact")
   var PAGE = document.documentElement.dataset.page || "home", GALLERY_PAGE = PAGE === "gallery";
   var OWN_PAGE = { "#gallery": "gallery.html", "#services": "services.html" };
   // Links to the gallery or services go to their own page; on those pages, links to other sections go back to the home page
