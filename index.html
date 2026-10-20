@@ -377,6 +377,9 @@ main { padding-top: var(--header-h, 147px); }
 html:not([data-page="gallery"]) #gallery { display: none; }
 html:not([data-page="services"]) #services { display: none; }
 html:not([data-page="contact"]) .f-cta { display: none; }
+/* Each page shows only its own content: the newsletter and the big footer are on the home page (the contact page keeps the studio details) */
+html[data-page] footer#contact .f-news { display: none; }
+html[data-page]:not([data-page="contact"]) footer#contact .f-main { display: none; }
 /* The session list has its own page (sessions.html), and shows in the "Session information" pop-up on the services page */
 html:not([data-page="sessions"]) main > #sessions { display: none !important; }
 html[data-page="sessions"] main > section:not(#sessions) { display: none !important; }
