@@ -104,6 +104,10 @@ em { font-style: italic; }
 .menu > li.open .drop { opacity: 1; visibility: visible; transform: none; }
 .drop a { display: flex; justify-content: space-between; align-items: baseline; gap: 18px; white-space: nowrap; padding: 10px 22px; text-decoration: none; color: var(--fg-2); font-size: .95rem; font-weight: 400; border-left: 3px solid transparent; transition: background .15s, border-color .15s, color .15s; }
 .drop a small { color: var(--muted); font-size: .8rem; }
+.drop .g-more-btn { display: flex; align-items: center; gap: 12px; width: 100%; border: 0; background: none; padding: 10px 22px; font: inherit; font-size: .95rem; font-weight: 400; color: var(--fg-2); text-align: left; cursor: pointer; }
+.drop .g-more-btn .dots { letter-spacing: 2px; font-size: 1.1rem; line-height: 1; color: var(--fg); }
+.drop .g-more-btn:hover, .drop .g-more-btn:focus-visible { color: var(--fg); background: var(--bg-2); }
+.drop li[hidden] { display: none; }
 .drop a:hover, .drop a:focus-visible { background: var(--bg-2); color: var(--fg); border-left-color: var(--band-bar); outline: none; }
 .drop .sep { height: 1px; background: var(--line); margin: 6px 0; }
 .drop .label { padding: 8px 22px 4px; font-size: .72rem; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); font-weight: 400; }
@@ -1510,15 +1514,26 @@ footer h3 { color: var(--fg); }
   // Dropdown menus
   var count = function (cat) { return TONES.reduce(function (n, t) { return n + t.photos.filter(function (p) { return cat === "all" || p[2].split(" ").indexOf(cat) > -1; }).length; }, 0); };
   $("#session-drop").innerHTML = '<li><a href="#tips" data-tips="wear">Tips: what to wear &amp; bring</a></li><li class="sep" role="separator"></li><li class="label">Sessions</li>' + SESSIONS.map(function (s) { return '<li><a href="booking.html?session=' + encodeURIComponent(plain(s[1])) + '">' + s[1] + "</a></li>"; }).join("") + '<li class="sep" role="separator"></li><li><a href="#packages">Packages &amp; pricing</a></li>';
-  $("#gallery-drop").innerHTML = '<li><a href="gallery.html">All photos <small>' + count("all") + "</small></a></li>" + '<li class="sep" role="separator"></li><li class="label">By category</li>' +
-    CATS.filter(function (c) { return c[0] !== "all" && count(c[0]); }).map(function (c) { return '<li><a href="gallery.html?cat=' + c[0] + '" data-gcat="' + c[0] + '">' + c[1] + " <small>" + count(c[0]) + "</small></a></li>"; }).join("");
+  // The first few categories, then "More" (three dots) for the rest
+  var GSHOW = 5, gcats = CATS.filter(function (c) { return c[0] !== "all" && count(c[0]); });
+  $("#gallery-drop").innerHTML = '<li><a href="gallery.html">All photos</a></li><li class="sep" role="separator"></li><li class="label">By category</li>' +
+    gcats.map(function (c, i) { return "<li" + (i >= GSHOW ? ' class="g-more" hidden' : "") + '><a href="gallery.html?cat=' + c[0] + '" data-gcat="' + c[0] + '">' + c[1] + "</a></li>"; }).join("") +
+    (gcats.length > GSHOW ? '<li><button type="button" class="g-more-btn" aria-expanded="false"><span class="dots" aria-hidden="true">&bull;&bull;&bull;</span>More categories</button></li>' : "");
+  var gMore = $("#gallery-drop .g-more-btn");
+  if (gMore) gMore.addEventListener("click", function (e) {
+    e.stopPropagation();
+    var open = gMore.getAttribute("aria-expanded") !== "true";
+    $$("#gallery-drop .g-more").forEach(function (li) { li.hidden = !open; });
+    gMore.setAttribute("aria-expanded", open); gMore.lastChild.textContent = open ? "Fewer categories" : "More categories";
+    if (open) $("#gallery-drop .g-more a").focus();
+  });
   var items = $$(".menu > li");
   function closeAll(except) { items.forEach(function (li) { if (li !== except) { li.classList.remove("open"); var b = $("button", li); if (b) b.setAttribute("aria-expanded", "false"); } }); }
   items.forEach(function (li) {
     var b = $(":scope > button", li); if (!b) return;
     b.addEventListener("click", function (e) { e.stopPropagation(); var open = !li.classList.contains("open"); closeAll(li); li.classList.toggle("open", open); b.setAttribute("aria-expanded", open); });
     li.addEventListener("keydown", function (e) {
-      var links = $$(".drop a", li), i = links.indexOf(document.activeElement);
+      var links = $$(".drop a, .drop .g-more-btn", li).filter(function (x) { return !x.closest("[hidden]"); }), i = links.indexOf(document.activeElement);
       if (e.key === "ArrowDown") { e.preventDefault(); li.classList.add("open"); b.setAttribute("aria-expanded", "true"); (links[i + 1] || links[0]).focus(); }
       if (e.key === "ArrowUp") { e.preventDefault(); (links[i - 1] || links[links.length - 1]).focus(); }
       if (e.key === "Escape") { closeAll(); b.focus(); }
