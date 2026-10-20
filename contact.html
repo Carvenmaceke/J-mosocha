@@ -286,6 +286,8 @@ main { padding-top: var(--header-h, 147px); }
 html:not([data-page="gallery"]) #gallery { display: none; }
 html:not([data-page="services"]) #services { display: none; }
 html:not([data-page="contact"]) .f-cta { display: none; }
+/* The session list is only shown in the "Session information" pop-up on the services page */
+main > #sessions { display: none !important; }
 html[data-page="contact"] main > section { display: none !important; }
 html[data-page="contact"] .f-cta { min-height: calc(100svh - var(--header-h, 160px)); display: grid; align-content: center; }
 html[data-page="services"] main > section:not(#services) { display: none !important; }
