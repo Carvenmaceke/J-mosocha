@@ -1,6 +1,6 @@
-"""Rebuild gallery.html, services.html and contact.html from index.html.
+"""Rebuild gallery.html, services.html, prints.html and contact.html from index.html.
 
-Both pages are the same file as the home page with data-page="gallery", "services" or
+Both pages are the same file as the home page with data-page="gallery", "services", "prints" or
 "contact" on <html>, which shows only that section. Run this after
 every change to index.html:
 
@@ -14,6 +14,8 @@ HOME_DESC = "Photography, videography and printing studio in Pretoria Central si
 PAGES = {
     "gallery": ("Gallery | J Masocha Photography, Pretoria",
                 "See our studio work in Pretoria: birthday, cake smash, babies, maternity, graduation, couples, family and portrait photoshoots by J Masocha Photography."),
+    "prints": ("Printed Products | Canvas, Frames & Photo Gifts in Pretoria | J Masocha Photography",
+               "Order canvas prints, framed photos, albums, photo globes, tumblers, mugs, plates and T-shirts, printed in-house at J Masocha Photography in Pretoria Central."),
     "contact": ("Contact Us | J Masocha Photography, Pretoria Central",
                 "Contact J Masocha Photography at 235 Helen Joseph Street, Pretoria Central. Email, WhatsApp or call 066 132 2462 to book a photoshoot or ask a question."),
     "services": ("Our Services | Photography, Videography & Printing in Pretoria | J Masocha Photography",
