@@ -101,6 +101,10 @@ a { color: inherit; }
 .card .ph .mv.l { left: 8px; } .card .ph .mv.r { right: 8px; }
 .orderbar { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 30; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center; padding: 10px 12px 10px 20px; border-radius: 999px; background: var(--fg); color: var(--bg); box-shadow: 0 14px 40px rgba(0,0,0,.3); max-width: calc(100vw - 24px); }
 .orderbar[hidden] { display: none; }
+.hero-cards .ph { aspect-ratio: 1; }
+.hero-cards .card .ph img { object-fit: contain; object-position: 50% 50%; background: #1a1a1c; }
+.hero-cards .num { position: absolute; top: 8px; left: 8px; min-width: 26px; height: 26px; padding: 0 7px; border-radius: 99px; display: grid; place-items: center; background: rgba(0,0,0,.65); color: #fff; font-size: .78rem; }
+.hero-cards .cap { color: var(--fg-2); font-size: .85rem; }
 .orderbar .btn { border-color: rgba(255,255,255,.5); color: #fff; padding: 8px 16px; }
 .orderbar .btn.solid { background: #fff; color: var(--fg); border-color: #fff; }
 .orderbar .btn:hover { background: #fff; color: var(--fg); }
@@ -295,6 +299,7 @@ h3.sub { font-size: 1.1rem; margin: 18px 0 8px; }
     </div>
     <nav class="tabs" role="tablist" aria-label="Sections">
       <button type="button" role="tab" aria-selected="true" aria-controls="tab-gallery" data-tab="gallery">Gallery</button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="tab-hero" data-tab="hero">Home slideshow</button>
       <button type="button" role="tab" aria-selected="false" aria-controls="tab-book" data-tab="book">Bookings</button>
       <button type="button" role="tab" aria-selected="false" aria-controls="tab-specials" data-tab="specials">Specials &amp; posters</button>
       <button type="button" role="tab" aria-selected="false" aria-controls="tab-subs" data-tab="subs">Subscribers</button>
@@ -310,6 +315,14 @@ h3.sub { font-size: 1.1rem; margin: 18px 0 8px; }
       </div>
       <div id="groups"></div>
       <div class="orderbar" id="orderbar" role="region" aria-label="Unsaved order" hidden><span>You changed the order of the photos.</span><button class="btn" type="button" id="order-undo">Undo</button><button class="btn solid" type="button" id="order-save">Save order</button></div>
+    </section>
+    <section id="tab-hero" role="tabpanel" hidden>
+      <div class="bar">
+        <button class="btn solid" type="button" id="hero-add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Add photos</button>
+        <p>These photos turn in the circle at the top of the home page, in this order. Use the arrows to change the order, or Remove to take a photo out. Changes appear on the website within a few minutes.</p>
+      </div>
+      <div class="cards hero-cards" id="hero-list"></div>
+      <div class="orderbar" id="hero-bar" role="region" aria-label="Unsaved slideshow changes" hidden><span id="hero-bar-text">You changed the slideshow.</span><button class="btn" type="button" id="hero-undo">Undo</button><button class="btn solid" type="button" id="hero-save">Save changes</button></div>
     </section>
     <section id="tab-book" role="tabpanel" hidden>
       <div id="book-setup" class="notice" hidden>
@@ -392,6 +405,22 @@ h3.sub { font-size: 1.1rem; margin: 18px 0 8px; }
     <div class="section"><span class="label">Categories</span> <span class="hint">pick one or more</span><div class="chips" id="add-cats"></div></div>
     <p class="err" id="add-err" role="alert"></p>
     <div class="panel-foot"><button class="btn" type="button" data-close>Cancel</button><button class="btn solid" type="submit" id="add-go">Upload</button></div>
+  </form>
+</dialog>
+
+<!-- Add photos to the home slideshow -->
+<dialog id="hero-dlg" aria-labelledby="hero-title">
+  <form class="panel" id="hero-form" method="dialog" novalidate>
+    <div class="panel-head"><h2 id="hero-title">Add slideshow photos</h2><button class="x" type="button" data-close aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <label class="drop" id="hero-drop">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+      <b>Choose photos</b><span class="hint">or drag them here &middot; JPG, PNG or WebP</span>
+      <input class="sr" type="file" id="hero-files" accept="image/jpeg,image/png,image/webp" multiple>
+    </label>
+    <div class="picked" id="hero-picked"></div>
+    <p class="hint">New photos are added at the end of the slideshow. Describe each photo in a few words (for Google and for people who can&rsquo;t see it).</p>
+    <p class="err" id="hero-err" role="alert"></p>
+    <div class="panel-foot"><button class="btn" type="button" data-close>Cancel</button><button class="btn solid" type="submit" id="hero-go">Upload</button></div>
   </form>
 </dialog>
 
@@ -591,7 +620,7 @@ h3.sub { font-size: 1.1rem; margin: 18px 0 8px; }
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
 
-  var token = null, nlKey = "", pass = null, gallery = null, site = null, fresh = {}, previews = {};
+  var token = null, nlKey = "", pass = null, gallery = null, site = null, hero = null, fresh = {}, previews = {};
 
   /* ---------- Key storage: the GitHub key is kept on this device, locked with the owner's password ---------- */
   var enc = new TextEncoder(), dec = new TextDecoder();
@@ -646,6 +675,18 @@ h3.sub { font-size: 1.1rem; margin: 18px 0 8px; }
   function loadGallery() {
     return gh("/contents/" + DATA + "?ref=" + BRANCH).then(function (f) { return parseGallery(decodeB64Utf8(f.content)); });
   }
+  var HERO_FILE = "hero.js";
+  function parseHero(text) {
+    var a = text.indexOf("[", text.indexOf("window.HERO")), b = text.lastIndexOf("]");
+    return JSON.parse(text.slice(a, b + 1));
+  }
+  function writeHero(list) {
+    return "// Photos in the turning circle at the top of the home page, in order. Managed from admin.html.\n// Each photo: file (in img/story/, without .webp), alt (a short description), ar (width \u00f7 height), and ext if it isn't webp.\nwindow.HERO = [\n" +
+      list.map(function (h) { return "  " + JSON.stringify(h); }).join(",\n") + "\n];\n";
+  }
+  function loadHero() {
+    return gh("/contents/" + HERO_FILE + "?ref=" + BRANCH).then(function (f) { return parseHero(decodeB64Utf8(f.content)); }, function (e) { if (e.status === 404) return []; throw e; });
+  }
   var SITE_FILE = "site.js";
   function parseSite(text) {
     var a = text.indexOf("{", text.indexOf("window.SITE")), b = text.lastIndexOf("}");
@@ -670,15 +711,16 @@ h3.sub { font-size: 1.1rem; margin: 18px 0 8px; }
     var head, d, plan;
     return gh("/git/ref/heads/" + BRANCH).then(function (ref) {
       head = ref.object.sha;
-      return Promise.all([gh("/git/commits/" + head), loadGallery(), loadSite()]);
+      return Promise.all([gh("/git/commits/" + head), loadGallery(), loadSite(), loadHero()]);
     }).then(function (r) {
-      d = { gallery: r[1], site: r[2] };
-      var before = { g: writeGallery(d.gallery), s: writeSite(d.site) };
+      d = { gallery: r[1], site: r[2], hero: r[3] };
+      var before = { g: writeGallery(d.gallery), s: writeSite(d.site), h: writeHero(d.hero) };
       plan = change(d);
-      var after = { g: writeGallery(d.gallery), s: writeSite(d.site) };
+      var after = { g: writeGallery(d.gallery), s: writeSite(d.site), h: writeHero(d.hero) };
       var blobs = plan.add.map(function (f) { return gh("/git/blobs", { method: "POST", body: { content: f.base64, encoding: "base64" } }).then(function (b) { return { path: f.path, mode: "100644", type: "blob", sha: b.sha }; }); });
       if (after.g !== before.g) blobs.push(gh("/git/blobs", { method: "POST", body: { content: after.g, encoding: "utf-8" } }).then(function (b) { return { path: DATA, mode: "100644", type: "blob", sha: b.sha }; }));
       if (after.s !== before.s) blobs.push(gh("/git/blobs", { method: "POST", body: { content: after.s, encoding: "utf-8" } }).then(function (b) { return { path: SITE_FILE, mode: "100644", type: "blob", sha: b.sha }; }));
+      if (after.h !== before.h) blobs.push(gh("/git/blobs", { method: "POST", body: { content: after.h, encoding: "utf-8" } }).then(function (b) { return { path: HERO_FILE, mode: "100644", type: "blob", sha: b.sha }; }));
       return Promise.all(blobs).then(function (entries) {
         plan.remove.forEach(function (p) { entries.push({ path: p, mode: "100644", type: "blob", sha: null }); });
         return gh("/git/trees", { method: "POST", body: { base_tree: r[0].tree.sha, tree: entries } });
@@ -687,7 +729,7 @@ h3.sub { font-size: 1.1rem; margin: 18px 0 8px; }
       return gh("/git/commits", { method: "POST", body: { message: plan.message, tree: tree.sha, parents: [head] } });
     }).then(function (commit) {
       return gh("/git/refs/heads/" + BRANCH, { method: "PATCH", body: { sha: commit.sha } });
-    }).then(function () { gallery = d.gallery; site = d.site; return d; }, function (e) {
+    }).then(function () { gallery = d.gallery; site = d.site; hero = d.hero; return d; }, function (e) {
       // Someone else saved at the same moment: start again from the latest version
       if ((e.status === 422 || e.status === 409) && tries < 2) return save(change, tries + 1);
       throw e;
@@ -733,11 +775,11 @@ h3.sub { font-size: 1.1rem; margin: 18px 0 8px; }
     try { localStorage.removeItem(KEY_STORE); } catch (x) {}
     showScreen("setup");
   });
-  $("#logout").addEventListener("click", function () { token = null; nlKey = ""; pass = null; gallery = site = subs = null; showScreen("login"); });
+  $("#logout").addEventListener("click", function () { token = null; nlKey = ""; pass = null; gallery = site = subs = hero = heroDraft = null; showScreen("login"); });
 
   function enterApp() {
     showScreen("app"); status("busy", "Loading your gallery…");
-    Promise.all([loadGallery(), loadSite()]).then(function (r) { gallery = r[0]; site = r[1]; status(); render(); renderPromos(); subsView(); }).catch(function (x) {
+    Promise.all([loadGallery(), loadSite(), loadHero()]).then(function (r) { gallery = r[0]; site = r[1]; hero = r[2]; heroDraft = null; status(); render(); renderPromos(); renderHero(); subsView(); }).catch(function (x) {
       if (x.status === 401) { status("bad", "Your GitHub access key has expired or was removed. Log out and set up this device again."); return; }
       status("bad", "Couldn’t load the gallery: " + x.message);
     });
@@ -1041,6 +1083,100 @@ h3.sub { font-size: 1.1rem; margin: 18px 0 8px; }
       if (b.dataset.tab === "subs") subsView(true);
       if (b.dataset.tab === "book") bookView(true);
     });
+  });
+
+  /* ---------- Home slideshow ---------- */
+  var heroDraft = null, heroPrev = {}, heroQueue = [], HERO_MIN = 5;
+  function heroList() { return heroDraft || hero || []; }
+  function heroSrc(h) { return heroPrev[h.file] || ("img/story/" + h.file + "." + (h.ext || "webp")); }
+  function renderHero() {
+    var list = heroList();
+    $("#hero-list").innerHTML = list.length ? list.map(function (h, i) {
+      return '<div class="card"><div class="ph"><img src="' + esc(heroSrc(h)) + '" alt="' + esc(h.alt) + '" loading="lazy"><span class="num">' + (i + 1) + '</span></div><div class="body"><p class="cap">' + esc(h.alt) + '</p>' +
+        '<div class="acts"><button type="button" data-hmove="' + i + '" data-d="-1"' + (i ? "" : " disabled") + ' aria-label="Move earlier">&larr;</button><button type="button" data-hmove="' + i + '" data-d="1"' + (i < list.length - 1 ? "" : " disabled") + ' aria-label="Move later">&rarr;</button>' +
+        '<button type="button" class="del" data-hrm="' + i + '">Remove</button></div></div></div>';
+    }).join("") : '<p class="empty">No photos in the slideshow yet. Add some photos to get started.</p>';
+    $("#hero-bar").hidden = !heroDraft;
+  }
+  function heroEdit(fn) { if (!heroDraft) heroDraft = JSON.parse(JSON.stringify(hero || [])); fn(heroDraft); renderHero(); }
+  $("#hero-list").addEventListener("click", function (e) {
+    var mv = e.target.closest("[data-hmove]"), rm = e.target.closest("[data-hrm]");
+    if (mv) heroEdit(function (l) { var i = +mv.dataset.hmove, j = i + +mv.dataset.d; var x = l[i]; l[i] = l[j]; l[j] = x; });
+    if (rm) {
+      if (heroList().length <= HERO_MIN) { status("bad", "The slideshow needs at least " + HERO_MIN + " photos. Add another photo before removing this one."); return; }
+      heroEdit(function (l) { l.splice(+rm.dataset.hrm, 1); });
+    }
+  });
+  $("#hero-undo").addEventListener("click", function () { heroDraft = null; renderHero(); status(); });
+  $("#hero-save").addEventListener("click", function () {
+    var draft = heroDraft, btn = this; if (!draft) return;
+    btn.disabled = true; status("busy", "Saving the slideshow…");
+    var orig = hero || [];
+    save(function (d) {
+      var has = function (list, h) { return list.some(function (x) { return x.file === h.file; }); };
+      var gone = orig.filter(function (h) { return !has(draft, h) && has(d.hero, h); });
+      // the new order, plus any photo added from another device in the meantime (at the end)
+      d.hero = draft.filter(function (h) { return has(d.hero, h); }).concat(d.hero.filter(function (h) { return !has(orig, h); }));
+      return { add: [], remove: gone.map(function (h) { return "img/story/" + h.file + "." + (h.ext || "webp"); }), message: "Update the home page slideshow" };
+    }).then(function () { heroDraft = null; btn.disabled = false; renderHero(); status("ok", "Slideshow saved. The website will update in a few minutes."); },
+      function (x) { btn.disabled = false; status("bad", failMsg(x)); });
+  });
+  // Adding photos
+  $("#hero-add").addEventListener("click", function () {
+    if (heroDraft) { status("bad", "Save or undo your slideshow changes first."); return; }
+    heroQueue = []; drawHeroQueue(); $("#hero-err").textContent = ""; openDlg($("#hero-dlg"));
+  });
+  function pickHero(list) {
+    Array.prototype.forEach.call(list, function (f) {
+      if (!/^image\/(jpeg|png|webp)$/.test(f.type)) { $("#hero-err").textContent = f.name + " isn\u2019t a JPG, PNG or WebP photo."; return; }
+      heroQueue.push({ file: f, url: URL.createObjectURL(f), alt: "" });
+    });
+    drawHeroQueue();
+  }
+  function drawHeroQueue() {
+    $("#hero-picked").innerHTML = heroQueue.map(function (q, i) {
+      return '<div class="pick"><img src="' + q.url + '" alt=""><input data-hi="' + i + '" value="' + esc(q.alt) + '" placeholder="Describe it, e.g. A family of four laughing" maxlength="90" aria-label="Description of photo ' + (i + 1) + '"><button type="button" class="x" data-hqrm="' + i + '" aria-label="Remove this photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>';
+    }).join("");
+    $("#hero-go").textContent = heroQueue.length > 1 ? "Upload " + heroQueue.length + " photos" : "Upload";
+  }
+  $("#hero-files").addEventListener("change", function (e) { pickHero(e.target.files); e.target.value = ""; });
+  ["dragover", "drop"].forEach(function (t) { $("#hero-drop").addEventListener(t, function (e) { e.preventDefault(); if (t === "drop") pickHero(e.dataTransfer.files); }); });
+  $("#hero-picked").addEventListener("input", function (e) { if (e.target.dataset.hi) heroQueue[+e.target.dataset.hi].alt = e.target.value; });
+  $("#hero-picked").addEventListener("click", function (e) { var b = e.target.closest("[data-hqrm]"); if (b) { URL.revokeObjectURL(heroQueue[+b.dataset.hqrm].url); heroQueue.splice(+b.dataset.hqrm, 1); drawHeroQueue(); } });
+  function prepareHero(q, i) {
+    var load = window.createImageBitmap ? createImageBitmap(q.file, { imageOrientation: "from-image" }).catch(function () { return createImageBitmap(q.file); }) : Promise.reject(new Error("This browser can\u2019t process photos. Try Chrome, Edge or Safari."));
+    return load.then(function (bmp) {
+      // the circle shows photos about 340px tall, so 900px on the long side is plenty
+      var w = bmp.width >= bmp.height ? 900 : Math.round(900 * bmp.width / bmp.height);
+      return resize(bmp, w).then(function (r) {
+        return blobB64(r.blob).then(function (b64) {
+          var file = slugify(q.alt) + "-" + Date.now().toString(36) + i;
+          var h = { file: file, alt: q.alt.trim(), ar: Math.round(r.w / r.h * 1000) / 1000 };
+          if (r.ext !== "webp") h.ext = r.ext;
+          return { h: h, b64: b64, url: q.url };
+        });
+      });
+    }).catch(function (x) { throw new Error(/^This browser/.test(x.message) ? x.message : "Couldn\u2019t read " + q.file.name + ". Try a JPG or PNG copy of it."); });
+  }
+  $("#hero-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var err = $("#hero-err"); err.textContent = "";
+    if (!heroQueue.length) { err.textContent = "Choose at least one photo."; return; }
+    var missing = heroQueue.findIndex(function (q) { return !q.alt.trim(); });
+    if (missing > -1) { err.textContent = "Add a short description for each photo."; $('#hero-picked input[data-hi="' + missing + '"]').focus(); return; }
+    var d = $("#hero-dlg"), btn = $("#hero-go"), n = heroQueue.length;
+    busy(d, true, btn, "Preparing photos\u2026");
+    Promise.all(heroQueue.map(prepareHero)).then(function (ready) {
+      btn.textContent = "Uploading\u2026";
+      return save(function (dd) {
+        ready.forEach(function (r) { dd.hero.push(r.h); });
+        return { add: ready.map(function (r) { return { path: "img/story/" + r.h.file + "." + (r.h.ext || "webp"), base64: r.b64 }; }), remove: [], message: "Add " + (n > 1 ? n + " photos" : "a photo") + " to the home page slideshow" };
+      }).then(function () {
+        ready.forEach(function (r) { heroPrev[r.h.file] = r.url; });
+        heroQueue = []; busy(d, false, btn, "Upload"); d.close(); renderHero();
+        status("ok", (n > 1 ? n + " photos" : "Photo") + " added to the slideshow. The website will update in a few minutes.");
+      });
+    }).catch(function (x) { busy(d, false, btn, n > 1 ? "Upload " + n + " photos" : "Upload"); err.textContent = x.status ? failMsg(x) : x.message; });
   });
 
   /* ---------- Specials ---------- */

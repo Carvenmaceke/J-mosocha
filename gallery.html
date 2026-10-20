@@ -1397,6 +1397,7 @@ footer h3 { color: var(--fg); }
 <script src="packages.js"></script>
 <script src="tips.js"></script>
 <script src="gallery.js"></script>
+<script src="hero.js"></script>
 <script src="site.js"></script>
 <script>
 (function () {
@@ -2105,28 +2106,28 @@ footer h3 { color: var(--fg); }
   // graduation, friends and family, and back to the studio where every chapter is kept.
   (function () {
     var ring = $("#ring"), stage = $("#ring-stage"); if (!ring) return;
-    var STORY = [   // [file in img/story/, description, width ÷ height of the photo]
-      ["01-love", "A couple about to kiss, in silhouette", 1.187],
-      ["02-expecting", "A father-to-be kneeling to the baby bump, in silhouette", 0.656],
-      ["03-newborn", "A baby in a pink knitted outfit on a swing", 0.680],
-      ["04-little-man", "A baby boy in a blue cap and suspenders", 0.674],
-      ["05-first-birthday", "A little boy at a white piano with his birthday cake", 1.112],
-      ["06-baby-girl", "A baby girl in a red tartan dress", 0.710],
-      ["08-gymnast", "A young gymnast holding a leg stretch", 0.671],
-      ["09-graduate", "A graduate holding her cap", 1.500],
-      ["10-celebration", "A woman in a white gown with falling confetti", 0.686],
-      ["11-friends", "Four friends in white T-shirts, laughing together", 1.500],
-      ["12-family", "A family of five in matching cream outfits", 1.431],
-      ["13-birthday", "A woman in lilac with roses and a cake on her birthday", 0.667],
-      ["14-outdoors", "A man relaxing outdoors among the flowers", 1.498],
-      ["15-studio", "The J Masocha studio, lights and camera ready", 0.667]
+    var STORY = (window.HERO || []).length ? HERO.map(function (h) { return [h.file + "." + (h.ext || "webp"), h.alt, h.ar]; }) : [   // [file in img/story/, description, width ÷ height]; the list itself is in hero.js
+      ["01-love.webp", "A couple about to kiss, in silhouette", 1.187],
+      ["02-expecting.webp", "A father-to-be kneeling to the baby bump, in silhouette", 0.656],
+      ["03-newborn.webp", "A baby in a pink knitted outfit on a swing", 0.680],
+      ["04-little-man.webp", "A baby boy in a blue cap and suspenders", 0.674],
+      ["05-first-birthday.webp", "A little boy at a white piano with his birthday cake", 1.112],
+      ["06-baby-girl.webp", "A baby girl in a red tartan dress", 0.710],
+      ["08-gymnast.webp", "A young gymnast holding a leg stretch", 0.671],
+      ["09-graduate.webp", "A graduate holding her cap", 1.500],
+      ["10-celebration.webp", "A woman in a white gown with falling confetti", 0.686],
+      ["11-friends.webp", "Four friends in white T-shirts, laughing together", 1.500],
+      ["12-family.webp", "A family of five in matching cream outfits", 1.431],
+      ["13-birthday.webp", "A woman in lilac with roses and a cake on her birthday", 0.667],
+      ["14-outdoors.webp", "A man relaxing outdoors among the flowers", 1.498],
+      ["15-studio.webp", "The J Masocha studio, lights and camera ready", 0.667]
     ];
     var picks = STORY;
     if (picks.length < 3) return;
     var n = picks.length, angles = [], angle = 0, R = 0, paused = false, last = 0;
     var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     ring.innerHTML = picks.map(function (x) {
-      return '<a class="ring-card" href="gallery.html" aria-label="View the gallery"><img src="img/story/' + x[0] + '.webp" alt="' + x[1] + '" draggable="false"></a>';
+      return '<a class="ring-card" href="gallery.html" aria-label="View the gallery"><img src="img/story/' + x[0] + '" alt="' + x[1] + '" draggable="false"></a>';
     }).join("");
     stage.insertAdjacentHTML("beforeend", '<div class="ring-floor" aria-hidden="true"></div>');
     var cards = $$(".ring-card", ring);
