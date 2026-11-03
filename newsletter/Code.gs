@@ -604,7 +604,13 @@ function updateBooking_(d) {
     b = bookings_().filter(function (x) { return x.code === d.code; })[0];
     if (!b) return { ok: false, error: "Booking not found." };
     var was = b.status;
-    if (d.status === "confirmed" || d.status === "cancelled") b.status = d.status;
+    if (d.status === "confirmed" || d.status === "cancelled" || d.status === "awaiting-payment") {
+      var now0 = new Date();
+      if (d.status !== "cancelled" && !holds_(b, now0) && bookings_().some(function (x) { return x.code !== b.code && x.date === b.date && x.time === b.time && holds_(x, now0); }))
+        return { ok: false, error: "Another booking now has that time. Move this booking to a free time first." };
+      b.status = d.status;
+      if (d.status === "awaiting-payment") b.holdUntil = "";   // set back to unpaid by the owner: keep the time held
+    }
     if (d.paid !== undefined && d.paid !== "") b.paid = Number(d.paid) || 0;
     if (d.date && d.time) {
       if (!validDate_(d.date) || !validTime_(d.time)) return { ok: false, error: "Choose a date and time." };

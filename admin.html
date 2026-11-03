@@ -188,7 +188,14 @@ dialog::backdrop { background: rgba(10,10,11,.55); }
 .bcal .cnt { position: absolute; top: 6px; right: 6px; min-width: 20px; height: 20px; border-radius: 999px; background: var(--accent); color: #fff; font-size: .72rem; display: grid; place-items: center; padding: 0 5px; }
 .legend { display: flex; flex-wrap: wrap; gap: 14px; margin: 12px 0 0; font-size: .8rem; color: var(--muted); }
 .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 4px; border: 1px solid var(--line); background: #fff; vertical-align: -2px; margin-right: 5px; }
-.legend i.c { background: var(--bg-2); } .legend i.x { box-shadow: inset 0 0 0 2px var(--accent); } .legend i.b { background: var(--accent); border-radius: 50%; border: 0; }
+.legend i.c { background: var(--bg-2); } .legend i.h { background: #f5ead8; border-color: #d9bf94; } .legend i.u { background: #c98a2b; border-radius: 50%; border: 0; } .legend i.b { background: var(--ok) !important; }
+.bcal button.has-bk { background: #f5ead8; border-color: #d9bf94; }
+.bcal button.has-bk.past { opacity: .8; }
+.bcal .cnt.paid { background: var(--ok); } .bcal .cnt.unpaid { background: #c98a2b; }
+.st-sel { font: inherit; font-size: .8rem; font-weight: 700; padding: 5px 28px 5px 10px; border-radius: 999px; border: 1px solid transparent; cursor: pointer; -webkit-appearance: none; appearance: none; background: var(--bg-2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 9px center / 12px; }
+.st-sel.unpaid { background-color: #f5ead8; color: #8a6420; border-color: #e3cfa9; } .st-sel.deposit { background-color: #e3eefa; color: #23589a; border-color: #c4d8f0; } .st-sel.full { background-color: #e6f2ea; color: var(--ok); border-color: #c4e0cd; } .st-sel.cancelled { background-color: #f8e4e0; color: var(--danger); border-color: #efc7bf; }
+.st-sel:disabled { opacity: .6; cursor: wait; }
+.bk.cancelled .st-sel { opacity: 1; } .legend i.x { box-shadow: inset 0 0 0 2px var(--accent); } .legend i.b { background: var(--accent); border-radius: 50%; border: 0; }
 .bl-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
 .bl-head h2 { font-size: 1.3rem; }
 .bl-head select { padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px; background: #fff; }
@@ -349,12 +356,12 @@ h3.sub { font-size: 1.1rem; margin: 18px 0 8px; }
               <button class="rbtn" type="button" id="bc-next" aria-label="Next month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></button>
             </div>
             <div class="bcal" id="bcal"></div>
-            <p class="legend"><span><i></i>Open</span><span><i class="c"></i>Closed</span><span><i class="x"></i>Changed for that day</span><span><i class="b"></i>Bookings</span></p>
+            <p class="legend"><span><i class="h"></i>Has bookings</span><span><i class="b"></i>All paid</span><span><i class="u"></i>Has unpaid</span><span><i></i>Open</span><span><i class="c"></i>Closed</span><span><i class="x"></i>Changed for that day</span></p>
             <p class="hint" style="margin:8px 0 0">Click a day to open or close it, change its times, or add an appointment.</p>
           </div>
           <div class="boxed">
             <div class="bl-head"><h2>Bookings</h2>
-              <label class="sr" for="bl-show">Show</label><select id="bl-show"><option value="upcoming">Upcoming</option><option value="waiting">Waiting for deposit</option><option value="past">Past &amp; cancelled</option></select></div>
+              <label class="sr" for="bl-show">Show</label><select id="bl-show"><option value="all">All bookings</option><option value="upcoming">Upcoming</option><option value="unpaid">Unpaid</option><option value="paid">Paid</option><option value="cancelled">Cancelled</option><option value="past">Past</option></select></div>
             <div id="blist"></div>
           </div>
         </div>
@@ -1451,6 +1458,8 @@ h3.sub { font-size: 1.1rem; margin: 18px 0 8px; }
   function usual(d) { return (bk.settings.week[String(utc(d).getUTCDay())] || []).slice(); }
   function timesOn(d) { var o = bk.days[d]; return o ? (o.open ? o.times.slice() : []) : usual(d); }
   function freeOn(d) { var taken = bk.bookings.filter(function (b) { return b.date === d && holds(b); }).map(function (b) { return b.time; }); return timesOn(d).filter(function (t) { return taken.indexOf(t) < 0; }); }
+  function payState(b) { return b.status === "cancelled" ? "cancelled" : b.status !== "confirmed" ? "unpaid" : Number(b.paid) > 0 && Number(b.price) > 0 && Number(b.paid) >= Number(b.price) ? "full" : "deposit"; }
+  var PAY_LABEL = { unpaid: "Unpaid", deposit: "Deposit paid", full: "Paid in full", cancelled: "Cancelled" };
   function rands(n) { return "R" + Number(n || 0).toLocaleString("en-ZA").replace(/\u00a0/g, " "); }
 
   function bookView(reload) {
@@ -1474,10 +1483,11 @@ h3.sub { font-size: 1.1rem; margin: 18px 0 8px; }
     var html = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(function (d) { return '<span class="dow">' + d + "</span>"; }).join("");
     for (var i = 0; i < lead; i++) html += "<span></span>";
     for (var d = 1; d <= count; d++) {
-      var ds = isoD(new Date(Date.UTC(y, m, d))), times = timesOn(ds), n = bk.bookings.filter(function (b) { return b.date === ds && holds(b); }).length;
+      var ds = isoD(new Date(Date.UTC(y, m, d))), times = timesOn(ds), on = bk.bookings.filter(function (b) { return b.date === ds && b.status !== "cancelled"; }), n = on.length,
+        unpaid = on.filter(function (b) { return payState(b) === "unpaid"; }).length;
       var free = freeOn(ds).length, label = !times.length ? "Closed" : free ? free + " open" : "Full";
-      html += '<button type="button" data-day="' + ds + '" class="' + (times.length ? "" : "closed") + (bk.days[ds] ? " custom" : "") + (ds < bk.today ? " past" : "") + (ds === bk.today ? " today" : "") +
-        '" aria-label="' + longDate(ds) + ", " + label + (n ? ", " + n + " booked" : "") + '"><span class="n">' + d + '</span><span class="st">' + label + "</span>" + (n ? '<span class="cnt">' + n + "</span>" : "") + "</button>";
+      html += '<button type="button" data-day="' + ds + '" class="' + (times.length ? "" : "closed") + (bk.days[ds] ? " custom" : "") + (ds < bk.today ? " past" : "") + (ds === bk.today ? " today" : "") + (n ? " has-bk" : "") +
+        '" aria-label="' + longDate(ds) + ", " + label + (n ? ", " + n + " booked" + (unpaid ? ", " + unpaid + " unpaid" : ", all paid") : "") + '"><span class="n">' + d + '</span><span class="st">' + label + "</span>" + (n ? '<span class="cnt ' + (unpaid ? "unpaid" : "paid") + '">' + n + "</span>" : "") + "</button>";
     }
     $("#bcal").innerHTML = html;
     $("#bc-title").textContent = MONTHS[m] + " " + y;
@@ -1487,28 +1497,37 @@ h3.sub { font-size: 1.1rem; margin: 18px 0 8px; }
   $("#bl-show").addEventListener("change", drawBList);
 
   function bkCard(b, withDate) {
-    var live = holds(b), st = b.status === "confirmed" ? '<span class="pill ok">Confirmed</span>' : b.status === "cancelled" ? '<span class="pill off">Cancelled</span>' :
-      live ? '<span class="pill wait">Waiting for deposit</span>' : '<span class="pill off">Deposit not received, time released</span>';
+    var live = holds(b), ps = payState(b);
+    var st = '<label class="sr" for="st-' + b.code + '">Status</label><select class="st-sel ' + ps + '" id="st-' + b.code + '" data-status="' + b.code + '">' +
+      ["unpaid", "deposit", "full", "cancelled"].map(function (k) { return '<option value="' + k + '"' + (k === ps ? " selected" : "") + ">" + PAY_LABEL[k] + "</option>"; }).join("") + "</select>" +
+      (ps === "unpaid" && !live ? '<span class="pill off">Time released</span>' : "");
     var how = b.source === "studio" ? "Added by you" : b.payment === "online" ? "Online, Yoco" : "Online, WhatsApp";
     var phone = String(b.phone || "").replace(/\D/g, "").replace(/^0/, "27");
     var msg = "Hi " + b.name.split(" ")[0] + ", this is J Masocha Photography about your booking " + b.code + " on " + longDate(b.date) + " at " + b.time + ".";
     return '<article class="bk' + (b.status === "cancelled" ? " cancelled" : "") + '"><div class="t">' + esc(b.time) + "</div><div><div class=\"who\">" + esc(b.name) + '</div><div class="what">' + esc(b.session) + (b.pkg ? " &ndash; " + esc(b.pkg) : "") + (withDate ? " &middot; " + longDate(b.date) : "") + "</div></div>" +
       '<div class="meta">' + st + "<span>" + esc(b.code) + "</span><span>&middot; " + how + "</span>" +
-      (b.deposit ? "<span>&middot; deposit " + rands(b.deposit) + (b.paid ? ", paid " + rands(b.paid) : "") + "</span>" : b.paid ? "<span>&middot; paid " + rands(b.paid) + "</span>" : "") +
+      (b.deposit ? "<span>&middot; deposit " + rands(b.deposit) + (Number(b.paid) ? ", paid " + rands(b.paid) : "") + "</span>" : Number(b.paid) ? "<span>&middot; paid " + rands(b.paid) + "</span>" : "") +
       (b.status === "awaiting-payment" && live && b.holdUntil ? "<span>&middot; held until " + esc(b.holdUntil.replace("T", " ")) + "</span>" : "") + "</div>" +
       (b.notes ? '<div class="meta">' + esc(b.notes) + "</div>" : "") + (b.email || b.phone ? '<div class="meta">' + esc(b.phone) + (b.email ? " &middot; " + esc(b.email) : "") + "</div>" : "") +
-      '<div class="acts">' + (b.status === "awaiting-payment" ? '<button type="button" class="ok" data-paid="' + b.code + '">Deposit received</button>' : "") +
+      '<div class="acts">' +
       (phone ? '<a href="https://wa.me/' + phone + "?text=" + encodeURIComponent(msg) + '" target="_blank" rel="noopener">WhatsApp</a>' : "") +
-      (b.status !== "cancelled" ? '<button type="button" data-move="' + b.code + '">Move</button><button type="button" class="del" data-cancel="' + b.code + '">Cancel</button>' : "") + "</div></article>";
+      (b.status !== "cancelled" ? '<button type="button" data-move="' + b.code + '">Move</button>' : "") + "</div></article>";
   }
   function drawBList() {
     var show = $("#bl-show").value, list = bk.bookings.slice().sort(function (a, b) { return (a.date + a.time).localeCompare(b.date + b.time); });
-    if (show === "upcoming") list = list.filter(function (b) { return b.date >= bk.today && b.status !== "cancelled" && (b.status === "confirmed" || holds(b)); });
-    if (show === "waiting") list = list.filter(function (b) { return b.status === "awaiting-payment"; });
-    if (show === "past") list = list.filter(function (b) { return b.date < bk.today || b.status === "cancelled" || !holds(b); }).reverse();
-    var day = "", html = "";
-    list.forEach(function (b) { if (b.date !== day) { day = b.date; html += '<p class="bk-day">' + longDate(day) + (day === bk.today ? " &middot; today" : "") + "</p>"; } html += bkCard(b); });
-    $("#blist").innerHTML = html || '<p class="empty">' + { upcoming: "No upcoming bookings yet.", waiting: "No bookings waiting for a deposit.", past: "Nothing here yet." }[show] + "</p>";
+    var ahead = function (b) { return b.date >= bk.today; };
+    if (show === "all") list = list.filter(ahead).concat(list.filter(function (b) { return !ahead(b); }).reverse());
+    if (show === "upcoming") list = list.filter(function (b) { return ahead(b) && b.status !== "cancelled"; });
+    if (show === "unpaid") list = list.filter(function (b) { return payState(b) === "unpaid"; });
+    if (show === "paid") list = list.filter(function (b) { var p = payState(b); return p === "deposit" || p === "full"; });
+    if (show === "cancelled") list = list.filter(function (b) { return b.status === "cancelled"; }).reverse();
+    if (show === "past") list = list.filter(function (b) { return !ahead(b); }).reverse();
+    var day = "", html = "", pastShown = false;
+    list.forEach(function (b) {
+      if (show === "all" && !ahead(b) && !pastShown) { pastShown = true; html += '<p class="bk-day" style="margin-top:22px;color:var(--fg)">Past bookings</p>'; }
+      if (b.date !== day) { day = b.date; html += '<p class="bk-day">' + longDate(day) + (day === bk.today ? " &middot; today" : "") + "</p>"; } html += bkCard(b);
+    });
+    $("#blist").innerHTML = html || '<p class="empty">' + { all: "No bookings yet.", upcoming: "No upcoming bookings yet.", unpaid: "No unpaid bookings.", paid: "No paid bookings yet.", cancelled: "No cancelled bookings.", past: "Nothing here yet." }[show] + "</p>";
   }
   function findBk(code) { return bk.bookings.filter(function (b) { return b.code === code; })[0]; }
   function bkAction(e) {
@@ -1523,6 +1542,26 @@ h3.sub { font-size: 1.1rem; margin: 18px 0 8px; }
     }
   }
   $("#blist").addEventListener("click", bkAction);
+  function setPayState(e) {
+    var sel = e.target.closest("select[data-status]"); if (!sel) return;
+    var b = findBk(sel.dataset.status), want = sel.value, was = payState(b);
+    if (want === was) return;
+    if (want === "cancelled" && !confirm("Cancel " + b.name + "’s booking on " + longDate(b.date) + " at " + b.time + "? The time opens up for other clients.")) { sel.value = was; return; }
+    var body = { action: "updateBooking", code: b.code };
+    if (want === "unpaid") { body.status = "awaiting-payment"; body.paid = 0; }
+    if (want === "deposit") { body.status = "confirmed"; body.paid = Number(b.deposit) || Number(b.paid) || 0; }
+    if (want === "full") { body.status = "confirmed"; body.paid = Number(b.price) || Number(b.deposit) || Number(b.paid) || 0; }
+    if (want === "cancelled") body.status = "cancelled";
+    sel.disabled = true; status("busy", "Updating " + b.code + "…");
+    nl(body).then(useBk).then(function () {
+      var now = findBk(b.code);
+      if (now && payState(now) !== want) status("bad", "Your Google script is out of date, so this status can’t be set yet. In Apps Script, paste the latest newsletter/Code.gs and deploy a new version.");
+      else status("ok", b.name + "’s booking is now: " + PAY_LABEL[want] + ".");
+      if ($("#day-dlg").open) drawDayList();
+    }, function (x) { sel.disabled = false; sel.value = was; status("bad", x.message); });
+  }
+  $("#blist").addEventListener("change", setPayState);
+  $("#day-list").addEventListener("change", setPayState);
   $("#day-list").addEventListener("click", bkAction);
 
   // One day: open, closed or changed times, and its appointments
